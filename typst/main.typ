@@ -2,19 +2,20 @@
 #show: AcademicTemplate.with(
   title: "Exploring Tangible Interfaces
   in Music Creation",
-  course: [University of Southern Denmark],
+  course: [Bachelor Project \ BSc (Eng) Game Development and Learning Technology \ University of Southern Denmark
+    ],
   authors: (
     (
       name: "David Kirckhoff Foght",
-      mail: "dafog22@student.sdu.dk",
+      examNumber: "190401913"
     ),
     (
       name: "Rebekka Hakon Troelsen",
-      mail: "retro22@student.sdu.dk",
+      examNumber: "190401898"
     ),
      (
       name: "Jamie Høj",
-      mail: "jahoe22@student.sdu.dk",
+      examNumber: "190402437"
     )
   ),
 
@@ -29,16 +30,24 @@
   language: "en",
   bibliography-file: "SpilTek.bib",
   appendices-file: "Appendices.typ",
-  timespan: "Project Period: 1st of February 2025 to 2nd of June 2025",
-  mainSupervisor: (fullName: "Jacob Nielsen", email: "jani@mmmi.sdu.dk"),
-  abstract:[]
+  timespan: "2nd of June 2025",
+  mainSupervisor: (fullName: "Jacob Nielsen"),
+  abstract:[Word Count: IDK YET]
 )
 
+#import "@preview/wordometer:0.1.4": word-count, total-words, total-characters
+#show: word-count.with(exclude: (<no-wc>))
+Total word count: #total-words \
+Total character count: #total-characters
+
+#cite(<aleksandra_acker_relationship_2015>, supplement: "p. 63-67")
 = Acronyms and Terms
 #include "Acronyms and Terms.typ"
+<no-wc>
 
 = Acknowledgements
 #include "sections/Acknowledgements.typ"
+<no-wc>
 
 = Introduction
 

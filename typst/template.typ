@@ -202,7 +202,7 @@
       ..slice.map(author => align(center, {
         text(11pt, author.name)
         if "examNumber" in author [
-          \ #text(10pt, style: "italic", [Eksamensnummer: ] + author.examNumber)
+          \ #text(10pt, author.examNumber)
         ]
         if "deptName" in author [
           \ #text(10pt, style: "italic", author.deptName)
@@ -230,8 +230,8 @@
             text(10pt, [Main Supervisor])
             linebreak()
             text(12pt, mainSupervisor.fullName)
-            linebreak()
-            text(10pt, mainSupervisor.email)
+            //linebreak()
+            //text(10pt, mainSupervisor.email)
           })
       )
     } else {

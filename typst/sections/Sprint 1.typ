@@ -76,7 +76,7 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
   [3], [Ableton Live], [Sound should be produced using Ableton Live on a computer.],
   [4], [Wireless connection], [Controllers should interface wirelessly with Host.],
   [5], [NFC reader], [An MFRC522 NFC Reader should be used for changing controllers' instruments.],
-  [6], [Screen], [A Pimorino Pico Display 2 should relay information and engage users.],
+  [6], [Display], [A Pimorino Pico Display 2 should relay information and engage users.],
   [7], [Low power consumption], [Controllers should be powered by batteries, and the host should be bus-powered by its connected computer.],
   [8], [Plug'N'Play], [Devices should simply work when turned on, without any tinkering or configurating, and the order of the devices being turned on shouldn't matter.],
   [9], [Low latency], [There should be minimal latency from when a user interacts with a controller to when a sound is produced.],
@@ -86,8 +86,51 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
 
 == Hardware experimentation and exploration
 
+=== MCU
+
+==== Circuitpython
+
+=== Display
+
+=== NFC Reader
+
+=== Musical interaction
+
+
+
 == Paper prototype
-=== Test
+#figure(
+  grid(
+    columns: 2,
+    gutter: 25pt,
+    image("../images/paperprototype1.jpg", height: 25%),
+    image("../images/paperprototype2.jpg", height: 25%)),
+  caption: [Paper Prototype],
+) <fig:paperprototype>
+
+
+A paper prototype was developed, as shown in @fig:paperprototype, to establish a common understanding within the team regarding the product's physical layout. On the prototype, the blue cardboard cutout represents a display, the red cutouts buttons and the pink cutouts; potentiometers. It also served as a preliminary tool for evaluating usability and interface intuitiveness. The prototype was constructed from multicolored cardboard and assembled using tape. It was produced at a 1:1 scale to accurately represent the dimensions of the intended final product. 
+
+=== Testing
+The prototype was tested by a student enrolled in the Game Development and Learning Technology program, allowing for initial feedback on usability. Due to the tester's personal connection to the team, feedback was looked upon with caution to mitigate potential bias. 
+
+The test was conducted at the University of Southern Denmark and involved an unstructured interview, combined with the Think Aloud methodology. An A/B test was also carried out to assess the preferred placement of the NFC reader. This multi-method approach supported a flexible testing environment and allowed exploration of questions not already pre-defined before the test. The session lasted approximately 30 minutes and yielded constructive feedback, while the overall user response remained positive. 
+
+The participant reported limited musical experience, having played piano during childhood but with no current involvement in playing music. Initial confusion was noted when first viewing the prototype; however, after a short briefing, the tester was able to interpret the key interface elements-e.g., identifying the blue rectangle as the screen shown in @fig:paperprototype.
+
+The participant's preliminary expectations included functionality for recording and playback of predefined beats, similar to GarageBand, and the ability to alter pitch, intended humorously to produce annoying sounds. Although the tester was not part of the target demographic, such feedback was interpreted as indicative of an exploratory and motivated interaction approach. During the A/B test, the tester expressed a preference for NFC reader placement on the side of the device. 
+
+Further observations included the importance of tactile feedback and visual indicators such as LEDs. A layout revision was recommended to better support left-handed users, ensuring potentiometer interaction would not obscure the screen. Additional suggestions included the inclusion of a power switch and the use of neutral colors for the device casing.
+
+
+
+
+
+
+
+
+
+
 
 /*
 // GAMMEL

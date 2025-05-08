@@ -4,7 +4,7 @@ During sprint 1 the team planned and began the prototyping of the product. Desig
 For this sprint the team wanted to interconnect the individual components into a functional breadboard prototype. This for example meant that choosing an instrument using an NFC card would trigger the screen to display a picture of the selected instrument, and change the sounds played through Ableton.
 
 
-== Controller input -> Host -> Audio
+== Controller input #sym.arrow.r Host #sym.arrow.r Audio
 == Setup on Breadboard
 - Interconnecting different elements of the project together.
   - Display.
