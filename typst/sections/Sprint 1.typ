@@ -51,7 +51,7 @@ Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was define
 Requirement 3 (Ableton Live) was introduced to further offload sound generation from the microcontrollers to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation.
 The host acts as the central connector in the system, interfacing between the controllers (Requirement 4: Wireless Connection) and Ableton Live, ensuring smooth communication and coordination across all components.
 
-Requirement 4 (Wireless Connection) was defined as there would be both a host and a controller. These two elements would have to communicate, and therefore, WiFi was the technology of choice. In relation to the prior requirement, it was logical to also include requirement 7 (Low Power Consumption) to ensure that the product would not need wiring. This consideration further informed the inclusion of requirement 8 (Plug and Play), emphasizing that the product should function immediately upon being powered on, without the need for complex configuration.
+Requirement 4 (Wireless Connection) was defined as since there would both be a host and multiple controllers, they would all have to communicate. WiFi was therefore chosen as the data communication protocol of choice since it provides a lot of physical flexibility. In relation to the prior requirement, it was logical to also include requirement 7 (Low Power Consumption) to ensure that the product would not need wiring. This consideration further informed the inclusion of requirement 8 (Plug and Play), emphasizing that the product should function immediately upon being powered on, without the need for complex configuration.
 
 Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in correlation to @table:usabilityRequirements's requirement 4 (Feedback). Requiring an NFC reader for the product's usability was inspired by retro gaming consoles and traditional train stamping tickets (danish: klippekort), and adding a screen would make it easy to display which instrument sounds were currently in use and generally provide feedback to the user.
  
@@ -71,11 +71,11 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
   columns: (auto, 1fr, 2fr),
   align: start,
   table.header([*Id*], [*Feature*], [*Description*]),
-  [1], [Raspberry Pi Pico], [Devices should be based on the Raspberry Pi Pico W MCU.],
+  [1], [MCU], [Each device should be run by an MCU.],
   [2], [Dedicated MIDI host], [Host should act as MIDI controller and interface with Ableton Live.],
   [3], [Ableton Live], [Sound should be produced using Ableton Live on a computer.],
   [4], [Wireless connection], [Controllers should interface wirelessly with Host.],
-  [5], [NFC reader], [An MFRC522 NFC Reader should be used for changing controllers' instruments.],
+  [5], [NFC reader], [A NFC Reader should be used for changing controllers' instruments.],
   [6], [Display], [A Pimorino Pico Display 2 should relay information and engage users.],
   [7], [Low power consumption], [Controllers should be powered by batteries, and the host should be bus-powered by its connected computer.],
   [8], [Plug'N'Play], [Devices should simply work when turned on, without any tinkering or configurating, and the order of the devices being turned on shouldn't matter.],
@@ -87,10 +87,26 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
 == Hardware experimentation and exploration
 
 === MCU
+Two microcontroller families were evaluated for both the controllers and the MIDI host: the Raspberry Pi Pico series and the Arduino Uno series. Both offer WiFi–capable models and provide sufficient GPIO pins to accommodate the project’s sensors and actuators (buttons, potentiometers, NFC reader, and display). The Arduino platform presented advantages in terms of prior team familiarity, extensive library support, and a well­established first-party IDE. However, its WiFi–enabled variants carry a significant price premium—often more than double that of comparable RP2040-based boards #cite(<jkollerupdk_raspberry_nodate>) #cite(<ardustoredk_arduino_nodate>).
+
+In contrast, the Raspberry Pi Pico series combines very low unit cost with robust performance and library support for both WiFi and MIDI functionality. Although the Pico lacks some of Arduino’s out-of-the-box shield compatibility and IDE simplicity, its community offers both free documentation, tutorials, and many well-made third-party libraries. This balance of affordability, sufficient processing capacity, and ecosystem support aligned closely with the cost-accessibility requirement (Requirement 12) @table:usabilityRequirements.
+
+Ultimately, the Raspberry Pi Pico series was selected. The more powerful Pico 2 WH was assigned to the host—where heavier computation would be done, and the original Pico W was chosen for the controllers to minimize per-unit expense. This configuration preserves overall system performance and flexibility, while ensuring the final devices remain inexpensive and flexible.
 
 ==== Circuitpython
+While exploring the Raspberry Pi Pico ecosystem the Circuitpython programming language  #cite(<adafruit_circuitpython_nodate>) was discovered. Circuitpython is based on Python and promises simplicity, quick prototyping and _"strong hardware support"_ #cite(<schroeder_what_2024>)
 
 === Display
+To meet usability requirements 4 (Feedback) and 11 (Engaging), a screen was integrated into the design. Specifically, the project utilized the Pico Display Pack 2.0, which is based on the ST7789 display driver.
+
+Initial testing was carried out using example code provided by Adafruit for the display. The code was successfully flashed onto the Pico and produced a "Hello World" output directly on the display itself as seen in @fig:helloworlddisplay.
+
+#figure(
+  image("../images/hello-world-display.jpeg", height: 20%),
+  caption: [Initial Display Test],
+) <fig:helloworlddisplay>
+
+As the display is originally intended to be mounted directly on top of the Pico, further testing was performed to determine the minimum set of pins required for full functionality, as not all pins in the final rendition of the product would be available for the display. This process was complicated by the absence of a formal datasheet for the display; only a schematic was available, which made pin identification more challenging.
 
 === NFC Reader
 
