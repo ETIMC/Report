@@ -5,15 +5,15 @@ During sprint 1 the team planned and began the prototyping of the product. Desig
 == Focus of Sprint 2
 For this sprint the team wanted to interconnect the individual components into a functional breadboard prototype. This for example meant that choosing an instrument using an NFC card would trigger the screen to display a picture of the selected instrument, and change the sounds played through Ableton.
 
+== WiFi problems
+During WiFi connectivity tests between the Host and a Controller, the Host’s WiFi driver would crash unpredictably, often within a minute of establishing a connection. This instability generated significant confusion, leading to doubts about the viability of WiFi as the communication protocol. As a fallback, Bluetooth was briefly trialed, but its inherent latency was incompatible with the low-latency requirement (requirement 9, @table:technicalRequirements).
+
+Debugging eventually uncovered a pattern: only a full power cycle of the Pico 2 before initiating the WiFi connection yielded a stable link. In contrast, soft reboots from the REPL almost invariably triggered driver failures shortly thereafter, particularly when performed in rapid succession. By adopting a strict procedure of completely disconnecting and reconnecting power to the Host prior to each WiFi session, the driver crashes ceased entirely, restoring reliable performance.
+
 == Host MIDI interface
 During early host development, two diagrams (@fig:diagramMessageFlow) were drafted to clarify controller-to-host interactions. One diagram illustrated how input signals (button presses and potentiometer turns) should be sent to, and processed by, the host (@fig:DevicePlayingDiagram). Controllers were required only to emit a simple message identifying the activated input; all higher-level processing would occur on the host.
 
 The host was designed around three lookup tables: a controller-to-instrument map, an instrument-to-MIDI-channel map, and an instrument-specific table of controller-button to MIDI-note assignments. When a message arrived indicating, for example, that Controller A’s Button 1 was pressed, the host would determine Controller A’s assigned instrument (@listing:receivedNote:5), select that instrument’s MIDI channel (@listing:receivedNote:6), look up the MIDI note tied to Button 1 for that instrument (@listing:receivedNote:8), and forward a corresponding MIDI message on the correct channel to Ableton Live (@listing:receivedNote:9). To change instruments, controllers sent special messages indicating the desired instrument; the host then updated the controller-to-instrument map accordingly (@fig:ChangeSoundDiagram). By pre-allocating one channel per instrument, sound changes required no additional latency—messages simply switched channels—ensuring seamless, low-latency response as required by the low latency technical requirement (requirement 9, @table:technicalRequirements).
-
-
-
-- Sounds in Ableton (Native Instruments)
-  - Choice of specific sounds
 
 #subpar.grid(
   columns: (auto, auto),
@@ -44,13 +44,18 @@ The host was designed around three lookup tables: a controller-to-instrument map
   caption: [`_received_note(socket, buffer)` function on Host for processing Controller input messages.]
 ) <listing:receivedNote>
 
+The sending of notes themselves was driven firstly by the later implemented NFC reader and also a programmatic queue. asd
+
+
+In Ableton Live a new project was set up with four MIDI tracks. Each track was assigned a different input MIDI channel. Each track was then given an instrument (@fig:abletonFourInstrument). The four instruments were drums, piano, guitar and trumpet. These instruments were chosen as they were easily recognizable, very different sounding, and their real counterparts very different looking.
+
 #figure(
   [BILLEDE FRA ABLETON],
   caption: [Ableton Live 11 setup for playing playing different instruments on different MIDI channels.]
 ) <fig:abletonFourInstrument>
 
 == Circuitry schematics
-A schematic was created to provide an overview of the internal wiring of the controller and to ensure correct and consistent integration of the system’s components (#text(red)[reference til bilag]. This step was essential to validate that all hardware elements could function together as intended and that the correct GPIO pins on the Pico were used.
+A schematic was created to provide an overview of the internal wiring of the controller and to ensure correct and consistent integration of the system’s components (#text(red)[reference til bilag (Schematic sprint 2)]). This step was essential to validate that all hardware elements could function together as intended and that the correct GPIO pins on the Pico were used.
 The schematic brings together all the hardware elements of the controller: 
 - NFC reader (RC522)
 - Display (Pico Display 2.0)
@@ -67,11 +72,17 @@ This schematic served as a key step in moving from individual hardware tests to 
 == Breadboard prototype
 
 === General setup of Controller
+By following the schematic, all components were successfully connected on a breadboard to simulate the controller's functionality and test how the individual parts interacted.
+
 - Interconnecting different elements of the project together.
 
 ==== Display
 
 ==== NFC Reader
+When the NFC reader was connected to the breadboard, several issues arose. The code used during earlier experimentation no longer functioned as expected, which led to the need for further testing with alternative implementations. It appeared that the NFC reader was being overloaded by continuous read attempts. To address this, a physical button was introduced to trigger card reads only when pressed, replacing the previous setup where the reader constantly polled for cards.
+
+This change resolved the issue, and the NFC reader began functioning reliably again. It was then reconnected to the main controller breadboard for continued integration and testing.
+
 - Many problems
   - Code from sprint 1, did not work, when implemented on the breadboard with the other components...
 - Tested and tried different code examples, but RFID reader could not properbly do it
@@ -172,28 +183,6 @@ During the test, the main focus points were:
   caption: [Test Setup for Sprint 2],
 ) <fig:sprint2setup>
 
-*Summarized Feedback:*
+All participants demonstrated a clear enjoyment of musical engagement. Two individuals indicated prior familiarity with keyboard instruments, noting regular usage at home, while none had received formal music education through institutions such as music schools. Participants without previous experience in playing instruments expressed a curiosity and interest in learning. Across the board, testers described the product as intuitive, easy to navigate. No confusion or operational difficulties were reported during interaction with the prototype.
 
-All participants expressed an enjoyment of playing music. Two noted that they regularly played on keyboards at home. None of the testers had received formal instruction through a music school or similar program. Those without prior experience playing an instrument showed a clear interest in learning. Additionally, all testers found the product intuitive and easy to use, with no reports of confusion or difficulty. Universally, the product was described as fun and engaging.
-
-*Specific Feedback Points:*
-
-1 SWITCHES
-- Five out of six testers expressed a preference for the keyboard switches over the switches used on the breadboard. 
-2 VISUAL FEEDBACK
-- All testers responded positively to the idea of incorporating LEDs in different colors. 
-- One tester suggested dark colors (Winter colors) for lower notes and lighter (Spring colors) for higher notes if the LEDs were placed by the buttons. 
-3 NFC READER PLACEMENT AND INTERACTION
-- All testers preferred inserting the NFC card on the right-hand side of the product. Upon further inquiry, it was revealed that all participants were right-handed, suggesting this preference may be due to handedness bias.
-- Alternative suggestions included:
-  - Swiping the card along the front of the product to trigger instrument changes.
-  - Simply placing the card on top of the device to activate a new instrument.
-4 POTENTIOMETERS
-- All testers found the potentiometers somewhat confusing and challenging to use.
-- The difficulty stemmed from their small size and limited range of rotation due to a built-in stopper, which restricted the degree of movement.
-5 DURABILITY CONCERNS
-- One tester expressed concern about the potential for the device to be damaged if objects other than the NFC card were inserted.
-- The same tester also mentioned worrying about the product being easily damaged if dropped.
-6 COLLABORATIVE PLAY
-- All testers expressed enthusiasm about playing music with others.
-- However, one tester raised a concern that if all users played the same instrument simultaneously, it might become irritating. They suggested that using different instruments would make the experience more enjoyable.
+During an A/B test, to determine which switch to use in the final rendition of the product. Here, five of the six participants indicated a preference for the keyboard-style switches over those integrated into the breadboard configuration as seen in @fig:sprint2setup. The keyboard switches 
