@@ -3,6 +3,7 @@
 - NFC: Near field communication
 - Pico 1: Raspberry Pi Pico 1 W MCU
 - Pico 2: Raspberry Pi Pico 2 W MCU
+- REPL: Read–eval–print loop
 
 == Terms
 - Host: Refers to a device connected to a computer, interfacing with Ableton Live.

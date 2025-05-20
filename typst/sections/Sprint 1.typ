@@ -28,9 +28,9 @@ Finally, requirement 8 (Looping) regards allowing users to record and later acco
   table.header([*Id*], [*Feature*], [*Description*]),
   [1], [Cooperative play], [Multiple users should be able to explore and experiment with music together.],
   [2], [Portable device], [The product should be easy to transport, so that usage is not limited to either home or school.],
-  [3], [Size], [Product should have a suitable size for the target group.],
+  [3], [Size], [Product should have a suitable compact size for the target group.],
   [4], [Feedback], [Feedback is given when using the product, ensuring intuitivity.],
-  [5], [Ambidexterous], [Product should be usable for both left- and right-handed people.],
+  [5], [Ambidextrous], [Product should be usable for both left- and right-handed people.],
   [6], [Plug'N'Play], [Product should be easy to set up, use, and pack away.],
   [7], [Beats and Consistency],[Music beat should be consistent and on time, notes should match ensuring everything "sounds good".],
   [8], [Looping],[Small music pieces should be able to be recorded on- and looped directly from the product.],
@@ -45,11 +45,17 @@ Finally, requirement 8 (Looping) regards allowing users to record and later acco
 
 === Technical Requirements
 All technical requirements can be found in @table:technicalRequirements.
-Requirement 1 (Raspberry Pi Pico) was defined to ensure the product was cheap, as requirement 12 (Cheap) in @table:usabilityRequirements also states was important. This was also the reason for choosing the Pico-series over, for example, Arduino MCU's as these are often more expensive. This was especially true taking requirement 4 (Wireless connection) into account as WiFi-enabled Arduino MCU's were much more expensive than Pico 1's or Pico 2's. Wireless connectivity was decided upon to provide some of the flexibility required by requirement 2 in @table:usabilityRequirements.
+
+Requirement 1 (MCU) was defined to ensure the product would be powerful while also being cheap, as requirement 12 (Cheap) in @table:usabilityRequirements also states was important. By choosing a MCU instead of a complete computer the devices would be simplified while still maintaining a high degree of flexibility, ease of use and affordable pricing. Furthermore, the MCU should afford wireless compatibility as stated in requirement 4 (Wireless connection). Wireless connectivity was decided upon to provide some of the flexibility required by requirement 2 in @table:usabilityRequirements. More precisely, WiFi was chosen as the standard of choice to enable lower latency than other products such as Bluetooth #cite(<sharrow_speed_2025>). 
 
 Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the microcontrollers from introducing latency that would conflict with requirement 9 (Low Latency) in @table:usabilityRequirements. To address this, a dedicated MIDI host was specified to handle part of the controllers’ functionality externally.
 Requirement 3 (Ableton Live) was introduced to further offload sound generation from the microcontrollers to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation.
-The host acts as the central connector in the system, interfacing between the controllers (Requirement 4: Wireless Connection) and Ableton Live, ensuring smooth communication and coordination across all components.
+The host acts as the central connector in the system, interfacing between the controllers (Requirement 4: Wireless Connection) and Ableton Live, ensuring smooth communication and coordination across all components. (@fig:DeviceRelationsshipsSprint1)
+
+#figure(
+  image("../images/DeviceRelationshipsSprint1.png", width: 75%),
+  caption: [Diagram illustrating system relationships between devices.]
+) <fig:DeviceRelationsshipsSprint1>
 
 Requirement 4 (Wireless Connection) was defined as since there would both be a host and multiple controllers, they would all have to communicate. WiFi was therefore chosen as the data communication protocol of choice since it provides a lot of physical flexibility. In relation to the prior requirement, it was logical to also include requirement 7 (Low Power Consumption) to ensure that the product would not need wiring. This consideration further informed the inclusion of requirement 8 (Plug and Play), emphasizing that the product should function immediately upon being powered on, without the need for complex configuration.
 
@@ -87,17 +93,22 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
 == Hardware experimentation and exploration
 
 === MCU
-Two microcontroller families were evaluated for both the controllers and the MIDI host: the Raspberry Pi Pico series and the Arduino Uno series. Both offer WiFi–capable models and provide sufficient GPIO pins to accommodate the project’s sensors and actuators (buttons, potentiometers, NFC reader, and display). The Arduino platform presented advantages in terms of prior team familiarity, extensive library support, and a well­established first-party IDE. However, its WiFi–enabled variants carry a significant price premium—often more than double that of comparable RP2040-based boards #cite(<jkollerupdk_raspberry_nodate>) #cite(<ardustoredk_arduino_nodate>).
+Two microcontroller families were evaluated for both the controllers and the MIDI host: the Raspberry Pi Pico series and the Arduino Uno series. Both offer WiFi–capable models and provide sufficient GPIO pins to accommodate the project’s sensors and actuators (buttons, potentiometers, NFC reader, and display). The Arduino platform presented advantages in terms of prior team familiarity, extensive library support, and a well-­established first-party IDE. However, its WiFi–enabled variants carry a significant price premium—often more than double that of comparable RP2040-based boards #cite(<jkollerupdk_raspberry_nodate>) #cite(<ardustoredk_arduino_nodate>).
 
 In contrast, the Raspberry Pi Pico series combines very low unit cost with robust performance and library support for both WiFi and MIDI functionality. Although the Pico lacks some of Arduino’s out-of-the-box shield compatibility and IDE simplicity, its community offers both free documentation, tutorials, and many well-made third-party libraries. This balance of affordability, sufficient processing capacity, and ecosystem support aligned closely with the cost-accessibility requirement (Requirement 12) @table:usabilityRequirements.
 
-Ultimately, the Raspberry Pi Pico series was selected. The more powerful Pico 2 WH was assigned to the host—where heavier computation would be done, and the original Pico W was chosen for the controllers to minimize per-unit expense. This configuration preserves overall system performance and flexibility, while ensuring the final devices remain inexpensive and flexible.
+Ultimately, the Raspberry Pi Pico series was selected. The more powerful Pico 2 W was assigned to the host—where heavier computation would be done, and the original Pico W was chosen for the controllers to minimize per-unit expense. This configuration preserves overall system performance and flexibility, while ensuring the final devices remain inexpensive and flexible.
 
 ==== Circuitpython
-While exploring the Raspberry Pi Pico ecosystem the Circuitpython programming language  #cite(<adafruit_circuitpython_nodate>) was discovered. Circuitpython is based on Python and promises simplicity, quick prototyping and _"strong hardware support"_ #cite(<schroeder_what_2024>)
+While exploring the Raspberry Pi Pico ecosystem the Circuitpython programming language #cite(<adafruit_circuitpython_nodate>) was discovered. Circuitpython is based on Python and promises simplicity, quick prototyping and _"strong hardware support"_ #cite(<schroeder_what_2024>). Furthermore, Circuitpython's creator Adafruit has already created many packages and libraries for everything from interfacing with screens to Bluetooth connectivity. Including packages for working with WiFi #cite(<noauthor_adafruit_2025>) and MIDI #cite(<walters_adafruit_2025>). While testing a Pico 2 was successfully made into hosting a WiFi hotspot using the beforementioned library. Likewise a Pico 1 was successfully configured to connect to the Pico 2's hotspot, and they could successfully exchange messages. For experimenting purposes, using the beforementioned MIDI library, the host was easily configured to act as a MIDI interface, sending MIDI notes on multiple MIDI challenges to an instance of Ableton Live running on a USB-connected laptop.
+
+Based on the theoretical capabilities and personal experimentations with Circuitpython, it was decided that the project should be developed using it.
 
 === Display
-To meet usability requirements 4 (Feedback) and 11 (Engaging), a screen was integrated into the design. Specifically, the project utilized the Pico Display Pack 2.0, which is based on the ST7789 display driver.
+/* To meet usability requirements 4 (Feedback), 11 (Engaging) @table:usabilityRequirements, a display was integrated into the design. Specifically, the project utilized the Pico Display Pack 2.0, which is based on the ST7789 display driver. This specific display was chosen for its compatibility with the Picos used in the project, its small footprint, furthermore it would fulfill requirement 12 (Cheap) @table:usabilityRequirements by not being a very costly component.
+*/
+To address usability requirements 4 (Feedback), 11 (Engaging), and 12 (Cheap) as listed in @table:usabilityRequirements, a display was incorporated into the design. The selected component was the Pico Display Pack 2.0, which is based on the ST7789 display driver. This particular display was chosen for its compatibility with the Picos used in the project, its compact physical dimensions, and cost-effectiveness, thereby supporting the project's goal of maintaining affordability.
+
 
 Initial testing was carried out using example code provided by Adafruit for the display. The code was successfully flashed onto the Pico and produced a "Hello World" output directly on the display itself as seen in @fig:helloworlddisplay.
 
@@ -110,22 +121,45 @@ As the display is originally intended to be mounted directly on top of the Pico,
 
 === NFC Reader
 
+Both the Parallax RFID Reader (\#28140) @parallaxcom_rfid_2024 and the RC522 module @arduinotechdk_rfid_2019 were considered for implementing NFC functionality. After brief testing and evaluation, the RC522 was chosen.
+
+The decision primarily rested on two factors: physical size and cost. The Parallax reader measured nearly twice the size of the RC522, which made it less suitable for a compact controller setup (see Requirement 3, @table:usabilityRequirements). Given the limited inner space of the controller, the RC522’s smaller form was a better fit.
+
+In terms of cost, the Parallax reader was significantly more expensive, priced around 25–30 USD #text(red)[kilde], whereas the RC522 was available for under 5 USD #text(red)[kilde]. As cost-efficiency was a central design criterion (see Requirement 12, @table:usabilityRequirements), selecting a module that was almost six times cheaper aligned better with the project's goals.
+
+Although the RC522 required a slightly more involved setup process—using SPI and initializing via Circuitpython libraries such as `mfrc522`, it fully supported the necessary NFC functionality. The trade-off in ease of use was considered acceptable given the substantial advantages in size and price.
+
+For simple experimentation with the RC522, a guide by @alam_using_2023 was followed. This resulted in a basic breadboard setup where the RC522 was connected to a Pico and two differently colored LEDs. The functionality of the code was kept simple, but was slightly modified to store the labels of the NFC cards as instrument names. When a card was scanned, the corresponding LED was activated, and a message was printed to the console indicating which instrument had been selected. Scanning the other card switched the active LED and updated the console output to match the second card’s assigned instrument.
+
+#figure(
+  image("../images/nfcFirstSetup.jpg", height: 20%),
+  caption: [Initial NFC Test],
+) <fig:nfcFirstSetup>
+
 === Musical interaction
+The last technical element experimented with during the first sprint was buttons and their connectivity with the Pico 1's. This was discovered to be very easy using Circuitpython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these a GPIO pin on the Pico 1 could easily be referenced (@listing:buttonsPullUp:1), the pin could easily be defined as an input pin (@listing:buttonsPullUp:3), and the pin could finally easily be pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4). It was decided that these libraries should be the backbone of how the controllers would read user input. It was, however, also noted, that button debouncing #cite(<wright_what_2022>) would probably be required in the future depending on the final buttons used.
 
+#figure(
+  ```cpy
+  POT_PIN = board.GP13
+  btn = digitalio.DigitalInOut(POT_PIN)
+  btn.direction = digitalio.Direction.INPUT
+  btn.pull = digitalio.Pull.UP
+  ```,
+  caption: [Code pulling input-pin GP13 to high.]
+) <listing:buttonsPullUp>
 
+Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs #cite(<noauthor_analog_nodate>). It was decided this library was to be used for reading the potentiometers.
 
 == Paper prototype
 #figure(
-  grid(
-    columns: 2,
-    gutter: 25pt,
-    image("../images/paperprototype1.jpg", height: 25%),
-    image("../images/paperprototype2.jpg", height: 25%)),
+ image("../images/paperprototype.png", height: 25%),
   caption: [Paper Prototype],
 ) <fig:paperprototype>
 
+To facilitate a shared understanding of the product's physical layout within the team, a paper prototype was created, as illustrated in @fig:paperprototype. The prototype was constructed at a 1:1 scale using multicolored cardboard and adhesive tape to accurately represent the intended dimensions of the final product. Interface components were color-coded: the display was represented by a blue cutout, buttons by red cutouts, and potentiometers by pink cutouts. In addition to supporting a shared understanding, the prototype functioned as a tool for assessing usability and interface intuitiveness in the early stages of development.
 
-A paper prototype was developed, as shown in @fig:paperprototype, to establish a common understanding within the team regarding the product's physical layout. On the prototype, the blue cardboard cutout represents a display, the red cutouts buttons and the pink cutouts; potentiometers. It also served as a preliminary tool for evaluating usability and interface intuitiveness. The prototype was constructed from multicolored cardboard and assembled using tape. It was produced at a 1:1 scale to accurately represent the dimensions of the intended final product. 
+The initial design was influenced by the layout of drum pads #text(red)[cite], which is reflected in the arrangement of components on the prototype. The design incorporated eight buttons and four potentiometers, selected to balance simplicity and functionality with the physical constraints of the box's size. These choices were informed by the usability requirements in @table:usabilityRequirements, specifically requirements 2 (Portability), 3 (Size), and 9 (Intimidating). Furthermore, the overall dimensions were also in part decided by the availability of a Bambu Lab A1 Mini 3D #text(red)[cite] for further prototyping, which limited the footprint to approximately 25cm x 25cm x 25cm.
 
 === Testing
 The prototype was tested by a student enrolled in the Game Development and Learning Technology program, allowing for initial feedback on usability. Due to the tester's personal connection to the team, feedback was looked upon with caution to mitigate potential bias. 

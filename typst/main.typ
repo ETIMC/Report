@@ -40,7 +40,17 @@
 Total word count: #total-words \
 Total character count: #total-characters
 
-#cite(<aleksandra_acker_relationship_2015>, supplement: "p. 63-67")
+#import "@preview/codly:1.3.0": *
+#show: codly-init.with()
+#codly(
+  languages: (
+    cpy: (name: " CircuitPython", icon: emoji.snake, color: rgb("#652f8e")),
+  )
+)
+
+#import "@preview/subpar:0.2.2"
+
+
 = Acronyms and Terms
 #include "Acronyms and Terms.typ"
 <no-wc>
