@@ -1,4 +1,6 @@
-= Sprint 2 transcriptions <app:Test>
+#heading([Sprint 2 transcriptions], outlined: false)
+<app:Test>
+
 #figure(
   placement: none,
   rect(image("appendices/sprint-2-test/Test 1.svg", width: 92%), radius: 2mm)

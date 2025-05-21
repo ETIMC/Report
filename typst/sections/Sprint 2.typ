@@ -15,7 +15,7 @@ During internal testing it was also discovered that there was a small but notice
 
 Lastly, it was sometimes experienced that a controller would disconnect from the host without the host ever finding out. To fix this, heartbeat-messages were implemented. They worked by having the host sending a heartbeat request message to the controller every few seconds. If the controller didn't answer the heartbeat three times in a row, the Host would forget the Controller.
 
-== Host MIDI interface
+== Host MIDI interface <sec:sprint2HostMidiInterface>
 During early host development, two diagrams (@fig:diagramMessageFlow) were drafted to clarify controller-to-host interactions. One diagram illustrated how input signals (button presses and potentiometer turns) should be sent to, and processed by, the host (@fig:DevicePlayingDiagram). Controllers were required only to emit a simple message identifying the activated input; all higher-level processing would occur on the host.
 
 #subpar.grid(
@@ -118,88 +118,122 @@ By following the schematic, all components were successfully connected on a brea
 === General setup of Controller
 
 ==== Buttons
+Four tactile switch buttons @adafruit_tactile_nodate were added to the breadboard, according to the schematic. Each button was connected to the Pico using an internal pull-up configuration which recives input when the buttons are pressed, and they were connected to ground. Code was implemented so that, when a button was pressed, the controller sent a corresponding message to the host indicating which button had been activated (e.g., “Button 3 pressed”).
+
+
+#figure(
+  ```cpy
+# Check for button press (transition from not pressed to pressed)
+if current_state == False and self.button_states[idx] == True:
+  print(f"Pressed button: {idx}")
+  self.wifi_handler.send_note(idx)
+  await asyncio.sleep(self.debounce_time)  # Debounce delay
+  ```,
+  caption: [.]
+) <listing:buttons>
+
+
+/*
 - Setup buttons on breadboard.
 - som nævnt i sprint 1, bruges pull-up resistor, sat op som schematic
 - tilføjet kode om at man trykker på knapper - sender besked til hosten (ikke yddyb for meget, blot knap 1 sender "jeg er 1")
 - Noget om knap koden (asyncio) + gammel debouncing (David)
-
+*/
 ==== NFC Reader
 
-- sættes sammen på breadboard med resten
-- Opdager at DEN tager for meget tid (blokere resten af koden, scanner hele tiden) (pt. uden læse knap) (eksperimentation, andre bib og timeout værdi)
-  - På trods af brug a asyncio (nævnt tidliger)
-  - Løst ved læse knap (sensor) for at scanne (nævn i testen at børnene glemte at bruge den, så det måske skal laves om til automatisk sensor)
-- slutning: sender wifi besked til hosten, om hvilket instrument der skal spilles
+When the NFC reader was integrated into the controller breadboard, several issues were encountered. Although the module had functioned correctly in earlier isolated tests, the NFC code now blocked the other components, as it continuously attempted to read cards. Various libraries and timeout adjustments were tested, and even the use of `asyncio()` failed to resolve the issue, as the code continued to block.
+The solution was to add a physical read button next to the NFC reader, acting as a sensor, which had to be pressed to initiate a card scan. This approach resolved the problem by allowing the rest of the system to operate uninterrupted. In practice, the NFC reader was therefore moved to a smaller breadboard because of space problems. This also made it easier to operate, as it was not all pressed compactly together.
 
-/*
-When integrating the NFC reader into the controller breadboard setup, numerous problems were encountered. Although the module had worked in earlier isolated tests, the code failed to function properly when implemented alongside the other components. Several alternative code examples were tested, but the reader consistently failed to return reliable results. It was suspected that the reader was experiencing overload from continuous polling since it happened every 50 milliseconds.
+The button was monitored in an asynchronous loop (@listing:nfcReadWButton:1) that repeatedly checked its state every 100 milliseconds (@listing:nfcReadWButton:6). When the button was pressed (@listing:nfcReadWButton:4), a message was printed to the console and the `read_nfc()` function was called (@listing:nfcReadWButton:6). This function sent a request to the RFID module to look for a card (@listing:nfcReadWButton:11).  When a card was found(@listing:nfcReadWButton:17) it was compared to the card labels (@listing:nfcCardLabels). If the card matched a label, a message was then sent to the host indicating which instrument the card represented @listing:nfcReadWButton:19).
 
-To isolate the issue, the NFC reader was temporarily moved to a clean breadboard, disconnected from the rest of the system. This allowed for targeted experimentation. During this process, a new library circuitpython-mfrc522 #text(red)[kilde] was discovered. The library proved more stable and easier to work with compared to the previously used codebase.
-
-Instead of polling continuously, the revised implementation introduced a physical button that triggered card reads only when pressed. This resolved the suspected overload issue. Additionally, the library required the reader to be explicitly re-initialized with rfid.init() before each read; omitting this line caused the reader to behave unpredictably over time. The updated code also configured the reader for SPI communication using the necessary pins (SCK, MOSI, MISO, RESET, and Chip Select). When a card was presented, the reader retrieved its UUID, converted it into a hexadecimal string, and compared it against predefined labels. After each read—regardless of whether the card was recognized—the reader was re-initialized to maintain system stability.
-
-With these changes, the NFC reader began functioning reliably and was subsequently reconnected to the main controller breadboard for continued integration and testing.
-
-Using this library, a simplified script was developed where a physical button was used to trigger each read attempt, instead of polling continuously. Pressing the button would initiate the card check. The following adjustments were made to ensure stable operation:
-
-    The NFC reader was explicitly re-initialized on each read using the rfid.init() command. This line turned out to be critical; without it, the module failed to operate correctly over time.
-
-    The script initialized the MFRC522 module for SPI communication by setting up the required pins: SCK, MOSI, MISO, RESET, and Chip Select.
-
-    When a card was presented, the module retrieved its UUID, converted it into a hexadecimal string, and compared it against predefined card labels.
-
-    Regardless of whether the scanned card was recognized, the module was re-initialized after every read, ensuring consistent performance in subsequent reads.
-
-These changes resolved the earlier issues. The NFC reader operated reliably under the new setup and was subsequently reintegrated into the controller’s main breadboard circuit for continued development and testing.
+To ensure the reader continued working reliably, it was reinitialized on each read (@listing:nfcReadWButton:24). Without this line, the reader would occasionally fail after repeated scans.
 
 
-When the NFC reader was connected to the breadboard, several issues arose. The code used during earlier experimentation no longer functioned as expected, which led to the need for further testing with alternative implementations. 
+#figure(
+  ```cpy
+async def check_nfc_sensor(self):
+  while True:
+    # If button is pressed
+		if not self.sensor.value:
+			print("Reading RFID card...")
+			self.read_nfc()
+		await asyncio.sleep(0.1)
+
+def read_nfc(self):
+	# Request for a card in idle mode
+	(status, tag_type) = self.rfid.request(self.rfid.REQIDL)
+	if status != self.rfid.OK:
+		print("No card detected.")
+		return
+
+  # Check if the card UID matches a known label
+	if card_str in self.card_labels:
+		print("Card recognized as:", self.card_labels[card_str])
+		self.wifi_handler.send_instrument_change(self.card_labels[card_str])
+	else:
+		print("Unknown card.")
+
+  # Reinitialize the RFID module
+  self.rfid.init()  
+  ```,
+  caption: [Button for reading NFC cards]
+) <listing:nfcReadWButton>
 
 
-It appeared that the NFC reader was being overloaded by continuous read attempts. 
+//- sættes sammen på breadboard med resten
+//- Opdager at DEN tager for meget tid (blokere resten af koden, scanner hele tiden) (pt. uden læse knap) (eksperimentation, andre bib og timeout værdi)
+ // - På trods af brug a asyncio (nævnt tidliger)
+//  - Løst ved læse knap (sensor) for at scanne (nævn i testen at børnene glemte at bruge den, så det måske skal laves om til automatisk sensor)
+//- slutning: sender wifi besked til hosten, om hvilket instrument der skal spilles
 
-To address this new libraries was experienced with. The library by (#text(red)[kilde]) was chosen, which simplified the code and made it easier to work with. A button was introduced to trigger card reads only when pressed, replacing the previous setup where the reader constantly polled for cards.
-
-This change resolved the issue, and the NFC reader began functioning reliably again. It was then reconnected to the main controller breadboard for continued integration and testing.
-*/
-- Many problems
-  - Code from sprint 1, did not work, when implemented on the breadboard with the other components...
-- Tested and tried different code examples, but RFID reader could not properbly do it
-  - Maybe because overbelastning?
-- Implemented on "clean" breadboard (away from other components) 
-  - Found new library from https://github.com/domdfcoding/circuitpython-mfrc522
-    - Made it easier
-    - Simple code - push button to read card
-      - Importent line! 'rfid.init()' which reinitialize the RFID module
-        - Does not work properly without that line!
-      - Initializes the RFID reader (MFRC522) by setting up the necessary pins for SPI communication (SCK, MOSI, MISO, RESET, and Chip Select)
-      - Button to trigger trying to read (button pressed = active low = reading)
-        - Code sends request to check if there is a card
-          - Presented card - retrieves the cards UUID (uniques identifier)
-          - Converts the UUID into a hex string, so it can be compared with the card_label
-            - If cards UUID matches, print result
-        - After reading card (whether it was known or unknown), the code reinitializes the RFID reader to prepare for the next read. This ensures that the system remains stable and can read cards correctly over time
 
 
 ==== Display
+As explained in #text(red)[cite paragraph], Adafruit's example code served as the foundation for the display's implementation. However, the original code was modified to support image rendering, rather than solely displaying text. Through experimentation, the function presented in @listing:displayImage was created to encapsulate the image loading process.
 
-aktiveres af NFC læser + evt. kode derfra
+#figure(
+  ```cpy
+def display_image(image_file):
+    splash = displayio.Group()
+    display.root_group = splash
 
-==== SPI Issues
+    try:
+        bitmap = displayio.OnDiskBitmap(image_file)
+        image_sprite = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        splash.append(image_sprite)
+    except Exception as e:
+        print(f"Error loading image: {e}")
 
-efter skærmen er sat til nfc ustabil
-  tog tid før at vi fandt ud af at det var skærmen der var problemet
-prøvede forskjellige ting - bla. om det er fordi de begge bruger den samme indbygede timer på picoen
-  sandsynligvist pga deling af spi bus, bib understøttede ikke delt spi bus
-Beslutning til test: skærm for sig selv, med egen pico
+  ```,
+  caption: [`display_image(image_file)` function to load images onto the display.]
+) <listing:displayImage>
 
-beslutning om ændring: skærm og nfc skal have hver deres spi bus
+Within this function, the variable `splash` is first instantiated as a `display.io` group, which is then assigned as the display's `root_group` (@listing:displayImage:2 to @listing:displayImage:3). A `try-except` block is utilized (@listing:displayImage:5 to @listing:displayImage:10) to attempt the creation of a bitmap from the provided `image_file`, which is subsequently appended to the `splash` group.
 
+To achieve the desired interaction between the display and the NFC reader, integration was implemented via the SPI protocol. Within the `def read_nfc(self)` function, a task is initiated wherein `display_image` is invoked upon successfull card recognition (@listing:NFCDisplay:6). The card's label is converted into a string, which is then used to determine the correspodning image to be loaded on the display (@listing:NFCDisplay:7).
+
+#figure(
+  ```cpy
+#Check if the card UID matches a known label
+if card_str in self.card_labels:
+    print("Card recognized as:", self.card_labels[card_str])
+    self.connection_handler.send_instrument_change(self.card_labels[card_str])
+    asyncio.create_task(
+      self.display_controller.display_image(
+      "/images/" + self.card_labels[card_str] + ".bmp")
+  ```,
+  caption: [Codesnippet from the function: `def read_nfc(self)` in nfc_handler.py.]
+) <listing:NFCDisplay>
+
+In the initial circuit design, both the NFC reader and the display were intended to operate on a shared SPI bus. However, upon integrating the display, the NFC reader began exhibiting unstable behavior, failing to consistently recognize cards. To resolve this issue, several potential causes were investigated, including the possibility of timing conflicts arising from shared use of the Pico's internal timer. Efforts were also made to interpret error messages generated under the shared SPI configuration. Ultimately, after numerous attempts, the circuit design was revised so that each component operated on a dedicated SPI bus, which successfully resolved the issues.
 
 ==== Potentiometers and multiplexer
+To accommodate the requirement of integrating four potentiometers into the circuit, a multiplexer was chosen to address the limitation of available GPIO pins on the Pico. The specific component selected for this purpose was the Texas Instruments 74HC4051 multiplexer #text(red)[cite].
 
-- Potentially put on potentiometers, and figure out functionality.
-- Tested multiplexer in its own circuit with three LED's, which worked! (to test its functionality)
+To verify the functionality of the multiplexer, an initial test circuit was constructed using three LEDs. In this setup, the Pico was programmed to send signals to different channels of the multiplexer, thereby activating each LED in succession. 
+
+A second test environment was developed using potentiometers. Here, the approach involved configuring the Pico to read inputs from the various potentiometers by selecting the appropriate channels on the multiplexer. During this testing phase, it was observed that leaving unused multiplexer channels unconnected led to unstable behavior; the analog readings would fluctuate and interfere with one another. This issue was resolved by grounding the unused pins, which stabilized the readings and ensured proper functionality.
+
 
 === General setup of Host
 The Host was very simply implemented on a breadboard as it only consisted of a Pico 2. By using WiFi no other wires had to be added. However, difficulties arose that led to adding LED's to the Host breadboard prototype.
@@ -261,9 +295,14 @@ When a controller connected to the Host the LED would blink blue, and when it di
 The second LED was programmed to display MIDI information. In practice this meant that it would blink according to the MIDI `TimingClock` message sent by Ableton to the Host.
 
 == Fusion 3D Experimentation
-- Design chassis (sketches first)
-- First button/pad designs
-- Possibly potentiometer handles
+
+
+- Kassen
+  - passede fysiske dimisioner 
+  Bund med hjørner, med hul til sidepanel
+
+- Sidepanel
+
 
 == Pixelart for the display
 #figure(

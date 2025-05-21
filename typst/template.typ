@@ -150,7 +150,9 @@
     }
 
     // Add margin to figures
+    //set figure(placement: auto) // Change this to have image autoposition themselves (at either top or bottom)
     show figure: set block(spacing: 1.5em)
+    
 
   // Numbering and spacing of math
   set math.equation(numbering: "(1)")

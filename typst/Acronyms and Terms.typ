@@ -9,6 +9,7 @@
 - UID: Unique identifier
 - TCP: Transmission Control Protocol
 - UDP: User Datagram Protocol
+- $I^2C$: Inter-Integrated Circuit
 
 == Terms
 - Host: Device connected to a computer, interfacing with Ableton Live and Controllers.
