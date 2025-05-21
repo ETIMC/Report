@@ -31,6 +31,25 @@
 - Planned testing.
   - Conducted testing
 
+=== Instruments
+- på baggrund af sprint 2 test
+- Noget om flere kort (trompet+guitat), lyde dertil, pixelart
+  
+=== noget om kablet
+  
+=== Schmatic
+
+=== PCB
+
+==== Design
+
+==== Production
+
+=== Chassis Design
+
+==== CAD design
+
+==== 3D printing
 == Testing on the Target Group
 
 *Mechanical Turk, Wizard of Oz test*

@@ -1,4 +1,6 @@
-At the start of the project period, it was decided to create a project revolving around music, experimentation, exploration, and tangibility. To further narrow down the different possible subjects, an idea generation session utilizing the brainstorming method #text(red)[cite!] was conducted, using Figma Jamboard #text(red)[cite!] as its medium. Various ideas were explored, and the most interesting ideas were as follows: 
+#import "@preview/subpar:0.2.2" 
+
+At the start of the project period, it was decided to create a project revolving around music, experimentation, exploration, and tangibility. To further narrow down the different possible subjects, an idea generation session utilizing the brainstorming method #text(red)[cite!] was conducted, using Figma Jamboard #text(red)[cite!] as its medium (@fig:FigmaIdeaGeneration). Various ideas were explored, and the most interesting ideas were as follows: 
 
 + Modular blocks with magnets that can be attached together to make a music-piece.
   - Could be a cooperative experience where more than one person decides the placement of a block in the system.
@@ -13,3 +15,13 @@ At the start of the project period, it was decided to create a project revolving
 + Classic piano roll where different modules can be attached. 
 
 The second idea, cooperative modules for music experimentation utilizing an NFC reader, with a target group of 9 to 12-year-olds, was selected as the basis for the project.
+
+#subpar.grid(
+  rows: (auto, auto),
+  caption: [Brainstorm made in FigJam.],
+  label: <fig:FigmaIdeaGeneration>,
+  figure(image("../images/FigmaIdeaGeneration1.png", width: 90%),
+    caption: [Post-it notes brainstorm.]),
+  figure(image("../images/FigmaIdeaGeneration2.png", width: 90%),
+    caption: [Organized brainstorm.]),
+)  

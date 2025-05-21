@@ -36,7 +36,7 @@
 )
 
 #import "@preview/wordometer:0.1.4": word-count, total-words, total-characters
-#show: word-count.with(exclude: (<no-wc>))
+#show: word-count.with(exclude: (<no-wc>, figure))
 Total word count: #total-words \
 Total character count: #total-characters
 

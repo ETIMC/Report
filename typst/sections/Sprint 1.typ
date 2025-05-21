@@ -14,10 +14,10 @@ During this sprint, technical and usability requirements were formulated, a pape
 Usability and technical requirements were formulated to streamline and focus product development. By defining these criteria, decisions made later in the process could be evaluated against the core objectives of the product, ensuring consistency and minimizing feature creep. Additionally, explicitly specifying the requirements ensured a uniform understanding of the project’s goals.
 
 === Usability Requirements
-All requirements are listed in @table:usabilityRequirements.
+All usability requirements are listed in @table:usabilityRequirements.
 The requirements were developed taking the target group's technical proficiency and prior musical knowledge into consideration. As a result, requirements 7 (Beats and Consistency) and 10 (Prior musical knowledge) were defined to ensure a positive user experience for both children with, and without prior experience playing instruments. Requirement 7 (Beats and Consistency) partly fulfills this by accommodating user timing inconsistencies without negatively affecting the produced music. Furthermore, the palette of playable notes should be predefined to make played music harmonically pleasing; even when used by individuals without any prior music theory knowledge.
 
-Requirement 1 (Cooperative play) was considered highly important, as relevant literature highlights the value of collaborative learning and interaction #text(red)[Newton-dunn 2003 cite.] Requirements 2, 3, 4, 6, and 11 (Portable device, Size, Feedback, Plug'N'Play, and Engaging) were defined to create a streamlined experience using the product for the intended users, both making it easy to use and usable in multiple settings. Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex. Furthermore, it should not closely resemble real instruments, as these themselves can seem complex or intimidating for non-musicians #text(red)[cite here].
+Requirement 1 (Cooperative play) was considered highly important, as relevant literature highlights the value of collaborative learning and interaction #cite(<newton-dunn_block_2003>) Requirements 2, 3, 4, 6, and 11 (Portable device, Size, Feedback, Plug'N'Play, and Engaging) were defined to create a streamlined experience using the product for the intended users, both making it easy to use and usable in multiple settings. Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex. Furthermore, it should not closely resemble real instruments, as these themselves can seem complex or intimidating for non-musicians #text(red)[cite here].
 
 Finally, requirement 8 (Looping) regards allowing users to record and later accompany themselves with different sounds, allowing users to create something they can show others, which further fosters an engaging experience #text(red)[cite here].
 
@@ -34,10 +34,10 @@ Finally, requirement 8 (Looping) regards allowing users to record and later acco
   [6], [Plug'N'Play], [Product should be easy to set up, use, and pack away.],
   [7], [Beats and Consistency],[Music beat should be consistent and on time, notes should match ensuring everything "sounds good".],
   [8], [Looping],[Small music pieces should be able to be recorded on- and looped directly from the product.],
-  [9], [Not intimidating],[Users should not feel intimidated by using the product],
+  [9], [Not intimidating],[Users should not feel intimidated by using the product.],
   [10], [Prior musical knowledge],[Should be fun for both children who are well-versed in playing music, and those with no prior knowledge.],
-  [11], [Engaging],[Usage should feel engaging.],
-  [12], [Cheap], [The devices should be cheap to make it as accessible as possible.]
+  [11], [Engaging],[Usage should feel engaged.],
+  [12], [Cheap], [The product should be cheap to make it as accessible as possible.]
   
   ),
   caption: [Usability requirements]
@@ -46,11 +46,13 @@ Finally, requirement 8 (Looping) regards allowing users to record and later acco
 === Technical Requirements
 All technical requirements can be found in @table:technicalRequirements.
 
-Requirement 1 (MCU) was defined to ensure the product would be powerful while also being cheap, as requirement 12 (Cheap) in @table:usabilityRequirements also states was important. By choosing a MCU instead of a complete computer the devices would be simplified while still maintaining a high degree of flexibility, ease of use and affordable pricing. Furthermore, the MCU should afford wireless compatibility as stated in requirement 4 (Wireless connection). Wireless connectivity was decided upon to provide some of the flexibility required by requirement 2 in @table:usabilityRequirements. More precisely, WiFi was chosen as the standard of choice to enable lower latency than other products such as Bluetooth #cite(<sharrow_speed_2025>). 
+Requirement 1 (MCU) was specified to balance processing power with cost-effectiveness, aligning with requirement 12 (Cheap) in @table:usabilityRequirements. Selecting a microcontroller over a full-fledged computer simplifies the device architecture while preserving flexibility, user-friendliness, and affordability. The chosen MCU platform also needed built-in support for wireless communication, per requirement 4 (Wireless Connection).
 
-Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the microcontrollers from introducing latency that would conflict with requirement 9 (Low Latency) in @table:usabilityRequirements. To address this, a dedicated MIDI host was specified to handle part of the controllers’ functionality externally.
-Requirement 3 (Ableton Live) was introduced to further offload sound generation from the microcontrollers to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation.
-The host acts as the central connector in the system, interfacing between the controllers (Requirement 4: Wireless Connection) and Ableton Live, ensuring smooth communication and coordination across all components. (@fig:DeviceRelationsshipsSprint1)
+Wireless connectivity was adopted to satisfy the mobility and ease-of-setup goals of Requirement 2 in @table:usabilityRequirements. Among available options, WiFi was selected for its lower end-to-end latency compared to alternatives like Bluetooth #cite(<sharrow_speed_2025>), ensuring that the system could transmit MIDI data rapidly enough to meet the low-latency requirement 9.
+
+Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the MCU's from introducing latency that would conflict with requirement 9 (Low Latency) in @table:usabilityRequirements. To address this, a dedicated MIDI host was specified to handle part of the controllers’ functionality externally.
+Requirement 3 (Ableton Live) was introduced to further offload sound generation from the MCU's to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation.
+The host acts as the central connector in the system, interfacing between the controllers and Ableton Live, ensuring smooth communication and coordination across all components. (@fig:DeviceRelationsshipsSprint1)
 
 #figure(
   image("../images/DeviceRelationshipsSprint1.png", width: 75%),
@@ -60,17 +62,6 @@ The host acts as the central connector in the system, interfacing between the co
 Requirement 4 (Wireless Connection) was defined as since there would both be a host and multiple controllers, they would all have to communicate. WiFi was therefore chosen as the data communication protocol of choice since it provides a lot of physical flexibility. In relation to the prior requirement, it was logical to also include requirement 7 (Low Power Consumption) to ensure that the product would not need wiring. This consideration further informed the inclusion of requirement 8 (Plug and Play), emphasizing that the product should function immediately upon being powered on, without the need for complex configuration.
 
 Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in correlation to @table:usabilityRequirements's requirement 4 (Feedback). Requiring an NFC reader for the product's usability was inspired by retro gaming consoles and traditional train stamping tickets (danish: klippekort), and adding a screen would make it easy to display which instrument sounds were currently in use and generally provide feedback to the user.
- 
-/*
-1. Cheaper and available even though it limits performance
-2. Since we are limited by performance the controllers shouldn't handle sound generation. Therefore a seperate device, the host, should "combine" the controllers and interface with a computer running ableton live (maybe mention the possibility of not using a computer but then using a Push 3? Is it a competitor?)
-3. The maximise flexibility and portability, the controllers should interface wirelessly with the host. This means each controller needs to manage it's own power.
-4. To live up to the usability requirement, instrument changing should be implemented using NFC cards. This was inspired by retro gaming consoles and train tickets.
-5. To live up to the feedback usability requirement, a screen should be implemented.
-6. To live up to the usability requirements of being modular and plug'n'play devices should be battery- or bus-powered.
-7. It should just work (usability requirement)
-8. (This should perhaps be an earlier requirement) Ableton Live should be used. This was chosen because it was available, and it has many sounds and great MIDI controller interfacing (made for LIVE play)
-*/
 
 #figure(
   table(
@@ -93,14 +84,18 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
 == Hardware experimentation and exploration
 
 === MCU
-Two microcontroller families were evaluated for both the controllers and the MIDI host: the Raspberry Pi Pico series and the Arduino Uno series. Both offer WiFi–capable models and provide sufficient GPIO pins to accommodate the project’s sensors and actuators (buttons, potentiometers, NFC reader, and display). The Arduino platform presented advantages in terms of prior team familiarity, extensive library support, and a well-­established first-party IDE. However, its WiFi–enabled variants carry a significant price premium—often more than double that of comparable RP2040-based boards #cite(<jkollerupdk_raspberry_nodate>) #cite(<ardustoredk_arduino_nodate>).
+Two microcontroller families were evaluated for both the controllers and the MIDI host: the Raspberry Pi Pico series and the Arduino Uno series. Both offer WiFi–capable models and provide sufficient GPIO pins to accommodate the project’s sensors and actuators (buttons, potentiometers, NFC reader, and display). The Arduino platform presented advantages in terms of prior team familiarity, extensive library support, and a well-­established first-party IDE. However, its WiFi–enabled variants carry a significant price premium, often costing more than double that of comparable RP2040-based boards #cite(<jkollerupdk_raspberry_nodate>) #cite(<ardustoredk_arduino_nodate>).
 
-In contrast, the Raspberry Pi Pico series combines very low unit cost with robust performance and library support for both WiFi and MIDI functionality. Although the Pico lacks some of Arduino’s out-of-the-box shield compatibility and IDE simplicity, its community offers both free documentation, tutorials, and many well-made third-party libraries. This balance of affordability, sufficient processing capacity, and ecosystem support aligned closely with the cost-accessibility requirement (Requirement 12) @table:usabilityRequirements.
+In contrast, the Raspberry Pi Pico series combines very low unit cost with robust performance and library support for both WiFi and MIDI functionality. Although the Pico lacks some of Arduino’s out-of-the-box shield compatibility and IDE simplicity, its community offers both free documentation, tutorials, and many well-made third-party libraries. This balance of affordability, sufficient processing capacity, and ecosystem support aligned closely with the cost-accessibility requirement (Requirement 12, @table:usabilityRequirements).
 
-Ultimately, the Raspberry Pi Pico series was selected. The more powerful Pico 2 W was assigned to the host—where heavier computation would be done, and the original Pico W was chosen for the controllers to minimize per-unit expense. This configuration preserves overall system performance and flexibility, while ensuring the final devices remain inexpensive and flexible.
+Ultimately, the Raspberry Pi Pico series was selected. The more powerful Pico 2 W was assigned to the host, where heavier computation would be done, and the original Pico W was chosen for the controllers to minimize per-unit expense. This configuration preserves overall system performance and flexibility, while ensuring the final devices remain inexpensive.
 
 ==== Circuitpython
-While exploring the Raspberry Pi Pico ecosystem the Circuitpython programming language #cite(<adafruit_circuitpython_nodate>) was discovered. Circuitpython is based on Python and promises simplicity, quick prototyping and _"strong hardware support"_ #cite(<schroeder_what_2024>). Furthermore, Circuitpython's creator Adafruit has already created many packages and libraries for everything from interfacing with screens to Bluetooth connectivity. Including packages for working with WiFi #cite(<noauthor_adafruit_2025>) and MIDI #cite(<walters_adafruit_2025>). While testing a Pico 2 was successfully made into hosting a WiFi hotspot using the beforementioned library. Likewise a Pico 1 was successfully configured to connect to the Pico 2's hotspot, and they could successfully exchange messages. For experimenting purposes, using the beforementioned MIDI library, the host was easily configured to act as a MIDI interface, sending MIDI notes on multiple MIDI challenges to an instance of Ableton Live running on a USB-connected laptop.
+While exploring the Raspberry Pi Pico ecosystem the Circuitpython programming language #cite(<adafruit_circuitpython_nodate>) was discovered. Circuitpython is based on Python and promises simplicity, quick prototyping and _"strong hardware support"_ #cite(<schroeder_what_2024>). Furthermore, Circuitpython's creator Adafruit has already created many packages and libraries for everything from interfacing with displays to Bluetooth connectivity, including packages for working with WiFi #cite(<noauthor_adafruit_2025>) and MIDI #cite(<walters_adafruit_2025>). While testing a Pico 2 was successfully made to host a WiFi hotspot using the beforementioned library. Likewise, a Pico 1 was successfully configured to connect to the Pico 2's hotspot, and they could successfully exchange messages. For experimentation purposes, using the beforementioned MIDI library, the host was easily configured to act as a MIDI interface, sending MIDI notes on multiple MIDI channels to an instance of Ableton Live running on a USB-connected laptop. 
+
+The primary drawback of CircuitPython was its confinement of the Pico’s execution to a single CPU core, raising concerns about multitasking performance as the host device needed to manage multiple controllers and a computer concurrently. Fortunately, the discovery of the _asyncio_ library addressed this limitation #cite(<halbert_cooperative_2022>). By providing a cooperative multitasking framework—where functions explicitly yield control and later resume after a specified interval.
+
+This cooperative multitasking model formed the foundation of both the host and controller codebase architectures. During development yielding points were inserted at key stages (e.g., WiFi polling, MIDI message processing, and input scanning), ensuring that network communication, MIDI I/O, and user-input handling all progressed smoothly without blocking each other.
 
 Based on the theoretical capabilities and personal experimentations with Circuitpython, it was decided that the project should be developed using it.
 
@@ -109,7 +104,6 @@ Based on the theoretical capabilities and personal experimentations with Circuit
 */
 To address usability requirements 4 (Feedback), 11 (Engaging), and 12 (Cheap) as listed in @table:usabilityRequirements, a display was incorporated into the design. The selected component was the Pico Display Pack 2.0, which is based on the ST7789 display driver. This particular display was chosen for its compatibility with the Picos used in the project, its compact physical dimensions, and cost-effectiveness, thereby supporting the project's goal of maintaining affordability.
 
-
 Initial testing was carried out using example code provided by Adafruit for the display. The code was successfully flashed onto the Pico and produced a "Hello World" output directly on the display itself as seen in @fig:helloworlddisplay.
 
 #figure(
@@ -117,7 +111,7 @@ Initial testing was carried out using example code provided by Adafruit for the 
   caption: [Initial Display Test],
 ) <fig:helloworlddisplay>
 
-As the display is originally intended to be mounted directly on top of the Pico, further testing was performed to determine the minimum set of pins required for full functionality, as not all pins in the final rendition of the product would be available for the display. This process was complicated by the absence of a formal datasheet for the display; only a schematic was available, which made pin identification more challenging.
+As the display was originally intended to be mounted directly on top of the Pico, further testing was performed to determine the minimum set of pins required for full functionality, as not all pins in the final rendition of the product would be available for the display. This process was complicated by the absence of a formal datasheet for the display; only a schematic was available, which made pin identification more challenging.
 
 === NFC Reader
 
@@ -125,11 +119,55 @@ Both the Parallax RFID Reader (\#28140) @parallaxcom_rfid_2024 and the RC522 m
 
 The decision primarily rested on two factors: physical size and cost. The Parallax reader measured nearly twice the size of the RC522, which made it less suitable for a compact controller setup (see Requirement 3, @table:usabilityRequirements). Given the limited inner space of the controller, the RC522’s smaller form was a better fit.
 
-In terms of cost, the Parallax reader was significantly more expensive, priced around 25–30 USD #text(red)[kilde], whereas the RC522 was available for under 5 USD #text(red)[kilde]. As cost-efficiency was a central design criterion (see Requirement 12, @table:usabilityRequirements), selecting a module that was almost six times cheaper aligned better with the project's goals.
+In terms of cost, the Parallax reader was significantly more expensive, priced around \$25–\$30 USD #text(red)[kilde], whereas the RC522 was available for under \$5 USD #text(red)[kilde]. As cost-efficiency was a central design criterion (see Requirement 12, @table:usabilityRequirements), selecting a module that was almost six times cheaper than its competitor aligned better with the project's goals.
 
-Although the RC522 required a slightly more involved setup process—using SPI and initializing via Circuitpython libraries such as `mfrc522`, it fully supported the necessary NFC functionality. The trade-off in ease of use was considered acceptable given the substantial advantages in size and price.
+Although the RC522 required a slightly more involved setup process, particularly due to the need for SPI communication and manual initialization in CircuitPython, some challenges arose in finding appropriate documentation. Most available libraries for both this exact model and NFC readers in general were designed for MicroPython. However, the library `mfrc522` offered full support for the necessary NFC functionality and proved to be a workable solution. The trade-off in ease of use was considered acceptable, given the substantial advantages in both size and cost.
+  
+Two NFC cards included with the reader were assigned as instruments: one representing a piano and the other a drumset. This led to a basic breadboard setup where the reader was connected to a Pico and two differently colored LEDs. The code was kept intentionally simple, but was adapted to store the labels of the NFC cards as instrument names (@listing:nfcCardLabels). 
 
-For simple experimentation with the RC522, a guide by @alam_using_2023 was followed. This resulted in a basic breadboard setup where the RC522 was connected to a Pico and two differently colored LEDs. The functionality of the code was kept simple, but was slightly modified to store the labels of the NFC cards as instrument names. When a card was scanned, the corresponding LED was activated, and a message was printed to the console indicating which instrument had been selected. Scanning the other card switched the active LED and updated the console output to match the second card’s assigned instrument.
+// Implementet with library from https://github.com/domdfcoding/circuitpython-mfrc522
+//     - Difficult to get working
+//     - Not much "reel" documentation
+//       - Most libraries have (already) been "translated" from micropython
+
+#figure(
+  ```cpy
+  card_labels = {
+    "80710414E1": "tromme",
+    "2ECB5873CE": "klaver",
+  }
+  ```,
+  caption: [Code mapping cards UIDs to labels.]
+) <listing:nfcCardLabels>
+
+The code was also modified to depend on which card was read (@listing:nfcCardChangeLED). When a card was scanned, its UID was compared with the previously scanned card (@listing:nfcCardChangeLED:2) to avoid processing repeated input from the same card. different and matched one of the defined labels—such as the drum card (@listing:nfcCardChangeLED:8)—the corresponding LED was activated (@listing:nfcCardChangeLED:9), and a message was printed to the console indicating which instrument had been selected (@listing:nfcCardChangeLED:6). Scanning the other card switched the active LED and updated the console output to reflect the newly selected instrument. If the UID did not match any known label, a message was printed indicating that the card was unrecognized (@listing:nfcCardChangeLED:16) and both LEDs was turned off (@listing:nfcCardChangeLED:17)(#text(red)[+18]).
+
+#figure(
+  ```cpy
+  # Check if the UID is one of our known cards
+  if (uid != last_uid) or (current_time - last_seen > 2):
+    print("UID detected:", card_str)
+    card_type = card_labels.get(card_str, None)
+    if card_type:
+        print("Card identified as:", card_type)
+        # Perform actions based on card type
+        if card_type == "tromme":
+            yellow.value = False
+            red.value = True
+        elif card_type == "klaver":
+            yellow.value = True
+            red.value = False
+  else:
+      # No card detected; reset previous card and clear LEDs.
+      print("Unknown card detected with UID:", card_str)
+      yellow.value = False
+      red.value = False
+  # Store the detected card UID
+  last_uid = uid
+  ```,
+  caption: [Code depending on which NFC card is read.]
+) <listing:nfcCardChangeLED>
+
 
 #figure(
   image("../images/nfcFirstSetup.jpg", height: 20%),
@@ -173,17 +211,41 @@ The participant's preliminary expectations included functionality for recording 
 Further observations included the importance of tactile feedback and visual indicators such as LEDs. A layout revision was recommended to better support left-handed users, ensuring potentiometer interaction would not obscure the screen. Additional suggestions included the inclusion of a power switch and the use of neutral colors for the device casing.
 
 
-
-
-
-
-
-
-
-
-
 /*
 // GAMMEL
+
+// == Davids notes
+// - Circuitpython made integrating with many devices easy
+//   - Limited Pico to using only one core, which created concerns regarding multitasking
+// - Wifi problems with CYW43 chip
+//   - Cleanup function was made to resolve this. Didn't resolve anything lol
+//   - Ended up being caused by the soft reboots. Hard reboots solved the problem
+// - I.fh.t. Mohis test, skulle padsne være mere som garageband?
+// - Asyncio
+//   - Easy to implement
+//   - Difficult to add error handling
+// - Latency, når wifi enhed forbindes
+// - LED's were setup in different functions. Would be refactored later
+// - Problems with device sometimes not recieving MIDI clock signal
+// - MIDI and LED put into their own classes and files
+
+// == Rebekka's notes
+// - NFC
+//   - Implementet with library from https://github.com/domdfcoding/circuitpython-mfrc522
+//     - Difficult to get working
+//     - Not much "reel" documentation
+//       - Most libraries have (already) been "translated" from micropython
+//   - Working 
+//     - With card labels
+//     - With 2 LEDs for either detected card(1 LED lighted up) or no card (no light in LEDs)
+    
+
+// == Jamie's notes
+// - Adafruit DisplayIO
+//   - Example class for the specific display (ST7789)
+// - The schematic was difficult to read, which led to difficulties finding out which pins were necessary.
+// - No datasheet making it difficult to figure out what the screen can do, or how to set it up.
+
 == Overview
 For this sprint, the team began by thoroughly outlining and planning the product, which would consist of at least two separate hardware devices working together.
 
@@ -274,36 +336,3 @@ To experiment with the integration of a screen the team opted to use the Pico Di
 However, for the implementation needed for the final product the team needed to find out which pins on the display, which originally was created to have a pico sit directly in it, were necessary for the functionality. This proved difficult as no datasheet existed for the device only a schematic with terms the team had not previously seen before. Therefore a significant amount of time was used to figure this out.
 
 */
-
-
-// == Davids notes
-// - Circuitpython made integrating with many devices easy
-//   - Limited Pico to using only one core, which created concerns regarding multitasking
-// - Wifi problems with CYW43 chip
-//   - Cleanup function was made to resolve this. Didn't resolve anything lol
-//   - Ended up being caused by the soft reboots. Hard reboots solved the problem
-// - I.fh.t. Mohis test, skulle padsne være mere som garageband?
-// - Asyncio
-//   - Easy to implement
-//   - Difficult to add error handling
-// - Latency, når wifi enhed forbindes
-// - LED's were setup in different functions. Would be refactored later
-// - Problems with device sometimes not recieving MIDI clock signal
-// - MIDI and LED put into their own classes and files
-
-// == Rebekka's notes
-// - NFC
-//   - Implementet with library from https://github.com/domdfcoding/circuitpython-mfrc522
-//     - Difficult to get working
-//     - Not much "reel" documentation
-//       - Most libraries have (already) been "translated" from micropython
-//   - Working 
-//     - With card labels
-//     - With 2 LEDs for either detected card(1 LED lighted up) or no card (no light in LEDs)
-    
-
-// == Jamie's notes
-// - Adafruit DisplayIO
-//   - Example class for the specific display (ST7789)
-// - The schematic was difficult to read, which led to difficulties finding out which pins were necessary.
-// - No datasheet making it difficult to figure out what the screen can do, or how to set it up.
