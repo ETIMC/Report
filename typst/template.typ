@@ -324,11 +324,19 @@
     bibliography(bibliography-file, title: "References", style: "apa")
   }
   if appendices-file != none {
-    colbreak()
-    heading("Appendices", numbering: none)
-    counter(heading).update(0)
-    set heading(supplement: [Appendix])
-    include(appendices-file)
-    //outline(target: heading.where(supplement: [Appendix]), title: [Appendix], indent: auto)
+  colbreak()
+  heading("Appendices", numbering: none)
+  
+  counter(heading).update(0)
+  set heading(
+    supplement: [Appendix],
+    numbering: "A"
+  )
+  include(appendices-file)
   }
+  outline(
+    target: heading.where(supplement: [Appendix]),
+    title: [Appendices],
+    indent: auto
+  )
 }

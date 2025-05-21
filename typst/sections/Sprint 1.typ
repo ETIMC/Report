@@ -104,7 +104,7 @@ Based on the theoretical capabilities and personal experimentations with Circuit
 */
 To address usability requirements 4 (Feedback), 11 (Engaging), and 12 (Cheap) as listed in @table:usabilityRequirements, a display was incorporated into the design. The selected component was the Pico Display Pack 2.0, which is based on the ST7789 display driver. This particular display was chosen for its compatibility with the Picos used in the project, its compact physical dimensions, and cost-effectiveness, thereby supporting the project's goal of maintaining affordability.
 
-Initial testing was carried out using example code provided by Adafruit for the display. The code was successfully flashed onto the Pico and produced a "Hello World" output directly on the display itself as seen in @fig:helloworlddisplay.
+Initial testing was carried out using example code provided by Adafruit for the display. The code was successfully flashed onto a Pico 2 and produced a "Hello World" output directly on the display itself as seen in @fig:helloworlddisplay.
 
 #figure(
   image("../images/hello-world-display.jpeg", height: 20%),
@@ -197,7 +197,7 @@ Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading a
 
 To facilitate a shared understanding of the product's physical layout within the team, a paper prototype was created, as illustrated in @fig:paperprototype. The prototype was constructed at a 1:1 scale using multicolored cardboard and adhesive tape to accurately represent the intended dimensions of the final product. Interface components were color-coded: the display was represented by a blue cutout, buttons by red cutouts, and potentiometers by pink cutouts. In addition to supporting a shared understanding, the prototype functioned as a tool for assessing usability and interface intuitiveness in the early stages of development.
 
-The initial design was influenced by the layout of drum pads #text(red)[cite], which is reflected in the arrangement of components on the prototype. The design incorporated eight buttons and four potentiometers, selected to balance simplicity and functionality with the physical constraints of the box's size. These choices were informed by the usability requirements in @table:usabilityRequirements, specifically requirements 2 (Portability), 3 (Size), and 9 (Intimidating). Furthermore, the overall dimensions were also in part decided by the availability of a Bambu Lab A1 Mini 3D #text(red)[cite] for further prototyping, which limited the footprint to approximately 25cm x 25cm x 25cm.
+The initial design was influenced by the layout of drum pads #text(red)[cite], which is reflected in the arrangement of components on the prototype. The design incorporated eight buttons and four potentiometers, selected to balance simplicity and functionality with the physical constraints of the box's size. These choices were informed by the usability requirements in @table:usabilityRequirements, specifically requirements 2 (Portability), 3 (Size), and 9 (Intimidating). Furthermore, the overall dimensions were also in part decided by the availability of a Bambu Lab A1 Mini 3D #text(red)[cite] for further prototyping, which limited the footprint to approximately 18cm x 18cm x 18cm.
 
 === Testing
 The prototype was tested by a student enrolled in the Game Development and Learning Technology program, allowing for initial feedback on usability. Due to the tester's personal connection to the team, feedback was looked upon with caution to mitigate potential bias. 

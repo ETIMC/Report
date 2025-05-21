@@ -1,10 +1,10 @@
+#import "@preview/codly:1.3.0": *
+
 == Summarize Sprint 2
-
-
 
 - Conclude what the test from sprint 2 did for the further development plans.
 
-== What we did for this sprint
+== What we did this sprint
 - Further experimentation with Multiplexer functionality
   - To get a stable connection each A-pin on the multiplexer not in use must be set to ground, otherwise the values on the potentiometers will float A LOT and interfere with each other.
 - Further work on Fusion implementation
@@ -31,41 +31,74 @@
 - Planned testing.
   - Conducted testing
 
-=== Instruments
+== Multiplexer experimentation
+
+== NFC Reader and Display SPI solution
+
+== More instruments
 - på baggrund af sprint 2 test
 - Noget om flere kort (trompet+guitat), lyde dertil, pixelart
-  
-=== noget om kablet
-  
-=== Schmatic
 
-=== PCB
+== Lowering latency
+=== UDP
+As discuss in @sec:sprint2WifiProblems, latency, primarily caused by TCP, was experienced when playing on the Controller. To improve this, the WiFi system was changed to use UDP instead.
+This was mostly a simple process. Most rewriting consisted of removing TCP sockets (@listing:exchangingSocketsDiff:1) and exchanging them with the addresses of the controllers (@listing:exchangingSocketsDiff:3). As UDP is not connection-oriented, this was necessary for the host to be able to identify and remember the controllers that connect to it.
 
-==== Design
+This improved the latency a fair bit. Sadly, however, the latency was still noticeable, which lead to a more drastic change being made.
 
-==== Production
+#codly(
+  highlighted-lines: ((1, red.lighten(60%)), (2, red.lighten(60%)), (3, green.lighten(60%)), (4, green.lighten(60%))),
+)
+#figure(
+  ```cpy
+  - def _received_heartbeat(self, socket):
+  -      self.socket_responses[socket] = 0
+  +  def _received_heartbeat(self, addr):
+  +      self.socket_responses[addr] = 0
+  ```,
+  caption: [Example of changing TCP code (red) to UDP code (green) by exchanging sockets for addresses.]
+) <listing:exchangingSocketsDiff>
 
-=== Chassis Design
+=== Wired
 
-==== CAD design
+- To minimize latency, we shifted to a wired connection
+- This is in violation of multiple requirements, but it was considered worth it
+  - Big fear latency would discourage children from playing, as it didn't feel good
+  - Real music instruments are instant. Our product should be as close to that as possible
+  - Allowed remove batteries. More plug'n' play?
+- Steps to do it
+  - First, choose communication protocol. I2C was chosen.
+    - Low pin amount requirements
+  - Implemented on a breadboard
+    - Important to quickly do this to test before wasting too much time with this idea
+    - It worked great, and the code was changed
+  - How should they physically be connected?
+    - USB Type B
+      - Exactly four pins
+      
+== Schematic
 
-==== 3D printing
+== PCB
+
+=== Design
+
+=== Production
+
+== Chassis Design
+
+=== CAD design
+
+=== 3D printing
+
 == Testing on the Target Group
+The test took place at the University of Southern Denmark, where the prototype was evaluated by three participants. Each test took approximately 8 minutes.
 
-*Mechanical Turk, Wizard of Oz test*
+During this test, the first iterations of the product's outer shell was completed, inside a non-functional PCB was installed as seen in @fig:sprint3setup. Additionally, a display with a Pico 2 mounted directly on it was connected to a laptop, allowing the display to be updated manually. This made it possible to conduct a Mechanical Turk/Wizard of Os test #text(red)[cite], where testers were able to simulate the experience of selecting an instrument by inserting an NFC card into the prototype.
 
-The test was conducted at the University of Southern Denmark, where the prototype was evaluated by three individual participants. This test was very informal; a brief introduction was given about the product and the stage it was in. Furthermore, an unstructured interview was conducted. Each testing session lasted approximately 10 minutes.
-
-During this test, the first iteration of the product’s outer shell was completed. Inside the enclosure, a non-functional PCB was installed, featuring pre-drilled holes to accommodate switches and potentiometers, as illustrated in Figure @fig:sprint3setup. Additionally, a screen with a Raspberry Pi Pico mounted directly on its back was placed into the designated cutout. The Pico was connected to a laptop, allowing the display to be updated manually. This setup enabled testers to simulate the experience of selecting an instrument by inserting a card into the prototype.
+Furthermore, during this test A/B, Think Aloud, and unstructured interview methodologies were used. 
 
 #figure(
   image("../images/box-v1.jpeg", height: 25%, width: 40%),
   caption: [Test Setup for Sprint 3],
 ) <fig:sprint3setup>
 
-=== Summarized Feedback
-During testing, participants expressed enjoyment while interacting with the product, despite its incomplete functionality. One participant noted that they believed the product would be highly enjoyable once fully operational.
-
-Additionally, two of the participants had prior formal training in music, specifically in drumming and guitar. Their input provided a valuable perspective on whether the product could motivate users to learn a new instrument. While they personally did not feel inclined to pursue a new instrument, they suggested that the product could be especially beneficial for individuals without prior musical experience. They also expressed enthusiasm for the concept of collaborative play and found the interaction engaging to the point of reluctance in ending the session—leaving the room only after “just one more press of a button.”
-
-When asked about the potential addition of LEDs, all participants favored the idea of a light strip encircling the entire box. They also appreciated the all-black design of the product, and the adjusted size was met with unanimous approval.

@@ -1,16 +1,19 @@
 #import "@preview/subpar:0.2.2"
+#import "@preview/codly:1.3.0": *
 
 During sprint 1 the team planned and began the prototyping of the product. Design choices where made which included that the system would consist of a host device, and one or more controller devices communicating via wifi. Capabilities of making the controller modular, such as experimentation with an NFC reader for deciding the instrument played, and a display visualizing the choice was initiated during the prior sprint. The team also created a paper prototype where a test was held to gather feedback that could then be taken into consideration #text(red)[highlight which parts we used during this sprint to guide the development!]. The sprint successfully established that the components were usable in stand-alone implementations.
 
 == Focus of Sprint 2
 For this sprint the team wanted to interconnect the individual components into a functional breadboard prototype. This for example meant that choosing an instrument using an NFC card would trigger the screen to display a picture of the selected instrument, and change the sounds played through Ableton.
 
-== WiFi problems
+== WiFi problems <sec:sprint2WifiProblems>
 During further WiFi connectivity tests between the Host and a Controller, the Host’s WiFi driver would crash unpredictably, often within a minute of establishing a connection. This instability generated significant confusion, leading to doubts about the viability of WiFi as the communication protocol of choice. As a fallback, Bluetooth was briefly trialed, but its inherent latency was incompatible with the low-latency requirement (Requirement 9, @table:technicalRequirements).
 
 Debugging eventually uncovered a pattern: only a full power cycle of the Pico 2 before initiating the WiFi connection yielded a stable result. In contrast, soft reboots from the REPL almost invariably triggered driver failures shortly thereafter, particularly when performed in rapid succession. By adopting a strict procedure of completely disconnecting and reconnecting power to the Host prior to each WiFi session, the driver crashes ceased entirely, restoring reliable performance.
 
-During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to a sound was played by Ableton Live. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was caused by using the TCP protocol, which contains a lot of extra headers adding overhead to each sent message over WiFi. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
+During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to a sound was played by Ableton Live. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was caused by using the TCP protocol, which contains a extra headers and acknowledgement messages adding overhead to each sent message over WiFi. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
+
+Lastly, it was sometimes experienced that a controller would disconnect from the host without the host ever finding out. To fix this, heartbeat-messages were implemented. They worked by having the host sending a heartbeat request message to the controller every few seconds. If the controller didn't answer the heartbeat three times in a row, the Host would forget the Controller.
 
 == Host MIDI interface
 During early host development, two diagrams (@fig:diagramMessageFlow) were drafted to clarify controller-to-host interactions. One diagram illustrated how input signals (button presses and potentiometer turns) should be sent to, and processed by, the host (@fig:DevicePlayingDiagram). Controllers were required only to emit a simple message identifying the activated input; all higher-level processing would occur on the host.
@@ -207,23 +210,43 @@ During development and internal testing it was discovered that it was difficult 
 The LED's chosen were the _Breadboard-friendly RGB Smart NeoPixel_ #cite(<adafruit_breadboard-friendly_2025>). These were chosen for their availability, flexibility and affordable pricing. By using NeoPixel LED's it became possible to control multiple LED's using only GPIO on the host Pico 2. Furthermore, the _RGB Smart NeoPixel_ LED's are full RGB LED's meaning a single LED can display a wide array of colors. Lastly, as both the NeoPixel LED's and CircuitPython are made by Adafruit, a first-party library made them easy to integrate #cite(<george_adafruit_2025>).
 
 It was decided that that the first LED should be used for connection states. It was programmed to blink yellow while the Host was turning on and setting up it's WiFi hotspot. Upon successfully turning on the LED would turn green.
-When a controller connected to the Host the LED would blink blue, and when it disconnected the LED would blink purple (@listing:handleNewConnectionLed). This was done to monitor the connection of the host and controller without needing to have them both connected to a computer.
+When a controller connected to the Host the LED would blink blue, and when it disconnected the LED would blink purple (@listing:handleNewConnectionLed). This was done to monitor the connection of the host and controller without needing to have them both connected to a computer and was implemented by monitoring the amount of devices connected to the Host's hotspot (@listing:handleNewConnectionLed:4).
 
+#codly(
+  annotations: (
+    (
+      start: 5,
+      end:  11,
+      content: block(
+        width: 20em,
+        align(left, box(width: 100pt)[Blink LED blue if there are more devices than last check.])
+      )
+    ),
+    (
+      start: 12,
+      end:  18,
+      content: block(
+        width: 20em,
+        align(left, box(width: 100pt)[Blink LED purple if there are less devices than last check.])
+      )
+    ),
+  )
+)
 #figure(
   ```cpy
   async def handle_new_connection_led():
     last_stations_len = len(wifi.radio.stations_ap)
     while True:
         current_stations_len = len(wifi.radio.stations_ap)
-        if current_stations_len > last_stations_len: # New device
-            for _ in range(3): # Blink blue
+        if current_stations_len > last_stations_len:
+            for _ in range(3)
                 await set_led(0, 0, 20)
                 await asyncio.sleep(0.25)
                 await set_led(0, 0, 0)
                 await asyncio.sleep(0.25)
             await set_led(20, 20, 0)
-        elif current_stations_len < last_stations_len: # Lost device
-            for _ in range(3): # Blink purple
+        elif current_stations_len < last_stations_len:
+            for _ in range(3):
                 await set_led(20, 0, 20)
                 await asyncio.sleep(0.25)
                 await set_led(0, 0, 0)
