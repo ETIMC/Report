@@ -64,7 +64,7 @@ Total character count: #total-characters
 @app:Test2 \
 @app:Test3
 
-= Literature Review
+= State of the Art
 #include "sections/Literature review.typ"
 
 = Idea Generation
@@ -76,11 +76,14 @@ Total character count: #total-characters
 = Sprint 2
 #include "sections/Sprint 2.typ"
 
-= Sprint 3
+= Sprint 3 <sec:sprint3>
 #include "sections/Sprint 3.typ"
 
-= Sprint 4
+= Sprint 4 <sec:sprint4>
 #include "sections/Sprint 4.typ"
+
+= Sprint 5
+#include "sections/Sprint 5.typ"
 
 = Evaluation 
 

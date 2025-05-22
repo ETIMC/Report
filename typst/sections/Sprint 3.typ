@@ -146,7 +146,7 @@ During internal testing a second Pico 1 was connected to briefly test, how the H
 - Her skal den nye strømløsning nok nævnes (via USB. Brug Pico datasheet igen)
 - David kan også skrive om, at Pico'erne trak for meget strøm
 
-== PCB
+== PCB <sec:PCBsprint3>
 === Design
 To develop a fully functional prototype beyond a breadboard implementation, a custom PCB was designed. During this process, practical considerations such as the placement of mounting holes for integration within the final chassis were taken into account. Additionally, due to the use of specific components that lacked readily available footprints, several custom or modified footprints were created as part of the PCB design.
 
@@ -162,20 +162,36 @@ Once this problem was resolved, a second issue arose due to the change in the pr
   caption: [*Left*: "Fit to Page" scaling problems. *Middle*: Wrong footprint scaling. *Right*: Ink Problems.],
 ) <fig:PCBMistakes>
 
-Later, the production facility reverted to the previous printer configuration, allowing for a successfully fabricated PCB. During the soldering phase, several technical challenges were encountered. These included difficulties related to manual hole drilling, which affected the alignment and stability of mounted components. Additionally, this phase involved working with VIAs for the first time, which proved particularly challenging due to poor solder adhesion, leading to fragile connections. Further inspection of the assembled PCB revealed several design errors as well. These required "hacks" to establish the necessary connections and restore full functionality.
 
 == Chassis Design
 
 === CAD design
+
+v21-v51
+- Standoff til PCB
+  1. cylinder med hul til skrue i midten (v24)
+  2. indsat "PCB" (v49)
+  3. offsetters (v51)
+  
+- NFC holder (NFC læseren + sted til kort, led+ldr)
+  1. tilføjet (v49) 
+  - Side panel nfc
+    1. stor åbning på 5mm (v30)
+- Låg
+  1. Huller til alt, match med PCB (v24)
+- Skruer
+
+
+- Sidepal bagside
+  1. hul til ledning (v30)
+  2. hul til tænd/sluk knap (v49)
 
 === 3D printing
 
 == Testing on the Target Group
 The test took place at the University of Southern Denmark, where the prototype was evaluated by three participants. Each test took approximately 8 minutes.
 
-During this test, the first iterations of the product's outer shell was completed, inside a non-functional PCB was installed as seen in @fig:sprint3setup. Additionally, a display with a Pico 2 mounted directly on it was connected to a laptop, allowing the display to be updated manually. This made it possible to conduct a Mechanical Turk/Wizard of Os test #text(red)[cite], where testers were able to simulate the experience of selecting an instrument by inserting an NFC card into the prototype.
-
-Furthermore, during this test A/B, Think Aloud, and unstructured interview methodologies were used. 
+During this test, the first iterations of the product's outer shell was completed, inside a non-functional PCB was installed as seen in @fig:sprint3setup. Additionally, a display with a Pico 2 mounted directly on it was connected to a laptop, allowing the display to be updated manually. This made it possible to conduct a Mechanical Turk/Wizard of Os test #text(red)[cite], where testers were able to simulate the experience of selecting an instrument by inserting an NFC card into the prototype. Furthermore, during this test A/B, Think Aloud, and unstructured interview methodologies were used. 
 
 #figure(
   image("../images/box-v1.jpeg", height: 25%, width: 40%),

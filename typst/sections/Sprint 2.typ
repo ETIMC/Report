@@ -227,7 +227,7 @@ if card_str in self.card_labels:
 
 In the initial circuit design, both the NFC reader and the display were intended to operate on a shared SPI bus. However, upon integrating the display, the NFC reader began exhibiting unstable behavior, failing to consistently recognize cards. To resolve this issue, several potential causes were investigated, including the possibility of timing conflicts arising from shared use of the Pico's internal timer. Efforts were also made to interpret error messages generated under the shared SPI configuration. Ultimately, after numerous attempts, the circuit design was revised so that each component operated on a dedicated SPI bus, which successfully resolved the issues.
 
-==== Potentiometers and multiplexer
+==== Potentiometers and multiplexer <sec:potsSprint2>
 To accommodate the requirement of integrating four potentiometers into the circuit, a multiplexer was chosen to address the limitation of available GPIO pins on the Pico. The specific component selected for this purpose was the Texas Instruments 74HC4051 multiplexer #text(red)[cite].
 
 To verify the functionality of the multiplexer, an initial test circuit was constructed using three LEDs. In this setup, the Pico was programmed to send signals to different channels of the multiplexer, thereby activating each LED in succession. 
@@ -296,12 +296,21 @@ The second LED was programmed to display MIDI information. In practice this mean
 
 == Fusion 3D Experimentation
 
+Ideen:
+- passede fysiske dimisioner 
+- kunne skilles af for nemmere adgang til indersiden og ændring af kassen uden alt skulle printes igen
+- hul til magneter (skulle ogs være i låget)
+- rundede sider/hjørner (ikke så skart - flere måder)
 
-- Kassen
-  - passede fysiske dimisioner 
-  Bund med hjørner, med hul til sidepanel
-
+- Kassen (første udkast)
+  - Den rigtige tankegang (Bund med hjørner, med hul til sidepanel)
+  - Men bange for at den ville knække, - for tyndt - , derfor redesign
+  - 
+- Kassen (færdig v20)
+  - Mere solid, forhåbenligt - men derfor mindre indre plads (tykkere væge)
 - Sidepanel
+  - Ikke lige, for mere indre plads 
+  
 
 
 == Pixelart for the display
