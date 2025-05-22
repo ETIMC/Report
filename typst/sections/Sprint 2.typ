@@ -11,7 +11,7 @@ During further WiFi connectivity tests between the Host and a Controller, the Ho
 
 Debugging eventually uncovered a pattern: only a full power cycle of the Pico 2 before initiating the WiFi connection yielded a stable result. In contrast, soft reboots from the REPL almost invariably triggered driver failures shortly thereafter, particularly when performed in rapid succession. By adopting a strict procedure of completely disconnecting and reconnecting power to the Host prior to each WiFi session, the driver crashes ceased entirely, restoring reliable performance.
 
-During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to a sound was played by Ableton Live. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was caused by using the TCP protocol, which contains a extra headers and acknowledgement messages adding overhead to each sent message over WiFi. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
+During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to a sound was played by Ableton Live. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was network latency. There were two suggested primary reasons for this. The first one was that the WiFi chip on the Pico 1 and Pico 2 may not have been designed for low-latency communication. A possible solution for this would be exchanging the Pico 1 and Pico 2's for a different MCU. A contender would be the ESP32 line of devices, since they have both a dedicated wireless protocol for low latency communication and a library for sending MIDI messages @espressif_systems_esp-now_2025 @geissl_thomasgeisslesp-now-midi_2025. For affordability and availability reasons, this idea was not further explored. The other possible reason for the latency was the using of the TCP protocol, which contains extra headers and acknowledgement messages adding overhead to each sent message. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
 
 Lastly, it was sometimes experienced that a controller would disconnect from the host without the host ever finding out. To fix this, heartbeat-messages were implemented. They worked by having the host sending a heartbeat request message to the controller every few seconds. If the controller didn't answer the heartbeat three times in a row, the Host would forget the Controller.
 
@@ -118,7 +118,7 @@ By following the schematic, all components were successfully connected on a brea
 === General setup of Controller
 
 ==== Buttons
-Four tactile switch buttons @adafruit_tactile_nodate were added to the breadboard, according to the schematic. Each button was connected to the Pico using an internal pull-up configuration which recives input when the buttons are pressed, and they were connected to ground. Code was implemented so that, when a button was pressed, the controller sent a corresponding message to the host indicating which button had been activated (e.g., “Button 3 pressed”).
+Four tactile switch buttons @adafruit_tactile_nodate were added to the breadboard, according to the schematic. Each button was connected to the Pico using an internal pull-up configuration which receives input when the buttons are pressed, and they were connected to ground. Code was implemented so that, when a button was pressed, the controller sent a corresponding message to the host indicating which button had been activated (e.g., “Button 3 pressed”).
 
 
 #figure(
@@ -139,15 +139,14 @@ if current_state == False and self.button_states[idx] == True:
 - tilføjet kode om at man trykker på knapper - sender besked til hosten (ikke yddyb for meget, blot knap 1 sender "jeg er 1")
 - Noget om knap koden (asyncio) + gammel debouncing (David)
 */
-==== NFC Reader
 
+==== NFC Reader
 When the NFC reader was integrated into the controller breadboard, several issues were encountered. Although the module had functioned correctly in earlier isolated tests, the NFC code now blocked the other components, as it continuously attempted to read cards. Various libraries and timeout adjustments were tested, and even the use of `asyncio()` failed to resolve the issue, as the code continued to block.
 The solution was to add a physical read button next to the NFC reader, acting as a sensor, which had to be pressed to initiate a card scan. This approach resolved the problem by allowing the rest of the system to operate uninterrupted. In practice, the NFC reader was therefore moved to a smaller breadboard because of space problems. This also made it easier to operate, as it was not all pressed compactly together.
 
 The button was monitored in an asynchronous loop (@listing:nfcReadWButton:1) that repeatedly checked its state every 100 milliseconds (@listing:nfcReadWButton:6). When the button was pressed (@listing:nfcReadWButton:4), a message was printed to the console and the `read_nfc()` function was called (@listing:nfcReadWButton:6). This function sent a request to the RFID module to look for a card (@listing:nfcReadWButton:11).  When a card was found(@listing:nfcReadWButton:17) it was compared to the card labels (@listing:nfcCardLabels). If the card matched a label, a message was then sent to the host indicating which instrument the card represented @listing:nfcReadWButton:19).
 
 To ensure the reader continued working reliably, it was reinitialized on each read (@listing:nfcReadWButton:24). Without this line, the reader would occasionally fail after repeated scans.
-
 
 #figure(
   ```cpy
@@ -179,16 +178,13 @@ def read_nfc(self):
   caption: [Button for reading NFC cards]
 ) <listing:nfcReadWButton>
 
-
 //- sættes sammen på breadboard med resten
 //- Opdager at DEN tager for meget tid (blokere resten af koden, scanner hele tiden) (pt. uden læse knap) (eksperimentation, andre bib og timeout værdi)
  // - På trods af brug a asyncio (nævnt tidliger)
 //  - Løst ved læse knap (sensor) for at scanne (nævn i testen at børnene glemte at bruge den, så det måske skal laves om til automatisk sensor)
 //- slutning: sender wifi besked til hosten, om hvilket instrument der skal spilles
 
-
-
-==== Display
+==== Display <sec:Sprint2Display>
 As explained in #text(red)[cite paragraph], Adafruit's example code served as the foundation for the display's implementation. However, the original code was modified to support image rendering, rather than solely displaying text. Through experimentation, the function presented in @listing:displayImage was created to encapsulate the image loading process.
 
 #figure(
@@ -210,7 +206,7 @@ def display_image(image_file):
 
 Within this function, the variable `splash` is first instantiated as a `display.io` group, which is then assigned as the display's `root_group` (@listing:displayImage:2 to @listing:displayImage:3). A `try-except` block is utilized (@listing:displayImage:5 to @listing:displayImage:10) to attempt the creation of a bitmap from the provided `image_file`, which is subsequently appended to the `splash` group.
 
-To achieve the desired interaction between the display and the NFC reader, integration was implemented via the SPI protocol. Within the `def read_nfc(self)` function, a task is initiated wherein `display_image` is invoked upon successfull card recognition (@listing:NFCDisplay:6). The card's label is converted into a string, which is then used to determine the correspodning image to be loaded on the display (@listing:NFCDisplay:7).
+To achieve the desired interaction between the display and the NFC reader, integration was implemented via the SPI protocol. Within the `def read_nfc(self)` function, a task is initiated wherein `display_image` is invoked upon successful card recognition (@listing:NFCDisplay:6). The card's label is converted into a string, which is then used to determine the corresponding image to be loaded on the display (@listing:NFCDisplay:7).
 
 #figure(
   ```cpy
@@ -225,7 +221,7 @@ if card_str in self.card_labels:
   caption: [Codesnippet from the function: `def read_nfc(self)` in nfc_handler.py.]
 ) <listing:NFCDisplay>
 
-In the initial circuit design, both the NFC reader and the display were intended to operate on a shared SPI bus. However, upon integrating the display, the NFC reader began exhibiting unstable behavior, failing to consistently recognize cards. To resolve this issue, several potential causes were investigated, including the possibility of timing conflicts arising from shared use of the Pico's internal timer. Efforts were also made to interpret error messages generated under the shared SPI configuration. Ultimately, after numerous attempts, the circuit design was revised so that each component operated on a dedicated SPI bus, which successfully resolved the issues.
+In the initial circuit design, both the NFC reader and the display were intended to operate on a shared SPI bus. However, upon integrating the display, the NFC reader began exhibiting unstable behavior, failing to consistently recognize cards. To resolve this issue, several potential causes were investigated, including the possibility of timing conflicts arising from shared use of the Pico's internal timers. Efforts were also made to interpret error messages generated under the shared SPI configuration. Ultimately, it was decided that the display and NFC reader should be allocated separate SPI busses in a later iteration.
 
 ==== Potentiometers and multiplexer <sec:potsSprint2>
 To accommodate the requirement of integrating four potentiometers into the circuit, a multiplexer was chosen to address the limitation of available GPIO pins on the Pico. The specific component selected for this purpose was the Texas Instruments 74HC4051 multiplexer #text(red)[cite].
@@ -296,24 +292,29 @@ The second LED was programmed to display MIDI information. In practice this mean
 
 == Fusion 3D Experimentation
 
-Ideen:
-- passede fysiske dimisioner 
-- kunne skilles af for nemmere adgang til indersiden og ændring af kassen uden alt skulle printes igen
-- hul til magneter (skulle ogs være i låget)
-- rundede sider/hjørner (ikke så skart - flere måder)
+The controller needed to be enclosed in a physical chassis. Since a 3D printer was available, it was decided to design the enclosure in Fusion 360 and print it using PLA. As none of the team members had significant experience with CAD modelling, the process involved considerable experimentation and iteration.
+Using the paper prototype as a reference, the first version of the model was created. It featured a flat square base with detachable sides, allowing easier access to the internal components during development. This modular design also made it possible to make small adjustments without reprinting the entire structure. The corners were modelled with slits into which the side panels could slide. Holes for magnets were added to later allow a lid to snap into place. Additionally, all sharp edges were rounded to create a more comfortable and polished finish.
 
-- Kassen (første udkast)
-  - Den rigtige tankegang (Bund med hjørner, med hul til sidepanel)
-  - Men bange for at den ville knække, - for tyndt - , derfor redesign
-  - 
-- Kassen (færdig v20)
-  - Mere solid, forhåbenligt - men derfor mindre indre plads (tykkere væge)
-- Sidepanel
-  - Ikke lige, for mere indre plads 
-  
+The first 3D model (@fig:fus2FirstAttempt) captured the core design, but several issues were quickly identified. The corners did not grip the sides securely, and the overall structure was considered too thin to provide stability. To address this, the corners were resigned to be thicker while keeping the same sliding slit mechanism. The side panels were also adjusted to fit the new corner dimensions. However, this redesign led to reduced internal space. 
+To solve this, a slight inward curve was added to the side panels. This preserved structural stability at the corners while reclaiming space in the center of the enclosure. The updated model (@fig:fus2Assembled) was then 3D printed, as shown in @fig:3DFirstPrintedBox.
 
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Controller chassis' in Fusion.],
+  label: <fig:fus2>,
+  align: top,
+  figure(image("../images/Fusion/fus2FirstAttemptBox.png", width: 100%),
+    caption: [First attempt at designing controller box.]), <fig:fus2FirstAttempt>,
+  figure(image("../images/Fusion/fus2Assembled.png", width: 95%),
+    caption: [Controller chassis after changes.]), <fig:fus2Assembled>
+)
 
-== Pixelart for the display
+#figure(
+  image("../images/Fusion/3DFirstBox.jpg", width: 40%),
+  caption: [3D printed controller chassis.],
+) <fig:3DFirstPrintedBox>
+
+== Pixelart for the Display
 #figure(
   image("../images/pixel-art.png", height: 20%),
   caption: [Instrument Pixel Art],
@@ -323,8 +324,8 @@ All visual assets used for the display were created specifically for the project
 
 For the initial breadboard implementation, two instrument images– a drum and a piano– were created as seen in @fig:pixelart. Feedback obtained during testing indicated interest in additional instruments, specifically a guitar and a trumpet. These images were subsequently developed and included in the system later in the development process.
 
-== Testing on the Target Group
-The test was conducted at the University of Southern Denmark, where the prototype was evaluated by five individual participants. All participants fell within the age range of the intended target group. The testing procedure consisted of a think-aloud part, where testers could experiment using the product while providing feedback. This was followed by an unstructured interview. These methods were selected for their adaptability, which proved particularly beneficial given that the participants were children. This flexibility allowed the children to guide parts of the session by posing questions, offering detailed feedback, or requesting additional guidance on the use of the product and its features. On average, each testing session lasted approximately 10 minutes.
+== Testing
+Testing was conducted at the University of Southern Denmark, where the prototype was evaluated by five individual participants within the target group. These participants were all enrolled at Teknologiskolen @teknologiskolen_om_2025, an extracurricular activity with the focus of teaching kids about hardware. This meant they had prior knowledge of breadboard setups and hardware in general, which made it possible to test a very early implementation of the system without causing the target group too much confusion. The testing procedure consisted of a think-aloud part, where testers could experiment using the product while providing feedback. This was followed by an unstructured interview. These methods were selected for their adaptability, which proved particularly beneficial given that the participants were children. This adaptability allowed the children to guide parts of the session by posing questions, offering detailed feedback, or requesting additional guidance on the use of the product and its features. On average, each testing session lasted approximately 10 minutes.
 
 In one instance, two participants were present in the room simultaneously; however, they completed the test individually and responded to the predefined questions together afterward. All remaining sessions involved one participant at a time.
 
@@ -333,12 +334,15 @@ In one instance, two participants were present in the room simultaneously; howev
   caption: [Test Setup for Sprint 2],
 ) <fig:sprint2setup>
 
-All participants demonstrated a clear enjoyment of musical engagement. Two individuals indicated prior familiarity with keyboard instruments, noting regular usage at home, while none had received formal music education through institutions such as music schools. Participants without previous experience in playing instruments expressed a curiosity and interest in learning. Across the board, testers described the product as intuitive, easy to navigate. No confusion or operational difficulties were reported during interaction with the prototype.
+All participants demonstrated a clear enjoyment of musical engagement. Two individuals reported prior familiarity with keyboard instruments, noting regular usage at home, while none had received formal music training. Participants without previous experience playing instruments expressed a curiosity and interest in learning. Across the board, testers described the product as intuitive, easy to navigate. No confusion or operational difficulties were reported during interaction with the prototype (@app:Sprint2Transcriptions).
 
-Various A/B tests were conducted. In one to determine which switch to use in the final rendition of the product, five of the six participants indicated a preference for the keyboard-style switches over those integrated into the breadboard configuration as seen in @fig:sprint2setup. Another test had the aim of determining the best placement of the NFC reader. Participants favored the positioning of the card reader on the right-hand side of the device. Upon asking, it emerged that all participants were right-handed, raising the possibility of a handedness bias influencing the preference. Additionally, another interaction method was proposed by a participant, which included "swiping" the NFC card along the front panel.
+Various A/B tests were conducted. The first one was to determine which switch to use in the final rendition of the product. The choice was between something like the SKHH-1370651 switches @mouser_electronics_skhhbwa010_2025, and Nuphy low-profile mechanical keyboard switches in the MOSS style @nuphy_nuphy_2025. Here, five of the six participants indicated a preference for the keyboard-style switches over those integrated into the breadboard configuration as seen in @fig:sprint2setup. Another A/B test had the aim of determining the best placement hole to put an NFC card into, this was conducted with the paper prototype. Participants favored the positioning of the hole on the right-hand side of the device. Upon asking, it emerged that all participants were right-handed, raising the possibility of a handedness bias influencing the preference. Additionally, another interaction method was proposed by a participant, which included "swiping" the NFC card along the front panel in the style of contactless payment options, or Rejsekort when travelling with public transport in Denmark.
 
-When asked about how to further incorporate visual feedback, all testers responded positively to the idea of incorporating LEDs, some specifying that color-coded placement near the buttons would be beneficial to enhance association with the pitch of notes as described in the following quote: #quote[Then you could have different colors, like, for the sounds. So if they were deep sounds, they could be dark blue, and if there were lighter ones, they could be light colors, like spring colors. The dark tones could then be winter colors.] (translated from Danish to English) #text(red)[reference to appendix].
+When asked about how to further incorporate visual feedback, all testers responded positively to the idea of incorporating LEDs, some specifying that color-coded placement near the buttons would be beneficial to enhance association with the pitch of notes as described in the following quote: #quote[Then you could have different colors, like, for the sounds. So if they were deep sounds, they could be dark blue, and if there were lighter ones, they could be light colors, like spring colors. The dark tones could then be winter colors.] (translated from Danish to English) (@app:Sprint2Transcriptions).
 
-Durability was briefly addressed by one participant, who raised concerns about the potential for damage if inappropriate objects were inserted into the NFC slot #quote[Can you put other stuff into it? [...] so that it says kaboom?] (translated from Danish to English) #text(red)[appendix reference] or if the device were to be dropped #quote[But what about switches? What if they fall off if you accidentally drop it from the Eiffel Tower?] (translated from Danish to English) #text(red)[appendix reference].
+Durability was briefly addressed by one participant, who raised concerns about the potential for damage if inappropriate objects were inserted into the NFC slot #quote[Can you put other stuff into it? [...] so that it says kaboom?] (translated from Danish to English) (@app:Sprint2Transcriptions) or if the device were to be dropped #quote[But what about switches? What if they fall off if you accidentally drop it from the Eiffel Tower?] (translated from Danish to English) (@app:Sprint2Transcriptions). 
 
-Interaction with potentiometers emerged as an area of concern as participants found them unintuitive and awkward to handle, largely due to their compact physical dimensions and the limited rotational range. Finally, the concept of collaborative play elicited uniformly positive reactions, with all testers expressing enthusiasm about a shared music-making experience. However, one participant noted that simultaneous use of identical instrument sounds could lead to an uncomfortable auditory experience.
+Interaction with potentiometers emerged as an area of concern as participants found them unintuitive and awkward to handle, largely due to their compact physical dimensions and the limited rotational range. Finally, the concept of collaborative play elicited positive reactions, with all testers expressing enthusiasm about a shared music-making experience. However, one participant noted that simultaneous use of identical instrument sounds could lead to an uncomfortable auditory experience.
+
+Finally, one tester showed interest in the power supply options for the product. In response, two possibilities were presented: incorporating batteries or using a wired power connection. The tester indicated a preference for the wired option, as replacing batteries would become an inconvenience. #quote[Yes, but maybe I think it's a bit easier with a cord, you know. Batteries—you actually have to go out and buy them.] (translated from Danish to English) (@app:Sprint2Transcriptions). This was taken into consideration, as testers had difficulty creating beats with the product, which was partly observed to be because of WiFi latency problems.
+

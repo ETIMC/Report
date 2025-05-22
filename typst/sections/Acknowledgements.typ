@@ -1,5 +1,5 @@
-ty to roberto for being a big ass G,
+The team would like to express sincere gratitude to our supervisor, Jacob Nielsen, for his continuous support and enthusiasm throughout the project, and in general, for making it a possibility! His insightful feedback and readiness to provide clarification and guidance were highly valued and contributed significantly to the successful development of the project.
 
-ty to jacob for being a big ass G as well,
+We also extend our thanks to lecturer Roberto Nobrega for his consistent availability and willingness to assist, even outside regular hours. His genuine interest in the project and encouragement throughout the process were greatly appreciated and highly motivating.
 
-love you, byeeeeee
+Lastly, we would like to thank Teknologiskolen and Rosengårdskolen for their collaboration, which enabled us to test the product with the intended target group. The feedback obtained through this collaboration was instrumental in shaping the final design and functionality of the prototype.

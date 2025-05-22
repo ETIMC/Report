@@ -26,16 +26,21 @@
   // Page
   paperSize: "a4",
   columnsAmount: 2,
-  seperateTitlePage: false,
-  useToc: false,
-  seperateTocPage: false,
   firstLineIndentWidth: 1em,
   language: "da",
   region: "dk",
   paragraph-spacing: 1.5em,
   
+  // Title page
+  seperateTitlePage: false,
+
+  // Toc
+  useToc: false,
+  seperateTocPage: false,
+  
   // Bibliography
   bibliography-file: none,
+  
   // Appendices
   appendices-file: none,
 
@@ -82,71 +87,74 @@
 
   // Numbering of headings
   set heading(numbering: "I.A.1.")
+
+  show heading.where(level: 1): head => {
+    set heading(
+    supplement: [Chapter]
+  )
+  }
+  
   show heading: it => context{
-      // Find out the final number of the heading counter.
       let levels = counter(heading).at(here())
-      let deepest = if levels != () {
-        levels.last()
-      } else {
-        1
-      }
+      let deepest = if levels != () { levels.last() } else { 1 }
   
       set text(10pt, weight: 400)
-      // Stop if appendix
-      if it.body == [Appendices] [
-        #set text(12pt)
-        #show: smallcaps
-        #set align(center)
-        #v(20pt, weak: true)
-        #counter(heading).update(0)
-        #it.body
-      ]
-      else if it.supplement == [Appendix] [
-        #set text(10pt)
-        #set par(first-line-indent: 0em)
-        #set align(center)
-        #v(10pt, weak: true)
-        #numbering("A.", deepest)
-        #h(7pt, weak: true)
-        #it.body
-       ] else if it.level == 1 [
-        // First-level headings are centered smallcaps.
-        // We don't want to number of the acknowledgment section.
-        #let is-ack = it.body in ([Acknowledgment], [Acknowledgment])
-        #set text(if is-ack { 10pt } else { 12pt })
-        
-        #show: smallcaps
-        #set align(left)
-        #v(40pt, weak: true)
-        #if it.numbering != none and not is-ack {
+      
+      // Appendices title (special heading)
+      if it.body == [Appendices] {
+        set text(12pt)
+        show: smallcaps
+        set align(center)
+        it.body
+      }
+
+      // Appendix content headings
+      else if it.supplement == [Appendix] {
+        set align(center)
+        v(10pt, weak: true)
+        numbering("A.", deepest)
+        h(7pt, weak: true)
+        it.body
+      }
+      
+       // Level 1: Chapter style
+       else if it.level == 1 {
+         set text(12pt)
+         show: smallcaps
+         set align(left)
+         v(40pt, weak: true)
+         if it.numbering != none {
           numbering("I.", deepest)
           h(7pt, weak: true)
-        }
-        #it.body
-        //#line(length: 100%)
-        #v(13.75pt, weak: true)
-      ] else if it.level == 2 [
-        // Second-level headings are run-ins.
-        #set par(first-line-indent: 0em)
-        #set align(left)
-        #set text(style: "italic")
-        #v(10pt, weak: true)
-        #if it.numbering != none {
+         }
+         it.body
+         v(13.75pt, weak: true)
+      }
+      
+      // Level 2: Run-in section italic
+      else if it.level == 2 {
+        set par(first-line-indent: 0em)
+        set align(left)
+        set text(style: "italic")
+        v(10pt, weak: true)
+        if it.numbering != none {
           numbering("A.", deepest)
           h(7pt, weak: true)
         }
-        #it.body
-        #v(10pt, weak: true)
-      ] else [
-        // Third level headings are run-ins too, but different.
-        
-        #h(1em)
-        #if it.level == 3 {
+        it.body
+        v(10pt, weak: true)
+      }
+      
+      // Level 3+: Different run-ins
+      else {
+        h(1em)
+        if it.level == 3 {
           numbering("1)", deepest)
           [ ]
         }
-        _#(it.body):_
-      ]
+        it.body
+        [: ]
+      }
     }
 
     // Add margin to figures
@@ -305,8 +313,12 @@
         v(10pt, weak: true)
         strong(it)
       }
-      outline(title: [Table of Contents], indent: auto)
-
+      outline(
+        title: [Table of Contents],
+        indent: auto,
+        depth: 2,
+        target: heading.where(supplement: [Chapter]).or(heading.where(supplement: [Section]))
+      )
       
       set par(first-line-indent: firstLineIndentWidth)
   
@@ -325,19 +337,24 @@
     show bibliography: set text(8pt)
     bibliography(bibliography-file, title: "References", style: "apa")
   }
+
+  // Appendix
   if appendices-file != none {
   colbreak()
   heading("Appendices", numbering: none)
   
   counter(heading).update(0)
+
   set heading(
     supplement: [Appendix],
     numbering: "A"
   )
+  
   include(appendices-file)
   }
+  
   outline(
-    target: heading.where(supplement: [Appendix]),
+    target: heading.where(supplement: [Chapter]),
     title: [Appendices],
     indent: auto
   )

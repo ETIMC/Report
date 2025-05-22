@@ -33,8 +33,6 @@
 
 == Multiplexer experimentation
 
-== NFC Reader and Display SPI solution
-
 == More instruments
 - på baggrund af sprint 2 test
 - Noget om flere kort (trompet+guitat), lyde dertil, pixelart
@@ -65,9 +63,9 @@ To completely eliminate the perceived latency, the decision was made to replace 
 The wired solution offered two key advantages that outweighed its drawbacks. First, it removed nearly all latency, delivering an immediate response that felt more natural and expected. Second, it enabled the controllers to draw power directly from the host rather than relying on onboard batteries. Removing batteries not only lightened the controllers portability (Requirement 2, @table:usabilityRequirements), but also reduced product maintenance.
 
 ==== Process
-For managing the now wired connection, $I^2C$ was used. Though SPI had been quicker @campbell_basics_2016 it would also have required another SPI bus on the Pico 1's which was not possible after allocating the NFC reader and the display an SPI bus each. Furthermore, this would require four pins on each Pico 1 and three pins plus one pin for each controller on the host @campbell_basics_2016-1 whereas $I^2C$ only requires two pins on each Pico @campbell_basics_2016.
+For managing the now wired connection, I²C was used. Though SPI had been quicker @campbell_basics_2016 it would also have required another SPI bus on the Pico 1's which was not possible after allocating the NFC reader and the display an SPI bus each. Furthermore, this would require four pins on each Pico 1 and three pins plus one pin for each controller on the host @campbell_basics_2016-1 whereas I²C only requires two pins on each Pico @campbell_basics_2016.
 
-Choosing $I^2C$ over SPI also enabled reusing larger parts of the existing codebase. Since it works by sending frames, which resembles WiFi's HTTP messages that were currently being used, the code changes on the Host were somewhat minimal. The primary code change was in how the host found connected Controllers and read from them. Finding hosts was very easily done by calling `self.i2c.scan()`, which returned an array of connected addresses (@listing:hostScanI2C:4). Reading messages from the host was also very easily though also very different than reading HTTP messages. Whereas HTTP messages worked by having the Controller send the messages and then having the Host read them when ready, $I^2C$ worked by making the Host tell each controller that it was ready to receive messages from the Controllers (@listing:hostScanI2C:9). Only then, could the Controllers send their messages.
+Choosing I²C over SPI also enabled reusing larger parts of the existing codebase. Since it works by sending frames, which resembles WiFi's HTTP messages that were currently being used, the code changes on the Host were somewhat minimal. The primary code change was in how the host found connected Controllers and read from them. Finding hosts was very easily done by calling `self.i2c.scan()`, which returned an array of connected addresses (@listing:hostScanI2C:4). Reading messages from the host was also very easily though also very different than reading HTTP messages. Whereas HTTP messages worked by having the Controller send the messages and then having the Host read them when ready, I²C worked by making the Host tell each controller that it was ready to receive messages from the Controllers (@listing:hostScanI2C:9). Only then, could the Controllers send their messages.
 
 A lot of the earlier code was also refactored, splitting it into multiple files (`connection_handler.py`, `midi_handler.py` etc.), making sure each file only concerned itself with one part of the codebase. This made it easier to maintain and extend.
 
@@ -93,7 +91,7 @@ The controller code was changed a bit more than the Host's code. This was primar
       end:  5,
       content: block(
         width: 22em,
-        align(left, box(width: 100pt)[Wait until Host requests message.])
+        align(left, box(width: 120pt)[Wait until Host requests message.])
       )
     ),
     (
@@ -101,7 +99,7 @@ The controller code was changed a bit more than the Host's code. This was primar
       end:  11,
       content: block(
         width: 20em,
-        align(left, box(width: 100pt)[Pop one element from queue.])
+        align(left, box(width: 110pt)[Pop one element from queue.])
       )
     ),
     (
@@ -109,10 +107,11 @@ The controller code was changed a bit more than the Host's code. This was primar
       end:  13,
       content: block(
         width: 20em,
-        align(left, box(width: 100pt)[Pad the message and send it to the Host.])
+        align(left, box(width: 110pt)[Pad the message to 16 bytes, and send it to the Host.])
       )
     ),
-  )
+  ),
+  annotation-format: none
 )
 #figure(
   ```cpy
@@ -134,17 +133,22 @@ The controller code was changed a bit more than the Host's code. This was primar
   caption: [Controller unloading queue to Host (10), when Host requests messages (2).]
 ) <listing:ControllerI2C>
 
-During internal testing a second Pico 1 was connected to briefly test, how the Host handled having two Controllers connected. The test went well apart from one problem. The host couldn't differentiate between the Controllers. After debugging it was discovered that since the Controller code was simply copied from the first Pico 1 to the other one, they had the same $I^2C$ address set. After changing this address on the second Pico, the two Picos were able to communicate flawlessly with the Host without any noticeable latency or delay.
+During internal testing a second Pico 1 was connected to briefly test, how the Host handled having two Controllers connected. The test went well apart from one problem. The host couldn't differentiate between the Controllers. After debugging it was discovered that since the Controller code was simply copied from the first Pico 1 to the other one, they had the same I²C address set. After changing this address on the second Pico, the two Picos were able to communicate flawlessly with the Host without any noticeable latency or delay.
 
-=== Physical interface
+==== Physical interface
+Standard USB 2.0 Type B to USB 2.0 Type A cables were chosen to physically link the Controllers and Host because they strike an ideal balance between availability, affordability, robustness, and electrical simplicity. These cables are more robust and easier to plug in than smaller connectors, which was believed would highten the portability and plug'N'play usability of the system (Requirement 3 & 7, @table:usabilityRequirements). Most importantly, each cable carries exactly four conductors, and each connector exposes exactly four pins. This meant that two pins could reserved for power (+5V and ground), while the two other pins could be reserved for the two required I²C pins: SDA and SCL.
 
-  - How should they physically be connected?
-    - USB Type B
-      - Exactly four pins
-      
-== Schematic
+Beyond pin count, USB Type B connectors offer good mechanical retention and strain relief, helping to prevent accidental disconnections during use. Standard cable lengths (up to 5 meters for USB 2.0) provide good reach, mitigating some of the flexibility downsides of switching from wireless connectivity. Lastly, by relying on off-the-shelf USB cables rather than custom cables, the design minimizes part variety, simplifies sourcing and replacement, and leverages existing technology, possibly familiar to users.
+
+== Circuitry
+To address the instability of the NFC reader that arose after integrating the display (@sec:Sprint2Display), the display was moved to a separate SPI bus with its own dedicated GPIO pins. Following this change, the NFC reader resumed functioning reliably. This strongly suggested that the issue stemmed from the individual CircuitPython drivers for the NFC reader and display not supporting shared use of a single SPI bus. By isolating them onto separate buses, any conflicts were avoided, confirming this as the likely cause of the instability.
+
+
+@raspberry_pi_raspberry_2024 @raspberry_pi_raspberry_2024-1
+
 - Her skal den nye strømløsning nok nævnes (via USB. Brug Pico datasheet igen)
 - David kan også skrive om, at Pico'erne trak for meget strøm
+- Skærm og NFC deler ikke længere pins
 
 == PCB <sec:PCBsprint3>
 === Design
@@ -188,13 +192,14 @@ v21-v51
 
 === 3D printing
 
-== Testing on the Target Group
-The test took place at the University of Southern Denmark, where the prototype was evaluated by three participants. Each test took approximately 8 minutes.
+== Testing
+The test took place at the University of Southern Denmark, where the prototype was evaluated by three participants from Teknologiskolen @teknologiskolen_om_2025. Each test took approximately 8 minutes.
 
-During this test, the first iterations of the product's outer shell was completed, inside a non-functional PCB was installed as seen in @fig:sprint3setup. Additionally, a display with a Pico 2 mounted directly on it was connected to a laptop, allowing the display to be updated manually. This made it possible to conduct a Mechanical Turk/Wizard of Os test #text(red)[cite], where testers were able to simulate the experience of selecting an instrument by inserting an NFC card into the prototype. Furthermore, during this test A/B, Think Aloud, and unstructured interview methodologies were used. 
+During this test, the first iteration of the  outer shell of the product was completed, and inside, a non-functional PCB was installed as seen in @fig:sprint3setup. Additionally, a display with a Pico 2 mounted directly on it was connected to a laptop, allowing the display to be updated manually. This made it possible to conduct a Mechanical Turk @first_principles_product_2025/Wizard of Oz test @nngroup_wizard_2025, where testers were able to simulate the experience of selecting an instrument by inserting an NFC card into the prototype. Furthermore, during this test A/B, Think Aloud, and unstructured interview methodologies were used. 
 
 #figure(
   image("../images/box-v1.jpeg", height: 25%, width: 40%),
   caption: [Test Setup for Sprint 3],
 ) <fig:sprint3setup>
+
 

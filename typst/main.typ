@@ -19,11 +19,11 @@
     )
   ),
 
-  seperateTitlePage: false,
+  seperateTitlePage: true,
   useToc: true,
   seperateTocPage: true,
   thesis: true,
-  seperateAbstractPage: false,
+  seperateAbstractPage: true,
   firstLineIndentWidth: 0em,
   columnsAmount: 1,
   paragraph-spacing: 1.5em,
@@ -59,10 +59,11 @@ Total character count: #total-characters
 #include "sections/Acknowledgements.typ"
 <no-wc>
 
-= Introduction
-@app:Test \
-@app:Test2 \
-@app:Test3
+#colbreak()
+= Introduction <chap:Introduction>
+@chap:Introduction \
+@app:schematicSprint2
+
 
 = State of the Art
 #include "sections/Literature review.typ"
