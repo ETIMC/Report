@@ -11,136 +11,47 @@ During further WiFi connectivity tests between the Host and a Controller, the Ho
 
 Debugging eventually uncovered a pattern: only a full power cycle of the Pico 2 before initiating the WiFi connection yielded a stable result. In contrast, soft reboots from the REPL almost invariably triggered driver failures shortly thereafter, particularly when performed in rapid succession. By adopting a strict procedure of completely disconnecting and reconnecting power to the Host prior to each WiFi session, the driver crashes ceased entirely, restoring reliable performance.
 
-During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to a sound was played by Ableton Live. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was network latency. There were two suggested primary reasons for this. The first one was that the WiFi chip on the Pico 1 and Pico 2 may not have been designed for low-latency communication. A possible solution for this would be exchanging the Pico 1 and Pico 2's for a different MCU. A contender would be the ESP32 line of devices, since they have both a dedicated wireless protocol for low latency communication and a library for sending MIDI messages @espressif_systems_esp-now_2025 @geissl_thomasgeisslesp-now-midi_2025. For affordability and availability reasons, this idea was not further explored. The other possible reason for the latency was the using of the TCP protocol, which contains extra headers and acknowledgement messages adding overhead to each sent message. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
+During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to the message showing up in the Host's REPL. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was network latency. There were two suggested primary reasons for this. The first one was that the WiFi chip on the Pico 1 and Pico 2 may not have been designed for low-latency communication. A possible solution for this would be exchanging the Pico 1 and Pico 2's for a different MCU. A contender would be the ESP32 line of devices, since they have both a dedicated wireless protocol for low latency communication and a library for sending MIDI messages @espressif_systems_esp-now_2025 @geissl_thomasgeisslesp-now-midi_2025. For affordability and availability reasons, this idea was not further explored. The other possible reason for the latency was the using of the TCP protocol, which contains extra headers and acknowledgement messages adding overhead to each sent message. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
 
 Lastly, it was sometimes experienced that a controller would disconnect from the host without the host ever finding out. To fix this, heartbeat-messages were implemented. They worked by having the host sending a heartbeat request message to the controller every few seconds. If the controller didn't answer the heartbeat three times in a row, the Host would forget the Controller.
 
-== Host MIDI interface <sec:sprint2HostMidiInterface>
-During early host development, two diagrams (@fig:diagramMessageFlow) were drafted to clarify controller-to-host interactions. One diagram illustrated how input signals (button presses and potentiometer turns) should be sent to, and processed by, the host (@fig:DevicePlayingDiagram). Controllers were required only to emit a simple message identifying the activated input; all higher-level processing would occur on the host.
-
-#subpar.grid(
-  columns: (auto, auto),
-  caption: [Diagrams showing message flow.],
-  label: <fig:diagramMessageFlow>,
-  align: top,
-  figure(image("../images/DevicePlayingDiagram.png", width: 98%),
-    caption: [Message flow when using Controller.]), <fig:DevicePlayingDiagram>,
-  figure(image("../images/ChangeSoundDiagram.png", width: 100%),
-    caption: [Message flow when changing instrument.]), <fig:ChangeSoundDiagram>
-)
-
-The host was designed around three lookup tables: a controller-to-instrument map (@listing:lookUpTables2Instr:1), an instrument-to-MIDI-channel map (@listing:lookUpTables2Instr:2), and an instrument-specific table of controller-button to MIDI-note assignments (@listing:lookUpTables2Instr:6) which trialed used the `note_parser()` function from the MIDI library #cite(<walters_adafruit_2025>) to convert the name of the notes to the right MIDI number. When a message arrived indicating, for example, that Controller A’s Button 1 was pressed, the host would determine Controller A’s assigned instrument (@listing:receivedNote:5), select that instrument’s MIDI channel (@listing:receivedNote:6), look up the MIDI note tied to Button 1 for that instrument (@listing:receivedNote:8), and forward a corresponding MIDI message on the correct channel to Ableton Live (@listing:receivedNote:9). To change instruments, controllers sent special messages indicating the desired instrument; the host then updated the controller-to-instrument map accordingly (@fig:ChangeSoundDiagram). By pre-allocating one channel per instrument, sound changes required no additional latency—messages simply switched channels—ensuring seamless, low-latency response as required by the low latency technical requirement (Requirement 9, @table:technicalRequirements).
-
-#figure(
-  ```cpy
-  self.client_instruments = {}
-  self.instrument_channels = {
-      "DRUMS": 1,
-      "PIANO": 2,
-  }
-  self.instrument_notes = {
-      "DRUMS": {
-          b"0": note_parser("D#2"),  # 39 - Hand Clap
-          b"1": note_parser("F#2"),  # 42 - Closed Hi-Hat
-          b"2": note_parser("G#2"),  # 44 - Tambourine
-          b"3": note_parser("C2"),  # 36 - Bass Drum
-          b"4": note_parser("D2"),  # 38 - Snare Drum
-          b"5": note_parser("A#2"),  # 46 - Open Hi-Hat
-          b"6": note_parser("C#3"),  # 49 - Crash Cymbal
-          b"7": note_parser("D#3"),  # 51 - Ride Cymbal
-      },
-      "PIANO": {
-          b"0": note_parser("C4"),  # 60 - Middle C
-          b"1": note_parser("E4"),  # 64
-          b"2": note_parser("G4"),  # 67
-          b"3": note_parser("C5"),  # 72
-          b"4": note_parser("E5"),  # 76
-          b"5": note_parser("G5"),  # 79
-          b"6": note_parser("C6"),  # 84
-          b"7": note_parser("E6"),  # 88
-      }
-  }
-  ```,
-  caption: [Look-up table on Host.]
-) <listing:lookUpTables2Instr>
-
-The lookup table mapping controller button-presses to MIDI notes was defined to guarantee harmonic consistency (Requirement 7, @table:usabilityRequirements). Two octaves of the C-major triad were selected so users could access both high and low pitches without additional configuration. To support a future use case where a potentiometer might shift octaves, a pentatonic scale was considered—its five notes per octave offering broader melodic flexibility without risking dissonance #cite(<farrant_what_2020>).
-
-
-#figure(
-  ```cpy
-  def _received_note(self, socket, buffer):
-        try:
-            parts = buffer.split(b":")
-            note_idx = bytes(parts[1].strip())
-            instrument = self.client_instruments[socket]
-            channel = self.instrument_channels[instrument]
-            if note_idx in self.instrument_notes.get(instrument, {}):
-                note = self.instrument_notes[instrument][note_idx]
-                self.midi_handler.add_to_queue(note, channel)
-            else:
-                print(f"Unknown note index: {note_idx} for instrument {instrument}")
-        except Exception as e:
-  ```,
-  caption: [`_received_note(socket, buffer)` function on Host for processing Controller input messages.]
-) <listing:receivedNote>
-
-The sending of notes themselves was driven by a programmatic queue. When a controller registered a button input a message with the new instrument was sent to the Host. This message would undergo the previously mentioned processing before being added to a queue (@listing:receivedNote:9). The way the queue was emptied was quite interesting. When the "Play" button in Ableton Live was pressed it would begin sending 24 `TimingClock` messages to the host per beat. This means that if Ableton Live was set to play at 120 BPM the message would be received by the Host $24 dot 120 = 2880$ times a minute. By counting these messages and only emptying the queue, sending the MIDI messages to the host, every 24 `TimingClock` messages, the Controllers input was quantized to the beat, overlooking potential timing-mishaps by the user (requirement 7, @table:usabilityRequirements). It was however also discovered that this didn't "feel" as nice to use as when the MIDI signals were immediately send to Ableton and the feedback heard instantly. This was also the case when emptying the queue every half-beat (every 12 `TimingClock` messages). For this reason, this feature was turned off during testing on the target group.
-
-== Ableton Live setup
-In Ableton Live a new project was set up with four MIDI tracks. Each track was assigned a different input MIDI channel. Each track was then given an instrument (@fig:abletonFourInstrument). The four instruments were drums, piano, guitar and trumpet. These instruments were chosen as they were easily recognizable, very different sounding, and their real counterparts very different looking.
-
-During the configuration of Ableton Live, it was decided to not prioritize looping functionality (Requirement 9, @table:usabilityRequirements). This decision was made since Ableton Live already implements looping. Therefore it seemed wiser to focus on other aspects of the product as the user would already be able to use looping by using the required instance of Ableton Live.
-
-#figure(
-  [BILLEDE FRA ABLETON PÅ DAVIDS BÆRBAR],
-  caption: [Ableton Live 11 setup for playing playing different instruments on different MIDI channels.]
-) <fig:abletonFourInstrument>
-
-== Circuitry schematics
-A schematic was created to provide an overview of the internal wiring of the controller and to ensure correct and consistent integration of the system’s components (#text(red)[reference til bilag (Schematic sprint 2)]). This step was essential to validate that all hardware elements could function together as intended and that the correct GPIO pins on the Pico were used.
+== Circuitry
+A schematic was created to provide an overview of the internal wiring of the controller and to ensure correct and consistent integration of the system’s components (@app:schematicSprint2). This step was essential to validate that all hardware elements could function together as intended and that the correct GPIO pins on the Pico were used.
 The schematic brings together all the hardware elements of the controller: 
 - NFC reader (RC522)
+  - The NFC reader was connected to the Pico 1's SPI0 bus, which was one of the Pico's two SPI busses.
 - Display (Pico Display 2.0)
-- Push buttons
+  - The display was also connected to the Pico 1's SPI0 bus though with a different CSn pin. Since both the NFC reader and the display used SPI, it seemed like an obvious way to use fewer GPIO pins on the Pico's.
+- Buttons
+  - The eight buttons planned for in @sec:sprint1MusicalInteraction was added. Furthermore, external pull-up resistors were added. This was an oversight, since the Pico 1's internal pull'up resistors would be used.
 - Potentiometers via multiplexer
-- LEDs (NeoPixels)
+  - As mentioned in @sec:sprint1MusicalInteraction the four potentiometers would require more analog inputs than what the Pico 1's offered. A multiplexer was therefore added, allowing the Pico 1's to receive analog inputs from all four potentiometers using only one analog GPIO pin.
 - Power system
+  - Four AA batteries where added as the primary power source. This would result in a power supply of $4 dot 1.2V = 4.8V$, closely resembling the 5V the Pico 1's would receive when connected to a computer via USB.
+  - A power switch was added to allow for the user to turn off the controllers without removing the batteries.
+  - A MOSFET transistor and resistor was added in accordance with the recommendations of #cite(<raspberry_pi_raspberry_2024-1>, form: "prose"). This was done so that the batteries would be automatically disconnected when the Pico 1's were connected to a computer for debugging to make sure neither the Pico 1's or connected computers would be damaged.
+- LEDs
+  - For visual purposes, ten LED's were added to schematic. The LED's chosen were the _Breadboard-friendly RGB Smart NeoPixel_ #cite(<adafruit_breadboard-friendly_2025>). These were chosen for their availability, flexibility and affordable pricing. By using NeoPixel LED's it was possible to control multiple LED's using only one GPIO pin. Furthermore, the _RGB Smart NeoPixel_ LED's are full RGB LED's meaning a single LED can display a wide array of colors. Lastly, as both the NeoPixel LED's and CircuitPython are made by Adafruit, a first-party library made them easy to integrate #cite(<george_adafruit_2025>).
+  - A level shifter was added to make the NeoPixels run at 4.8V. This was done to make sure the LED's would be bright enough for both inside and outside use, as they were reported to have a lower brightness when connected to a 3.3V source @adafruit_breadboard-friendly_2025.
 
 The schematic served as a key step in moving from individual hardware tests to a fully integrated prototype.
 
-== Breadboard prototype
-By following the schematic, all components were successfully connected on a breadboard to simulate the controller's functionality and test how the individual parts interacted.
+== Controller breadboard prototype
+By following the schematic (@app:schematicSprint2), a controller was successfully assembled on a breadboard to test how the individual parts interacted. The LED's were deemed not strictly important for the functionality of the Controller and was therefore not implemented on the breadboard.
 
-- Interconnecting different elements of the project together.
-- både host og controller
-
-=== General setup of Controller
-
-==== Buttons
-Four tactile switch buttons @adafruit_tactile_nodate were added to the breadboard, according to the schematic. Each button was connected to the Pico using an internal pull-up configuration which receives input when the buttons are pressed, and they were connected to ground. Code was implemented so that, when a button was pressed, the controller sent a corresponding message to the host indicating which button had been activated (e.g., “Button 3 pressed”).
-
+=== Buttons
+Four tactile switch buttons @adafruit_tactile_nodate were added to the breadboard, according to the schematic. Each button was connected to the Pico using an internal pull-up configuration as mentioned in @sec:sprint1MusicalInteraction. The buttons were implemented so that, when a button was pressed, the controller send a single message to the host indicating which button had been activated (e.g., “Button 3 pressed”) (@listing:sprint2Buttons).
 
 #figure(
   ```cpy
-# Check for button press (transition from not pressed to pressed)
 if current_state == False and self.button_states[idx] == True:
-  print(f"Pressed button: {idx}")
   self.wifi_handler.send_note(idx)
-  await asyncio.sleep(self.debounce_time)  # Debounce delay
+  await asyncio.sleep(0.001)
   ```,
-  caption: [.]
-) <listing:buttons>
+  caption: [Example of code handling button press.]
+) <listing:sprint2Buttons>
 
-
-/*
-- Setup buttons on breadboard.
-- som nævnt i sprint 1, bruges pull-up resistor, sat op som schematic
-- tilføjet kode om at man trykker på knapper - sender besked til hosten (ikke yddyb for meget, blot knap 1 sender "jeg er 1")
-- Noget om knap koden (asyncio) + gammel debouncing (David)
-*/
-
-==== NFC Reader
+=== NFC Reader
 When the NFC reader was integrated into the controller breadboard, several issues were encountered. Although the module had functioned correctly in earlier isolated tests, the NFC code now blocked the other components, as it continuously attempted to read cards. Various libraries and timeout adjustments were tested, and even the use of `asyncio()` failed to resolve the issue, as the code continued to block.
 The solution was to add a physical read button next to the NFC reader, acting as a sensor, which had to be pressed to initiate a card scan. This approach resolved the problem by allowing the rest of the system to operate uninterrupted. In practice, the NFC reader was therefore moved to a smaller breadboard because of space problems. This also made it easier to operate, as it was not all pressed compactly together.
 
@@ -184,7 +95,7 @@ def read_nfc(self):
 //  - Løst ved læse knap (sensor) for at scanne (nævn i testen at børnene glemte at bruge den, så det måske skal laves om til automatisk sensor)
 //- slutning: sender wifi besked til hosten, om hvilket instrument der skal spilles
 
-==== Display <sec:Sprint2Display>
+=== Display <sec:Sprint2Display>
 As explained in #text(red)[cite paragraph], Adafruit's example code served as the foundation for the display's implementation. However, the original code was modified to support image rendering, rather than solely displaying text. Through experimentation, the function presented in @listing:displayImage was created to encapsulate the image loading process.
 
 #figure(
@@ -223,21 +134,18 @@ if card_str in self.card_labels:
 
 In the initial circuit design, both the NFC reader and the display were intended to operate on a shared SPI bus. However, upon integrating the display, the NFC reader began exhibiting unstable behavior, failing to consistently recognize cards. To resolve this issue, several potential causes were investigated, including the possibility of timing conflicts arising from shared use of the Pico's internal timers. Efforts were also made to interpret error messages generated under the shared SPI configuration. Ultimately, it was decided that the display and NFC reader should be allocated separate SPI busses in a later iteration.
 
-==== Potentiometers and multiplexer <sec:potsSprint2>
+=== Potentiometers and multiplexer <sec:potsSprint2>
 To accommodate the requirement of integrating four potentiometers into the circuit, a multiplexer was chosen to address the limitation of available GPIO pins on the Pico. The specific component selected for this purpose was the Texas Instruments 74HC4051 multiplexer #text(red)[cite].
 
 To verify the functionality of the multiplexer, an initial test circuit was constructed using three LEDs. In this setup, the Pico was programmed to send signals to different channels of the multiplexer, thereby activating each LED in succession. 
 
 A second test environment was developed using potentiometers. Here, the approach involved configuring the Pico to read inputs from the various potentiometers by selecting the appropriate channels on the multiplexer. During this testing phase, it was observed that leaving unused multiplexer channels unconnected led to unstable behavior; the analog readings would fluctuate and interfere with one another. This issue was resolved by grounding the unused pins, which stabilized the readings and ensured proper functionality.
 
-
-=== General setup of Host
+== Host breadboard prototype
 The Host was very simply implemented on a breadboard as it only consisted of a Pico 2. By using WiFi no other wires had to be added. However, difficulties arose that led to adding LED's to the Host breadboard prototype.
 
-==== Visual feedback
-During development and internal testing it was discovered that it was difficult to debug the connection between the controller and the host as both would have to be physically connected to a computer running an instance of Visual Studio Code each to monitor the REPL. To make this debugging easier and to further device feedback (requirement 4, @table:usabilityRequirements) it was decided that the host should have two LED's for displaying the system's current state.
-
-The LED's chosen were the _Breadboard-friendly RGB Smart NeoPixel_ #cite(<adafruit_breadboard-friendly_2025>). These were chosen for their availability, flexibility and affordable pricing. By using NeoPixel LED's it became possible to control multiple LED's using only GPIO on the host Pico 2. Furthermore, the _RGB Smart NeoPixel_ LED's are full RGB LED's meaning a single LED can display a wide array of colors. Lastly, as both the NeoPixel LED's and CircuitPython are made by Adafruit, a first-party library made them easy to integrate #cite(<george_adafruit_2025>).
+=== Visual feedback
+During development and internal testing it was discovered that it was difficult to debug the connection between the controller and the host as both would have to be physically connected to a computer running an instance of Visual Studio Code each to monitor the REPL. To make this debugging easier and to further device feedback (requirement 4, @table:usabilityRequirements) it was decided that the host should have two NeoPixel LED's @adafruit_breadboard-friendly_2025 for displaying the system's current state.
 
 It was decided that that the first LED should be used for connection states. It was programmed to blink yellow while the Host was turning on and setting up it's WiFi hotspot. Upon successfully turning on the LED would turn green.
 When a controller connected to the Host the LED would blink blue, and when it disconnected the LED would blink purple (@listing:handleNewConnectionLed). This was done to monitor the connection of the host and controller without needing to have them both connected to a computer and was implemented by monitoring the amount of devices connected to the Host's hotspot (@listing:handleNewConnectionLed:4).
@@ -290,8 +198,90 @@ When a controller connected to the Host the LED would blink blue, and when it di
 
 The second LED was programmed to display MIDI information. In practice this meant that it would blink according to the MIDI `TimingClock` message sent by Ableton to the Host.
 
-== Fusion 3D Experimentation
+// === FØR DETTE MÅ DER IKKE NÆVNES NOGET OM NOTE BESKEDER ELLER CHANGE SOUND BESKEDER ===  
+// === FØR DETTE KAN INTET LAVE LYD ===  
+== Ableton Live setup
+In Ableton Live a new project was set up with two MIDI tracks. Each track was assigned a different input MIDI channel and was then given an instrument (@fig:abletonTwoInstrument). The two instruments were drums and piano. These instruments were chosen as they were easily recognizable, very different sounding, and their real counterparts very different looking.
 
+During the configuration of Ableton Live, it was decided to not prioritize looping functionality (Requirement 8, @table:usabilityRequirements). This decision was made since Ableton Live already implements looping. Therefore it seemed wiser to focus on other aspects of the product as the user would already be able to use looping by using the required instance of Ableton Live.
+
+#figure(
+  [BILLEDE FRA ABLETON PÅ DAVIDS BÆRBAR],
+  caption: [Ableton Live 11 setup for playing playing different instruments on different MIDI channels.]
+) <fig:abletonTwoInstrument>
+
+== Host MIDI interface <sec:sprint2HostMidiInterface>
+During early host development, two diagrams (@fig:diagramMessageFlow) were drafted to clarify controller-to-host interactions. One diagram illustrated how input signals (button presses and potentiometer turns) should be sent to, and processed by, the host (@fig:DevicePlayingDiagram). Controllers were required only to emit a simple message identifying the activated input; all higher-level processing would occur on the host.
+
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Diagrams showing message flow.],
+  label: <fig:diagramMessageFlow>,
+  align: top,
+  figure(image("../images/DevicePlayingDiagram.png", width: 98%),
+    caption: [Message flow when using Controller.]), <fig:DevicePlayingDiagram>,
+  figure(image("../images/ChangeSoundDiagram.png", width: 100%),
+    caption: [Message flow when changing instrument.]), <fig:ChangeSoundDiagram>
+)
+
+The host was designed around three lookup tables: a controller-to-instrument map (@listing:lookUpTables2Instr:1), an instrument-to-MIDI-channel map (@listing:lookUpTables2Instr:2), and an instrument-specific table of controller-button to MIDI-note assignments (@listing:lookUpTables2Instr:6) which trialed used the `note_parser()` function from the MIDI library #cite(<walters_adafruit_2025>) to convert the name of the notes to the right MIDI number. When a message arrived indicating, for example, that Controller A’s Button 1 was pressed, the host would determine Controller A’s assigned instrument (@listing:receivedNote:5), select that instrument’s MIDI channel (@listing:receivedNote:6), look up the MIDI note tied to Button 1 for that instrument (@listing:receivedNote:8), and forward a corresponding MIDI message on the correct channel to Ableton Live (@listing:receivedNote:9). To change instruments, controllers sent special messages indicating the desired instrument; the host then updated the controller-to-instrument map accordingly (@fig:ChangeSoundDiagram). By pre-allocating one channel per instrument, sound changes required no additional latency—messages simply switched channels—ensuring seamless, low-latency response as required by the low latency technical requirement (Requirement 9, @table:technicalRequirements).
+
+#figure(
+  ```cpy
+  self.client_instruments = {}
+  self.instrument_channels = {
+      "DRUMS": 1,
+      "PIANO": 2,
+  }
+  self.instrument_notes = {
+      "DRUMS": {
+          b"0": note_parser("D#2"),  # 39 - Hand Clap
+          b"1": note_parser("F#2"),  # 42 - Closed Hi-Hat
+          b"2": note_parser("G#2"),  # 44 - Tambourine
+          b"3": note_parser("C2"),  # 36 - Bass Drum
+          b"4": note_parser("D2"),  # 38 - Snare Drum
+          b"5": note_parser("A#2"),  # 46 - Open Hi-Hat
+          b"6": note_parser("C#3"),  # 49 - Crash Cymbal
+          b"7": note_parser("D#3"),  # 51 - Ride Cymbal
+      },
+      "PIANO": {
+          b"0": note_parser("C4"),  # 60 - Middle C
+          b"1": note_parser("E4"),  # 64
+          b"2": note_parser("G4"),  # 67
+          b"3": note_parser("C5"),  # 72
+          b"4": note_parser("E5"),  # 76
+          b"5": note_parser("G5"),  # 79
+          b"6": note_parser("C6"),  # 84
+          b"7": note_parser("E6"),  # 88
+      }
+  }
+  ```,
+  caption: [Look-up table on Host.]
+) <listing:lookUpTables2Instr>
+
+The lookup table mapping controller button-presses to MIDI notes was defined to guarantee harmonic consistency (Requirement 7, @table:usabilityRequirements). Two octaves of the C-major triad were selected so users could access both high and low pitches without additional configuration. To support a future use case where a potentiometer might shift octaves, a pentatonic scale was considered—its five notes per octave offering broader melodic flexibility without risking dissonance #cite(<farrant_what_2020>).
+
+#figure(
+  ```cpy
+  def _received_note(self, socket, buffer):
+        try:
+            parts = buffer.split(b":")
+            note_idx = bytes(parts[1].strip())
+            instrument = self.client_instruments[socket]
+            channel = self.instrument_channels[instrument]
+            if note_idx in self.instrument_notes.get(instrument, {}):
+                note = self.instrument_notes[instrument][note_idx]
+                self.midi_handler.add_to_queue(note, channel)
+            else:
+                print(f"Unknown note index: {note_idx} for instrument {instrument}")
+        except Exception as e:
+  ```,
+  caption: [`_received_note(socket, buffer)` function on Host for processing Controller input messages.]
+) <listing:receivedNote>
+
+The sending of notes themselves was driven by a programmatic queue. When a controller registered a button input a message with the new instrument was sent to the Host. This message would undergo the previously mentioned processing before being added to a queue (@listing:receivedNote:9). The way the queue was emptied was quite interesting. When the "Play" button in Ableton Live was pressed it would begin sending 24 `TimingClock` messages to the host per beat. This means that if Ableton Live was set to play at 120 BPM the message would be received by the Host $24 dot 120 = 2880$ times a minute. By counting these messages and only emptying the queue, sending the MIDI messages to the host, every 24 `TimingClock` messages, the Controllers input was quantized to the beat, overlooking potential timing-mishaps by the user (requirement 7, @table:usabilityRequirements). It was however also discovered that this didn't "feel" as nice to use as when the MIDI signals were immediately send to Ableton and the feedback heard instantly. This was also the case when emptying the queue every half-beat (every 12 `TimingClock` messages). For this reason, this feature was turned off during testing on the target group.
+
+== Fusion 3D Experimentation
 The controller needed to be enclosed in a physical chassis. Since a 3D printer was available, it was decided to design the enclosure in Fusion 360 and print it using PLA. As none of the team members had significant experience with CAD modelling, the process involved considerable experimentation and iteration.
 Using the paper prototype as a reference, the first version of the model was created. It featured a flat square base with detachable sides, allowing easier access to the internal components during development. This modular design also made it possible to make small adjustments without reprinting the entire structure. The corners were modelled with slits into which the side panels could slide. Holes for magnets were added to later allow a lid to snap into place. Additionally, all sharp edges were rounded to create a more comfortable and polished finish.
 
@@ -324,7 +314,7 @@ All visual assets used for the display were created specifically for the project
 
 For the initial breadboard implementation, two instrument images– a drum and a piano– were created as seen in @fig:pixelart. Feedback obtained during testing indicated interest in additional instruments, specifically a guitar and a trumpet. These images were subsequently developed and included in the system later in the development process.
 
-== Testing
+== Testing <sec:sprint2test>
 Testing was conducted at the University of Southern Denmark, where the prototype was evaluated by five individual participants within the target group. These participants were all enrolled at Teknologiskolen @teknologiskolen_om_2025, an extracurricular activity with the focus of teaching kids about hardware. This meant they had prior knowledge of breadboard setups and hardware in general, which made it possible to test a very early implementation of the system without causing the target group too much confusion. The testing procedure consisted of a think-aloud part, where testers could experiment using the product while providing feedback. This was followed by an unstructured interview. These methods were selected for their adaptability, which proved particularly beneficial given that the participants were children. This adaptability allowed the children to guide parts of the session by posing questions, offering detailed feedback, or requesting additional guidance on the use of the product and its features. On average, each testing session lasted approximately 10 minutes.
 
 In one instance, two participants were present in the room simultaneously; however, they completed the test individually and responded to the predefined questions together afterward. All remaining sessions involved one participant at a time.

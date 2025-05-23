@@ -50,7 +50,7 @@ Requirement 1 (MCU) was specified to balance processing power with cost-effectiv
 
 Wireless connectivity was adopted to satisfy the mobility and ease-of-setup goals of Requirement 2 in @table:usabilityRequirements. Among available options, WiFi was selected for its lower end-to-end latency compared to alternatives like Bluetooth #cite(<sharrow_speed_2025>), ensuring that the system could transmit MIDI data rapidly enough to meet the low-latency requirement 9.
 
-Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the MCU's from introducing latency that would conflict with requirement 9 (Low Latency) in @table:usabilityRequirements. To address this, a dedicated MIDI host was specified to handle part of the controllers’ functionality externally.
+Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the MCU's from introducing latency that would conflict with requirement 9 (Low Latency) in @table:usabilityRequirements. To address this, a dedicated MIDI _host_ was specified to handle MIDI functionality separately from the _controller_ that the user would use to experiment with music.
 Requirement 3 (Ableton Live) was introduced to further offload sound generation from the MCU's to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation.
 The host acts as the central connector in the system, interfacing between the controllers and Ableton Live, ensuring smooth communication and coordination across all components. (@fig:DeviceRelationsshipsSprint1)
 
@@ -62,6 +62,10 @@ The host acts as the central connector in the system, interfacing between the co
 Requirement 4 (Wireless Connection) was defined as since there would both be a host and multiple controllers, they would all have to communicate. WiFi was therefore chosen as the data communication protocol of choice since it provides a lot of physical flexibility. In relation to the prior requirement, it was logical to also include requirement 7 (Low Power Consumption) to ensure that the product would not need wiring. This consideration further informed the inclusion of requirement 8 (Plug and Play), emphasizing that the product should function immediately upon being powered on, without the need for complex configuration.
 
 Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in correlation to @table:usabilityRequirements's requirement 4 (Feedback). Requiring an NFC reader for the product's usability was inspired by retro gaming consoles and traditional train stamping tickets (danish: klippekort), and adding a screen would make it easy to display which instrument sounds were currently in use and generally provide feedback to the user.
+
+The last, and arguably most important, requirement, 10 (Interactive sensors), was required as this would be what the user would use the interface, interact and interface with music.
+
+Requirement 10 (Interactive Sensors) was specified to define the user’s primary means of engaging with the system and experimenting with music. By mandating a suite of responsive sensors—such as buttons, and—the design ensures that the user's interaction is reliably captured and translated into expressive musical output. This cornerstone requirement not only shapes the overall user experience, but also underpins the system’s ability to deliver intuitive, real-time interaction with sound.
 
 #figure(
   table(
@@ -77,6 +81,7 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
   [7], [Low power consumption], [Controllers should be powered by batteries, and the host should be bus-powered by its connected computer.],
   [8], [Plug'N'Play], [Devices should simply work when turned on, without any tinkering or configurating, and the order of the devices being turned on shouldn't matter.],
   [9], [Low latency], [There should be minimal latency from when a user interacts with a controller to when a sound is produced.],
+  [10], [Interactive sensors], [Controllers should have sensors for the user to interact with.]
   ),
   caption: [Technical requirements]
 ) <table:technicalRequirements>
@@ -86,7 +91,7 @@ Both requirement 5 (NFC Reader) and requirement 6 (Screen) were defined in corre
 === MCU
 Two microcontroller families were evaluated for both the controllers and the MIDI host: the Raspberry Pi Pico series and the Arduino Uno series. Both offer WiFi–capable models and provide sufficient GPIO pins to accommodate the project’s sensors and actuators (buttons, potentiometers, NFC reader, and display). The Arduino platform presented advantages in terms of prior team familiarity, extensive library support, and a well-­established first-party IDE. However, its WiFi–enabled variants carry a significant price premium, often costing more than double that of comparable RP2040-based boards #cite(<jkollerupdk_raspberry_nodate>) #cite(<ardustoredk_arduino_nodate>).
 
-In contrast, the Raspberry Pi Pico series combines very low unit cost with robust performance and library support for both WiFi and MIDI functionality. Although the Pico lacks some of Arduino’s out-of-the-box shield compatibility and IDE simplicity, its community offers both free documentation, tutorials, and many well-made third-party libraries. This balance of affordability, sufficient processing capacity, and ecosystem support aligned closely with the cost-accessibility requirement (Requirement 12, @table:usabilityRequirements).
+In contrast, the Raspberry Pi Pico series combines very low unit cost with robust performance and library support for both WiFi and MIDI functionality. Although the Pico lacks some of Arduino’s out-of-the-box shield compatibility and IDE simplicity, its community offers both free documentation, tutorials, and many well-made third-party libraries. This balance of affordability, sufficient processing capacity, and ecosystem support aligned closely with the cost-accessibility requirement (Requirement 12, @table:usabilityRequirements). It was also noted that the Pico series' GPIO pins could output a maximum of 3.3V. This was deemed not being a problem, but was important when choosing other components for the Controller and Host.
 
 Ultimately, the Raspberry Pi Pico series was selected. The more powerful Pico 2 W was assigned to the host, where heavier computation would be done, and the original Pico W was chosen for the controllers to minimize per-unit expense. This configuration preserves overall system performance and flexibility, while ensuring the final devices remain inexpensive.
 
@@ -174,8 +179,10 @@ The code was also modified to depend on which card was read (@listing:nfcCardCha
   caption: [Initial NFC Test],
 ) <fig:nfcFirstSetup>
 
-=== Musical interaction
-The last technical element experimented with during the first sprint was buttons and their connectivity with the Pico 1's. This was discovered to be very easy using Circuitpython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these a GPIO pin on the Pico 1 could easily be referenced (@listing:buttonsPullUp:1), the pin could easily be defined as an input pin (@listing:buttonsPullUp:3), and the pin could finally easily be pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4). It was decided that these libraries should be the backbone of how the controllers would read user input. It was, however, also noted, that button debouncing #cite(<wright_what_2022>) would probably be required in the future depending on the final buttons used.
+=== Musical interaction <sec:sprint1MusicalInteraction>
+The last technical elements experimented with during the first sprint was the "interactive sensors" (Requirement 10, @table:technicalRequirements). The chosen sensors were eight buttons and four potentiometers, where each button should play a note, and the potentiometers should be used to experiment with the sounds. The reason for making it eight buttons was that it formed a good balance between usability and size, while also fitting perfectly with how music is often split into fours.
+
+Getting buttons to work with the Pico 1's where very easy using Circuitpython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these a GPIO pin on the Pico 1 could easily be referenced (@listing:buttonsPullUp:1), the pin could easily be defined as an input pin (@listing:buttonsPullUp:3), and the pin could finally easily be pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4). The libraries became the backbone of how the controllers would read user input. It was, however, also noted, that button debouncing #cite(<wright_what_2022>) would probably be required in the future depending on the final buttons used.
 
 #figure(
   ```cpy
@@ -187,7 +194,7 @@ The last technical element experimented with during the first sprint was buttons
   caption: [Code pulling input-pin GP13 to high.]
 ) <listing:buttonsPullUp>
 
-Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs #cite(<noauthor_analog_nodate>). It was decided this library was to be used for reading the potentiometers.
+Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs @noauthor_analog_2025. It was decided this library was to be used for reading the potentiometers. However, it was noted that the Pico's only had three analog inputs. Therefore, a solution would later have to be found to connect all four potentiometers to the Pico's.
 
 == Paper prototype
 #figure(
@@ -200,9 +207,9 @@ To facilitate a shared understanding of the product's physical layout within the
 The initial design was influenced by the layout of drum pads #text(red)[cite], which is reflected in the arrangement of components on the prototype. The design incorporated eight buttons and four potentiometers, selected to balance simplicity and functionality with the physical constraints of the box's size. These choices were informed by the usability requirements in @table:usabilityRequirements, specifically requirements 2 (Portability), 3 (Size), and 9 (Intimidating). Furthermore, the overall dimensions were also in part decided by the availability of a Bambu Lab A1 Mini 3D #text(red)[cite] for further prototyping, which limited the footprint to approximately 18cm x 18cm x 18cm.
 
 === Testing
-The prototype was tested by a student enrolled in the Game Development and Learning Technology program, allowing for initial feedback on usability. Due to the tester's personal connection to the team, feedback was looked upon with caution to mitigate potential bias. 
+The prototype was tested by a student enrolled in the Game Development and Learning Technology program at the University of Southern Denmark, allowing for initial feedback on usability. Due to the tester's personal connection to the team, feedback was looked upon with caution to mitigate potential bias. 
 
-The test was conducted at the University of Southern Denmark and involved an unstructured interview, combined with the Think Aloud methodology. An A/B test was also carried out to assess the preferred placement of the NFC reader. This multi-method approach supported a flexible testing environment and allowed exploration of questions not already pre-defined before the test. The session lasted approximately 30 minutes and yielded constructive feedback, while the overall user response remained positive. 
+The test was conducted at the University of Southern Denmark and involved an unstructured interview, combined with the Think Aloud methodology. An A/B test was also carried out to assess the preferred placement of the NFC reader. This multi-method approach supported a flexible testing environment and allowed exploration of questions not already pre-defined before the test. The session lasted approximately 30 minutes and yielded constructive criticism, while the overall user response remained positive. 
 
 The participant reported limited musical experience, having played piano during childhood but with no current involvement in playing music. Initial confusion was noted when first viewing the prototype; however, after a short briefing, the tester was able to interpret the key interface elements-e.g., identifying the blue rectangle as the screen shown in @fig:paperprototype.
 

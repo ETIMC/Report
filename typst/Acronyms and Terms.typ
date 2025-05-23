@@ -16,6 +16,7 @@
 - $I^2C$: Inter-Integrated Circuit
 - SDA: Serial data line
 - SCL: Serial clock line
+- LDR: Light-dependent resistor
 
 == Terms
 - Host: Device connected to a computer, interfacing with Ableton Live and Controllers.

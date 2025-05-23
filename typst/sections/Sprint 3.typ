@@ -135,20 +135,23 @@ The controller code was changed a bit more than the Host's code. This was primar
 
 During internal testing a second Pico 1 was connected to briefly test, how the Host handled having two Controllers connected. The test went well apart from one problem. The host couldn't differentiate between the Controllers. After debugging it was discovered that since the Controller code was simply copied from the first Pico 1 to the other one, they had the same I²C address set. After changing this address on the second Pico, the two Picos were able to communicate flawlessly with the Host without any noticeable latency or delay.
 
-==== Physical interface
+==== Physical interface <sec:sprint3PhysicalInterface>
 Standard USB 2.0 Type B to USB 2.0 Type A cables were chosen to physically link the Controllers and Host because they strike an ideal balance between availability, affordability, robustness, and electrical simplicity. These cables are more robust and easier to plug in than smaller connectors, which was believed would highten the portability and plug'N'play usability of the system (Requirement 3 & 7, @table:usabilityRequirements). Most importantly, each cable carries exactly four conductors, and each connector exposes exactly four pins. This meant that two pins could reserved for power (+5V and ground), while the two other pins could be reserved for the two required I²C pins: SDA and SCL.
 
 Beyond pin count, USB Type B connectors offer good mechanical retention and strain relief, helping to prevent accidental disconnections during use. Standard cable lengths (up to 5 meters for USB 2.0) provide good reach, mitigating some of the flexibility downsides of switching from wireless connectivity. Lastly, by relying on off-the-shelf USB cables rather than custom cables, the design minimizes part variety, simplifies sourcing and replacement, and leverages existing technology, possibly familiar to users.
 
 == Circuitry
+=== SPI Busses
 To address the instability of the NFC reader that arose after integrating the display (@sec:Sprint2Display), the display was moved to a separate SPI bus with its own dedicated GPIO pins. Following this change, the NFC reader resumed functioning reliably. This strongly suggested that the issue stemmed from the individual CircuitPython drivers for the NFC reader and display not supporting shared use of a single SPI bus. By isolating them onto separate buses, any conflicts were avoided, confirming this as the likely cause of the instability.
 
+=== New power solution
+With the Controllers now linked to the Host via cable, the onboard battery, MOSFET, and resistor were removed from the Controller’s power circuit on the schematic and replaced with a USB 2.0 Type B connector. Of its four pins, two were assigned to power: the connector’s ground pin was tied to the Pico 1’s GND, and its VBUS pin was routed to the Pico 1’s VSYS input to supply +5 V #cite(<raspberry_pi_raspberry_2024-1>). The remaining two pins were designated for I²C (SDA and SCL) and wired to two digital GPIOs on the Pico 1.
 
-@raspberry_pi_raspberry_2024 @raspberry_pi_raspberry_2024-1
+On the Host side, the USB 2.0 Type A connector’s ground and I²C pins were wired identically. The VBUS pin, however, was connected directly to the Pico 2’s VBUS output, drawing power from the connected computer’s USB port #cite(<raspberry_pi_raspberry_2024>) like the Host. This arrangement streamlines the power design and ensures both devices receive stable +5 V while sharing a common I²C bus over the same cable.
 
-- Her skal den nye strømløsning nok nævnes (via USB. Brug Pico datasheet igen)
-- David kan også skrive om, at Pico'erne trak for meget strøm
-- Skærm og NFC deler ikke længere pins
+The new power solution was not without problems however. During internal testing it was discovered that when the host, and now therefore also the controllers, were connected to a powered USB hub, other devices to the hub would not receive their required power. This was discovered by having a the audio of a connected audio interface starting to crackle, when the Host was connected. Furthermore, it was discovered that neither the Host or any connected Controllers would function properly when connected to a laptop, unless the laptop was actively being charged. However, as long as the laptop was being charged, everything worked fine.
+
+During internal testing of the new USB-powered setup, two power-related issues emerged. First, when the Host—and by extension its Controllers—were plugged into a powered USB hub, downstream devices on that hub began to lose power, evidenced by crackling audio from a connected audio interface. Second, when connected directly to a laptop’s USB ports, neither the Host nor any attached Controllers would operate correctly unless the laptop itself was also connected to its charger. On battery power alone, the laptop’s USB ports were unable to supply sufficient current, causing the devices to malfunction. Once the laptop was charging, its USB ports delivered adequate power and all components worked reliably.
 
 == PCB <sec:PCBsprint3>
 === Design
@@ -170,36 +173,52 @@ Once this problem was resolved, a second issue arose due to the change in the pr
 == Chassis Design
 
 === CAD design
+Based on the previously 3D printed chassis (#text(red)[reference til sprint2 fusion]), several features were added and refined through iterative design. 
+One of the first additions was the creation of the PCB standoffs—four cylindrical supports with central screw holes, aligned to match the mounting holes of the PCB. Before printing, the placement and alignment of the standoffs were verified in Fusion by inserting a model of the PCB to ensure proper fit.
 
-v21-v51
-- Standoff til PCB
-  1. cylinder med hul til skrue i midten (v24)
-  2. indsat "PCB" (v49)
-  3. offsetters (v51)
-  
-- NFC holder (NFC læseren + sted til kort, led+ldr)
-  1. tilføjet (v49) 
-  - Side panel nfc
-    1. stor åbning på 5mm (v30)
-- Låg
-  1. Huller til alt, match med PCB (v24)
-- Skruer
+A dedicated NFC reader holder was also designed. This component included a fixed position for the NFC module and a dedicated slot for card insertion. A stop point was added inside the slot to prevent the cards from being inserted too far into the chassis, both to protect other internal components and in response to user testing from Sprint 2 (#text(red)[kilde]), where children expressed curiosity about placing objects into the opening. Additionally, holes were included in the NFC holder for an LDR sensor and an LED.
 
+Two new side panels were created as variations of the original design. The first was the NFC side panel, which featured a large rectangular opening with smoothed edges to ensure safe use. The second was the rear side panel, where cutouts were added for both a USB-B connector and a physical on/off switch.
 
-- Sidepal bagside
-  1. hul til ledning (v30)
-  2. hul til tænd/sluk knap (v49)
+Lastly, the lid was designed to align with the base of the chassis and the component layout on the PCB. Corresponding holes for the buttons, display, and potentiometers were added, ensuring that all controls and feedback elements were accessible from the outside.
+
+magnet huller
+
 
 === 3D printing
+Once the updated 3D models were completed, the components were printed without significant issues. The prints came out nicely and mostly fit together as intended. However, during assembly, it became clear that the PCB was positioned too low inside the chassis, making it hard to interact with the mounted components on the PCB, because the standoffs were too short. To fix this, a quick solution was implemented: small offset spacers were designed and printed. These were placed between the standoffs and the PCB to raise the board slightly. 
 
+Next came the challenge of securing the PCB using 3D-printed screws, as metal screws were intentionally avoided to prevent short-circuiting(#text(red)[evt flere grunde]). A screw generator #text(red)[kilde] was used to create custom screws for printing. The first version fit, but its head was too tall, preventing the lid from closing properly. A second version with a smaller head lacked print detail, making it difficult to insert. A third attempt involved splitting the screw into two printable parts, but the result still did not fit properly
+
+Finally, a flat-headed screw was printed, which fit correctly and allowed the lid to close. However, this introduced a new inconvenience: the screws had to be removed every time the enclosure was opened. This became frustrating during repeated testing and modifications.
+
+To solve this, a new idea was tested: printing the screw without a head, and pairing it with a small plastic bolt to hold it in place. While the screw worked, the bolt didn’t fit as intended. In the end, it was decided to simply rest the PCB on top of the standoffs, using a screw inserted through the middle purely for positioning. Because the lid sat close enough to the PCB, there was no risk of the board shifting during use, and this minimal solution proved effective.
+/*
+skruer:
+1. passede, men hoved for langt op (rød of sølv)
+2. ostehoved, passede ikke (rød)
+3. delt ostehoved, passede ikke
+4. sort lav top, passede, men meget besværlig at skrue (sort)
+5. løsning: skrue uden hoved + ide om møtrik (hvid + hvis&sort møtrik)
+*/
 == Testing
-The test took place at the University of Southern Denmark, where the prototype was evaluated by three participants from Teknologiskolen @teknologiskolen_om_2025. Each test took approximately 8 minutes.
+The test was conducted at the University of Southern Denmark and involved three participants from Teknologiskolen @teknologiskolen_om_2025. Each session lasted approximately eight minutes.
 
-During this test, the first iteration of the  outer shell of the product was completed, and inside, a non-functional PCB was installed as seen in @fig:sprint3setup. Additionally, a display with a Pico 2 mounted directly on it was connected to a laptop, allowing the display to be updated manually. This made it possible to conduct a Mechanical Turk @first_principles_product_2025/Wizard of Oz test @nngroup_wizard_2025, where testers were able to simulate the experience of selecting an instrument by inserting an NFC card into the prototype. Furthermore, during this test A/B, Think Aloud, and unstructured interview methodologies were used. 
+At this stage, the first iteration of the product's outer shell had been completed. Inside, a non-functional PCB was installed for visual and structural purposes as shown in @fig:sprint3setup. A display, with a Pico 2 mounted directly onto it, was connected to a laptop and fitted into the chassis as well. This setup allowed manual updates of the display, enabling a Wizard of Oz @nngroup_wizard_2025 or Mechanical Turk @first_principles_product_2025 test. This approach allowed participants to experience the intended interaction of selecting an instrument by inserting an NFC card, despite the system not yet fully working. A breadboard prototype was also presented during this session for the benefit of introducing new participants to the product idea, who had not participated in the test during Sprint 2.
+
+Testing combined A/B testing and unstructured interviews to gather useful feedback.
 
 #figure(
   image("../images/box-v1.jpeg", height: 25%, width: 40%),
   caption: [Test Setup for Sprint 3],
 ) <fig:sprint3setup>
 
+An A/B test was conducted to assess perferences for potentiometer knob sizes. Participants were presented with three different "topper" options: small, medium, and large. This test addressed earlier feedback, as described in @sec:sprint2test, where participants found the bare potentiometers difficult to manipulate. While individual preferences varied, all participants agreed that any topper was preferable to none.
 
+Overall, participants responded positively to the interaction experience during the Wizard of Oz test. One tester remarked #quote[Yes! I could just imagine myself sitting here and jamming!] #text(red)[cite appendices] and another stated: #quote[I think this is very funny!] #text(red)[cite appendices].
+
+When asked whether the system might motivate them to explore a new musical instrument, the participants, having musical backgrounds playing drums and guitar, responded negatively. However, one participant noted: #quote[Hmm... Especially if you've never played music before, then I think it would be like that.] #text(red)[cite appendices] which suggest the product could hold great appeal for individuals without prior musical experience.
+
+Participants were also asked if they would use the product in a real-life context, one responded: #quote[Yes, 100 percent!] #text(red)[cite appendices] and another offered a more nuanced perspective: #quote[Yes, but I would probably rather sit and feel the real thing, you know, but it's a good alternative if you just can't afford all those musical instruments.] #text(red)[cite appendices].
+
+In terms of physical interaction, one participant offered constructive criticism regarding the insertion of the NFC card: #quote[[...] But maybe it's a bit loose. It's like, if you don't put it in properly, it can easily slide out. So maybe a slightly narrower opening?] #text(red)[cite appendices].

@@ -354,7 +354,7 @@
   }
   
   outline(
-    target: heading.where(supplement: [Chapter]),
+    target: heading.where(supplement: [Appendix]),
     title: [Appendices],
     indent: auto
   )
