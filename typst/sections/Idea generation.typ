@@ -1,5 +1,10 @@
 #import "@preview/subpar:0.2.2" 
 
+#figure(
+  image("../images/FirstDrawing.png", height: 20%),
+  caption: [Initial Drawing of the Idea],
+) <fig:firstDrawing>
+
 At the start of the project period, it was decided to create a project revolving around music, experimentation, exploration, and tangibility. To further narrow down the different possible subjects, an idea generation session utilizing the brainstorming method #text(red)[cite!] was conducted, using Figma Jamboard #text(red)[cite!] as its medium (@fig:FigmaIdeaGeneration). Various ideas were explored, and the most interesting ideas were as follows: 
 
 + Modular blocks with magnets that can be attached together to make a music-piece.

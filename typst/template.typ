@@ -122,7 +122,7 @@
          set text(12pt)
          show: smallcaps
          set align(left)
-         v(40pt, weak: true)
+         v(25pt, weak: true)
          if it.numbering != none {
           numbering("I.", deepest)
           h(7pt, weak: true)

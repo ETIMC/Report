@@ -1,19 +1,12 @@
 // 1) Beskriv ideen. Kravspecifikation? Trådløs
 // Hardware valg -> Seperat host og computertilstlutning
 // 
-
-#figure(
-  image("../images/FirstDrawing.png", height: 20%),
-  caption: [Initial Drawing of the Idea],
-) <fig:firstDrawing>
-
 == Overview
 During this sprint, technical and usability requirements were formulated, a paper prototype was produced and experimentation with hardware and microcontrollers were begun.
 
-== Usability and Technical Requirements analysis 
 Usability and technical requirements were formulated to streamline and focus product development. By defining these criteria, decisions made later in the process could be evaluated against the core objectives of the product, ensuring consistency and minimizing feature creep. Additionally, explicitly specifying the requirements ensured a uniform understanding of the project’s goals.
 
-=== Usability Requirements
+== Usability Requirements
 All usability requirements are listed in @table:usabilityRequirements.
 The requirements were developed taking the target group's technical proficiency and prior musical knowledge into consideration. As a result, requirements 7 (Beats and Consistency) and 10 (Prior musical knowledge) were defined to ensure a positive user experience for both children with, and without prior experience playing instruments. Requirement 7 (Beats and Consistency) partly fulfills this by accommodating user timing inconsistencies without negatively affecting the produced music. Furthermore, the palette of playable notes should be predefined to make played music harmonically pleasing; even when used by individuals without any prior music theory knowledge.
 
@@ -36,21 +29,21 @@ Finally, requirement 8 (Looping) regards allowing users to record and later acco
   [8], [Looping],[Small music pieces should be able to be recorded on- and looped directly from the product.],
   [9], [Not intimidating],[Users should not feel intimidated by using the product.],
   [10], [Prior musical knowledge],[Should be fun for both children who are well-versed in playing music, and those with no prior knowledge.],
-  [11], [Engaging],[Usage should feel engaged.],
+  [11], [Engaging],[Users should feel engaged.],
   [12], [Cheap], [The product should be cheap to make it as accessible as possible.]
   
   ),
   caption: [Usability requirements]
 ) <table:usabilityRequirements>
 
-=== Technical Requirements
+== Technical Requirements
 All technical requirements can be found in @table:technicalRequirements.
 
 Requirement 1 (MCU) was specified to balance processing power with cost-effectiveness, aligning with requirement 12 (Cheap) in @table:usabilityRequirements. Selecting a microcontroller over a full-fledged computer simplifies the device architecture while preserving flexibility, user-friendliness, and affordability. The chosen MCU platform also needed built-in support for wireless communication, per requirement 4 (Wireless Connection).
 
 Wireless connectivity was adopted to satisfy the mobility and ease-of-setup goals of Requirement 2 in @table:usabilityRequirements. Among available options, WiFi was selected for its lower end-to-end latency compared to alternatives like Bluetooth #cite(<sharrow_speed_2025>), ensuring that the system could transmit MIDI data rapidly enough to meet the low-latency requirement 9.
 
-Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the MCU's from introducing latency that would conflict with requirement 9 (Low Latency) in @table:usabilityRequirements. To address this, a dedicated MIDI _host_ was specified to handle MIDI functionality separately from the _controller_ that the user would use to experiment with music.
+Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the MCU's from introducing latency that would conflict with requirement 9 (Low Latency) in @table:technicalRequirements. To address this, a dedicated MIDI _host_ was specified to handle MIDI functionality separately from the _controller_ that the user would use to experiment with music.
 Requirement 3 (Ableton Live) was introduced to further offload sound generation from the MCU's to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation.
 The host acts as the central connector in the system, interfacing between the controllers and Ableton Live, ensuring smooth communication and coordination across all components. (@fig:DeviceRelationsshipsSprint1)
 
@@ -96,7 +89,7 @@ In contrast, the Raspberry Pi Pico series combines very low unit cost with robus
 Ultimately, the Raspberry Pi Pico series was selected. The more powerful Pico 2 W was assigned to the host, where heavier computation would be done, and the original Pico W was chosen for the controllers to minimize per-unit expense. This configuration preserves overall system performance and flexibility, while ensuring the final devices remain inexpensive.
 
 ==== Circuitpython
-While exploring the Raspberry Pi Pico ecosystem the Circuitpython programming language #cite(<adafruit_circuitpython_nodate>) was discovered. Circuitpython is based on Python and promises simplicity, quick prototyping and _"strong hardware support"_ #cite(<schroeder_what_2024>). Furthermore, Circuitpython's creator Adafruit has already created many packages and libraries for everything from interfacing with displays to Bluetooth connectivity, including packages for working with WiFi #cite(<noauthor_adafruit_2025>) and MIDI #cite(<walters_adafruit_2025>). While testing a Pico 2 was successfully made to host a WiFi hotspot using the beforementioned library. Likewise, a Pico 1 was successfully configured to connect to the Pico 2's hotspot, and they could successfully exchange messages. For experimentation purposes, using the beforementioned MIDI library, the host was easily configured to act as a MIDI interface, sending MIDI notes on multiple MIDI channels to an instance of Ableton Live running on a USB-connected laptop. 
+While exploring the Raspberry Pi Pico ecosystem the Circuitpython programming language #cite(<adafruit_circuitpython_nodate>) was discovered. Circuitpython is based on Python and promises simplicity, quick prototyping and _"strong hardware support"_ #cite(<schroeder_what_2024>). Furthermore, Circuitpython's creator Adafruit has already created many packages and libraries for everything from interfacing with displays to Bluetooth connectivity, including packages for working with WiFi #cite(<noauthor_adafruit_2025>) and MIDI #cite(<walters_adafruit_2025>). While testing a Pico 2 was successfully made to host a WiFi hotspot using the beforementioned library. Likewise, a Pico 1 was successfully configured to connect to the Pico 2's hotspot, and they could successfully exchange simple wireless messages. For experimentation purposes, using the beforementioned MIDI library, the host was successfully configured to act as a MIDI interface, sending MIDI notes on multiple MIDI channels to an instance of Ableton Live running on a USB-connected laptop. 
 
 The primary drawback of CircuitPython was its confinement of the Pico’s execution to a single CPU core, raising concerns about multitasking performance as the host device needed to manage multiple controllers and a computer concurrently. Fortunately, the discovery of the _asyncio_ library addressed this limitation #cite(<halbert_cooperative_2022>). By providing a cooperative multitasking framework—where functions explicitly yield control and later resume after a specified interval.
 
@@ -182,6 +175,8 @@ The code was also modified to depend on which card was read (@listing:nfcCardCha
 === Musical interaction <sec:sprint1MusicalInteraction>
 The last technical elements experimented with during the first sprint was the "interactive sensors" (Requirement 10, @table:technicalRequirements). The chosen sensors were eight buttons and four potentiometers, where each button should play a note, and the potentiometers should be used to experiment with the sounds. The reason for making it eight buttons was that it formed a good balance between usability and size, while also fitting perfectly with how music is often split into fours.
 
+Multiple button types where explored. This included both classic switch buttons but also force sensitive resistors @adafruit_square_2022 and piezoresistors @kosaka_e-drum_nodate, which would allow the user the play notes with different velocities. Ultimately, however, it was decided to use switch buttons, to keep the design and development process simple.
+
 Getting buttons to work with the Pico 1's where very easy using Circuitpython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these a GPIO pin on the Pico 1 could easily be referenced (@listing:buttonsPullUp:1), the pin could easily be defined as an input pin (@listing:buttonsPullUp:3), and the pin could finally easily be pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4). The libraries became the backbone of how the controllers would read user input. It was, however, also noted, that button debouncing #cite(<wright_what_2022>) would probably be required in the future depending on the final buttons used.
 
 #figure(
@@ -204,7 +199,7 @@ Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading a
 
 To facilitate a shared understanding of the product's physical layout within the team, a paper prototype was created, as illustrated in @fig:paperprototype. The prototype was constructed at a 1:1 scale using multicolored cardboard and adhesive tape to accurately represent the intended dimensions of the final product. Interface components were color-coded: the display was represented by a blue cutout, buttons by red cutouts, and potentiometers by pink cutouts. In addition to supporting a shared understanding, the prototype functioned as a tool for assessing usability and interface intuitiveness in the early stages of development.
 
-The initial design was influenced by the layout of drum pads #text(red)[cite], which is reflected in the arrangement of components on the prototype. The design incorporated eight buttons and four potentiometers, selected to balance simplicity and functionality with the physical constraints of the box's size. These choices were informed by the usability requirements in @table:usabilityRequirements, specifically requirements 2 (Portability), 3 (Size), and 9 (Intimidating). Furthermore, the overall dimensions were also in part decided by the availability of a Bambu Lab A1 Mini 3D #text(red)[cite] for further prototyping, which limited the footprint to approximately 18cm x 18cm x 18cm.
+The initial design was influenced by the layout of drum pads #text(red)[cite], which is reflected in the arrangement of components on the prototype. The design incorporated eight buttons and four potentiometers, selected to balance simplicity and functionality with the physical constraints of the box's size. These choices were informed by the usability requirements in @table:usabilityRequirements, specifically requirements 2 (Portability), 3 (Size), and 9 (Intimidating). Furthermore, the overall dimensions were also in part decided by the availability of a Bambu Lab A1 Mini #text(red)[cite] for further prototyping, which limited the footprint to approximately 18cm x 18cm x 18cm.
 
 === Testing
 The prototype was tested by a student enrolled in the Game Development and Learning Technology program at the University of Southern Denmark, allowing for initial feedback on usability. Due to the tester's personal connection to the team, feedback was looked upon with caution to mitigate potential bias. 

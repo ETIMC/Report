@@ -3,7 +3,6 @@
 
 During sprint 1 the team planned and began the prototyping of the product. Design choices where made which included that the system would consist of a host device, and one or more controller devices communicating via wifi. Capabilities of making the controller modular, such as experimentation with an NFC reader for deciding the instrument played, and a display visualizing the choice was initiated during the prior sprint. The team also created a paper prototype where a test was held to gather feedback that could then be taken into consideration #text(red)[highlight which parts we used during this sprint to guide the development!]. The sprint successfully established that the components were usable in stand-alone implementations.
 
-== Focus of Sprint 2
 For this sprint the team wanted to interconnect the individual components into a functional breadboard prototype. This for example meant that choosing an instrument using an NFC card would trigger the screen to display a picture of the selected instrument, and change the sounds played through Ableton.
 
 == WiFi problems <sec:sprint2WifiProblems>
@@ -11,7 +10,7 @@ During further WiFi connectivity tests between the Host and a Controller, the Ho
 
 Debugging eventually uncovered a pattern: only a full power cycle of the Pico 2 before initiating the WiFi connection yielded a stable result. In contrast, soft reboots from the REPL almost invariably triggered driver failures shortly thereafter, particularly when performed in rapid succession. By adopting a strict procedure of completely disconnecting and reconnecting power to the Host prior to each WiFi session, the driver crashes ceased entirely, restoring reliable performance.
 
-During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to the message showing up in the Host's REPL. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was network latency. There were two suggested primary reasons for this. The first one was that the WiFi chip on the Pico 1 and Pico 2 may not have been designed for low-latency communication. A possible solution for this would be exchanging the Pico 1 and Pico 2's for a different MCU. A contender would be the ESP32 line of devices, since they have both a dedicated wireless protocol for low latency communication and a library for sending MIDI messages @espressif_systems_esp-now_2025 @geissl_thomasgeisslesp-now-midi_2025. For affordability and availability reasons, this idea was not further explored. The other possible reason for the latency was the using of the TCP protocol, which contains extra headers and acknowledgement messages adding overhead to each sent message. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
+During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to the message showing up in the Host's REPL. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was network latency. There were two suggested primary reasons for this. The first one was that the WiFi chip on the Pico 1 and Pico 2 may not have been designed for low-latency communication. A possible solution for this would be exchanging the Pico 1 and Pico 2's for a different MCU. A contender would be the ESP32 line of devices, since they have both a dedicated wireless protocol for low latency communication and a library for sending MIDI messages @espressif_systems_esp-now_2025 @geissl_thomasgeisslesp-now-midi_2025. For affordability and availability reasons, this idea was not further explored. The other possible reason for the latency was the using of TCP, which contains extra headers and acknowledgement messages adding overhead to each sent message. It was decided that TCP should be exchanged for UDP, which has less overhead, during the next sprint.
 
 Lastly, it was sometimes experienced that a controller would disconnect from the host without the host ever finding out. To fix this, heartbeat-messages were implemented. They worked by having the host sending a heartbeat request message to the controller every few seconds. If the controller didn't answer the heartbeat three times in a row, the Host would forget the Controller.
 
@@ -33,9 +32,7 @@ The schematic brings together all the hardware elements of the controller:
 - LEDs
   - For visual purposes, ten LED's were added to schematic. The LED's chosen were the _Breadboard-friendly RGB Smart NeoPixel_ #cite(<adafruit_breadboard-friendly_2025>). These were chosen for their availability, flexibility and affordable pricing. By using NeoPixel LED's it was possible to control multiple LED's using only one GPIO pin. Furthermore, the _RGB Smart NeoPixel_ LED's are full RGB LED's meaning a single LED can display a wide array of colors. Lastly, as both the NeoPixel LED's and CircuitPython are made by Adafruit, a first-party library made them easy to integrate #cite(<george_adafruit_2025>).
   - A level shifter was added to make the NeoPixels run at 4.8V. This was done to make sure the LED's would be bright enough for both inside and outside use, as they were reported to have a lower brightness when connected to a 3.3V source @adafruit_breadboard-friendly_2025.
-
-The schematic served as a key step in moving from individual hardware tests to a fully integrated prototype.
-
+  
 == Controller breadboard prototype
 By following the schematic (@app:schematicSprint2), a controller was successfully assembled on a breadboard to test how the individual parts interacted. The LED's were deemed not strictly important for the functionality of the Controller and was therefore not implemented on the breadboard.
 
@@ -203,10 +200,10 @@ The second LED was programmed to display MIDI information. In practice this mean
 == Ableton Live setup
 In Ableton Live a new project was set up with two MIDI tracks. Each track was assigned a different input MIDI channel and was then given an instrument (@fig:abletonTwoInstrument). The two instruments were drums and piano. These instruments were chosen as they were easily recognizable, very different sounding, and their real counterparts very different looking.
 
-During the configuration of Ableton Live, it was decided to not prioritize looping functionality (Requirement 8, @table:usabilityRequirements). This decision was made since Ableton Live already implements looping. Therefore it seemed wiser to focus on other aspects of the product as the user would already be able to use looping by using the required instance of Ableton Live.
+During the configuration of Ableton Live, it was decided to not prioritize looping functionality (Requirement 8, @table:usabilityRequirements). This decision was made since Ableton Live already implements looping. Therefore it seemed wiser to focus on other aspects of the product as the user would already be able to use looping through Ableton Live.
 
 #figure(
-  [BILLEDE FRA ABLETON PÅ DAVIDS BÆRBAR],
+  image("../images/Ableton-2Tracks.png", width: 50%),
   caption: [Ableton Live 11 setup for playing playing different instruments on different MIDI channels.]
 ) <fig:abletonTwoInstrument>
 
@@ -310,7 +307,7 @@ To solve this, a slight inward curve was added to the side panels. This preserve
   caption: [Instrument Pixel Art],
 ) <fig:pixelart>
 
-All visual assets used for the display were created specifically for the project, as it was discovered during testing that the Picos had limited storage capacity and that the chosen display module required the picture format to be in bitmap (.BMP) format #text(red)[cite] for proper image rendering. Common image formats were incompatible, and the availability of suitable .BMP files was limited. Consequently, the team produced the required imagery using Aseprite #cite(<igara_studio_aseprite_2025>), a tool suited for pixel art creation. This application was selected due to its ability to export compatible files, precise scaling for the display's resolution, and prior familiarity with the software. In addition, the pixel art style was considered suitable for the target audience, due to its playful and accessible visual expression– it would also be used to fulfill requirements 3 and 11 in @table:usabilityRequirements.
+All visual assets used for the display were created specifically for the project, as it was discovered during testing that the Picos had limited storage capacity and that the chosen display module required the picture format to be in bitmap (.BMP) format #text(red)[cite] for proper image rendering. Common image formats were incompatible, and the availability of suitable .BMP files was limited. Consequently, the team produced the required imagery using Aseprite #cite(<igara_studio_aseprite_2025>), a tool suited for pixel art creation. This application was selected due to its ability to export compatible files, precise scaling for the display's resolution, and prior familiarity with the software. In addition, the pixel art style was considered suitable for the target audience, due to its playful and accessible visual expression– it would also be used to fulfill requirements 4 and 11 in @table:usabilityRequirements. (Requirement 4 & 11, @table:usabilityRequirements)
 
 For the initial breadboard implementation, two instrument images– a drum and a piano– were created as seen in @fig:pixelart. Feedback obtained during testing indicated interest in additional instruments, specifically a guitar and a trumpet. These images were subsequently developed and included in the system later in the development process.
 

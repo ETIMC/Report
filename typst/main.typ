@@ -61,9 +61,7 @@ Total character count: #total-characters
 
 #colbreak()
 = Introduction <chap:Introduction>
-@chap:Introduction \
-@app:schematicSprint2
-
+#include "sections/Introduction.typ"
 
 = State of the Art
 #include "sections/Literature review.typ"
@@ -87,10 +85,13 @@ Total character count: #total-characters
 #include "sections/Sprint 5.typ"
 
 = Evaluation 
+#include "sections/Evaluation.typ"
 
 = Results
+#include "sections/Results.typ"
 
 = Discussion
 #include "sections/Discussion.typ"
 
 = Conclusion
+#include "sections/Conclusion.typ"

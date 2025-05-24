@@ -17,6 +17,9 @@
 - SDA: Serial data line
 - SCL: Serial clock line
 - LDR: Light-dependent resistor
+- RFID: Radio Frequency Identification
+
+#text(red)[Ifølge ChatGPT, kan vi sagtens have vores liste over forkortelser og akronymer. I rapporten skal vi dog stadig skrive det fulde navn første gang, det nævnes efterfulgt af forkortelsen i parentes. Jeg tænker vi fikser det i korrekturlæsningen.]
 
 == Terms
 - Host: Device connected to a computer, interfacing with Ableton Live and Controllers.

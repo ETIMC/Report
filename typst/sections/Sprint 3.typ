@@ -1,11 +1,12 @@
 #import "@preview/codly:1.3.0": *
 
-== Summarize Sprint 2
+Introduction to sprint 3
+- Naevn nye switches blev valgt
 
+/*
 - Conclude what the test from sprint 2 did for the further development plans.
 
-== What we did this sprint
-- Further experimentation with Multiplexer functionality
+ - Further experimentation with Multiplexer functionality
   - To get a stable connection each A-pin on the multiplexer not in use must be set to ground, otherwise the values on the potentiometers will float A LOT and interfere with each other.
 - Further work on Fusion implementation
   - Added Support implementation for the PCB to stay in place.
@@ -30,8 +31,7 @@
   - Screws.
 - Planned testing.
   - Conducted testing
-
-== Multiplexer experimentation
+*/
 
 == More instruments
 - på baggrund af sprint 2 test
@@ -183,7 +183,9 @@ Two new side panels were created as variations of the original design. The first
 Lastly, the lid was designed to align with the base of the chassis and the component layout on the PCB. Corresponding holes for the buttons, display, and potentiometers were added, ensuring that all controls and feedback elements were accessible from the outside.
 
 magnet huller
+roede dutter (midlertidige magneter)
 
+- ironing
 
 === 3D printing
 Once the updated 3D models were completed, the components were printed without significant issues. The prints came out nicely and mostly fit together as intended. However, during assembly, it became clear that the PCB was positioned too low inside the chassis, making it hard to interact with the mounted components on the PCB, because the standoffs were too short. To fix this, a quick solution was implemented: small offset spacers were designed and printed. These were placed between the standoffs and the PCB to raise the board slightly. 
