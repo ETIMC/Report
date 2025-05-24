@@ -1,7 +1,7 @@
 #import "@preview/subpar:0.2.2" 
 
 #figure(
-  image("../images/FirstDrawing.png", height: 20%),
+  image("../images/idea generation/FirstDrawing.png", height: 20%),
   caption: [Initial Drawing of the Idea],
 ) <fig:firstDrawing>
 
@@ -25,8 +25,8 @@ The second idea, cooperative modules for music experimentation utilizing an NFC 
   rows: (auto, auto),
   caption: [Brainstorm made in FigJam.],
   label: <fig:FigmaIdeaGeneration>,
-  figure(image("../images/FigmaIdeaGeneration1.png", width: 90%),
+  figure(image("../images/idea generation/FigmaIdeaGeneration1.png", width: 90%),
     caption: [Post-it notes brainstorm.]),
-  figure(image("../images/FigmaIdeaGeneration2.png", width: 90%),
+  figure(image("../images/idea generation/FigmaIdeaGeneration2.png", width: 90%),
     caption: [Organized brainstorm.]),
 )  

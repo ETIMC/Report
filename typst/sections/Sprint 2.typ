@@ -36,8 +36,10 @@ The schematic brings together all the hardware elements of the controller:
 == Controller breadboard prototype
 By following the schematic (@app:schematicSprint2), a controller was successfully assembled on a breadboard to test how the individual parts interacted. The LED's were deemed not strictly important for the functionality of the Controller and was therefore not implemented on the breadboard.
 
-=== Buttons
+=== Buttons <sec:sprint2Buttons>
 Four tactile switch buttons @adafruit_tactile_nodate were added to the breadboard, according to the schematic. Each button was connected to the Pico using an internal pull-up configuration as mentioned in @sec:sprint1MusicalInteraction. The buttons were implemented so that, when a button was pressed, the controller send a single message to the host indicating which button had been activated (e.g., “Button 3 pressed”) (@listing:sprint2Buttons).
+
+Multiple buttons were handled by having references to them in a programmatic array. This array would be constantly iterated through, checking the state of each button, comparing it to its previous state (@listing:sprint2Buttons:1) to monitor it's state and whether it was being pressed. If it had been pressed the beforementioned message would be sent and a short asynchronous wait would begin (@listing:sprint2Buttons:3) so that other parts of the code had time to run, before the next button was checked.
 
 #figure(
   ```cpy
@@ -165,7 +167,8 @@ When a controller connected to the Host the LED would blink blue, and when it di
         align(left, box(width: 100pt)[Blink LED purple if there are less devices than last check.])
       )
     ),
-  )
+  ),
+  annotation-format: none
 )
 #figure(
   ```cpy
@@ -203,7 +206,7 @@ In Ableton Live a new project was set up with two MIDI tracks. Each track was as
 During the configuration of Ableton Live, it was decided to not prioritize looping functionality (Requirement 8, @table:usabilityRequirements). This decision was made since Ableton Live already implements looping. Therefore it seemed wiser to focus on other aspects of the product as the user would already be able to use looping through Ableton Live.
 
 #figure(
-  image("../images/Ableton-2Tracks.png", width: 50%),
+  image("../images/sprint 2/Ableton-2Tracks.png", width: 50%),
   caption: [Ableton Live 11 setup for playing playing different instruments on different MIDI channels.]
 ) <fig:abletonTwoInstrument>
 
@@ -215,13 +218,13 @@ During early host development, two diagrams (@fig:diagramMessageFlow) were draft
   caption: [Diagrams showing message flow.],
   label: <fig:diagramMessageFlow>,
   align: top,
-  figure(image("../images/DevicePlayingDiagram.png", width: 98%),
+  figure(image("../images/sprint 2/DevicePlayingDiagram.png", width: 98%),
     caption: [Message flow when using Controller.]), <fig:DevicePlayingDiagram>,
-  figure(image("../images/ChangeSoundDiagram.png", width: 100%),
+  figure(image("../images/sprint 2/ChangeSoundDiagram.png", width: 100%),
     caption: [Message flow when changing instrument.]), <fig:ChangeSoundDiagram>
 )
 
-The host was designed around three lookup tables: a controller-to-instrument map (@listing:lookUpTables2Instr:1), an instrument-to-MIDI-channel map (@listing:lookUpTables2Instr:2), and an instrument-specific table of controller-button to MIDI-note assignments (@listing:lookUpTables2Instr:6) which trialed used the `note_parser()` function from the MIDI library #cite(<walters_adafruit_2025>) to convert the name of the notes to the right MIDI number. When a message arrived indicating, for example, that Controller A’s Button 1 was pressed, the host would determine Controller A’s assigned instrument (@listing:receivedNote:5), select that instrument’s MIDI channel (@listing:receivedNote:6), look up the MIDI note tied to Button 1 for that instrument (@listing:receivedNote:8), and forward a corresponding MIDI message on the correct channel to Ableton Live (@listing:receivedNote:9). To change instruments, controllers sent special messages indicating the desired instrument; the host then updated the controller-to-instrument map accordingly (@fig:ChangeSoundDiagram). By pre-allocating one channel per instrument, sound changes required no additional latency—messages simply switched channels—ensuring seamless, low-latency response as required by the low latency technical requirement (Requirement 9, @table:technicalRequirements).
+The host was designed around three lookup tables: a controller-to-instrument map (@listing:lookUpTables2Instr:1), an instrument-to-MIDI-channel map (@listing:lookUpTables2Instr:2), and an instrument-specific table of controller-button to MIDI-note assignments (@listing:lookUpTables2Instr:6) which trialed used the `note_parser()` function from the MIDI library #cite(<walters_adafruit_2025>) to convert the name of the notes to the right MIDI number. When a message arrived indicating, for example, that Controller A’s Button 1 was pressed, the host would determine Controller A’s assigned instrument (@listing:receivedNote:5), select that instrument’s MIDI channel (@listing:receivedNote:6), look up the MIDI note tied to Button 1 for that instrument (@listing:receivedNote:8), and forward a corresponding MIDI message on the correct channel to Ableton Live (@listing:receivedNote:9). To change instruments, controllers sent special messages indicating the desired instrument; the host then updated the controller-to-instrument map accordingly (@fig:ChangeSoundDiagram). By pre-allocating one channel per instrument, sound changes required no additional latency—messages simply switched channels—ensuring seamless, low-latency response as required by the low latency technical requirement (Requirement 9, @table:technicalRequirements). However, it was noted that this limited the amount of instruments as this is the limit of the MIDI protocol @levin_how_2024.
 
 #figure(
   ```cpy
@@ -286,24 +289,21 @@ The first 3D model (@fig:fus2FirstAttempt) captured the core design, but several
 To solve this, a slight inward curve was added to the side panels. This preserved structural stability at the corners while reclaiming space in the center of the enclosure. The updated model (@fig:fus2Assembled) was then 3D printed, as shown in @fig:3DFirstPrintedBox.
 
 #subpar.grid(
-  columns: (auto, auto),
-  caption: [Controller chassis' in Fusion.],
+  columns: (auto, auto, auto),
+  caption: [Controller chassis'.],
   label: <fig:fus2>,
   align: top,
   figure(image("../images/Fusion/fus2FirstAttemptBox.png", width: 100%),
     caption: [First attempt at designing controller box.]), <fig:fus2FirstAttempt>,
   figure(image("../images/Fusion/fus2Assembled.png", width: 95%),
-    caption: [Controller chassis after changes.]), <fig:fus2Assembled>
+    caption: [Controller chassis after changes.]), <fig:fus2Assembled>,
+  figure(image("../images/Fusion/3DFirstBox.jpg", width: 80%),
+    caption: [3D printed controller chassis.]), <fig:3DFirstPrintedBox>
 )
-
-#figure(
-  image("../images/Fusion/3DFirstBox.jpg", width: 40%),
-  caption: [3D printed controller chassis.],
-) <fig:3DFirstPrintedBox>
 
 == Pixelart for the Display
 #figure(
-  image("../images/pixel-art.png", height: 20%),
+  image("../images/sprint 2/pixel-art.png", height: 20%),
   caption: [Instrument Pixel Art],
 ) <fig:pixelart>
 
@@ -317,7 +317,7 @@ Testing was conducted at the University of Southern Denmark, where the prototype
 In one instance, two participants were present in the room simultaneously; however, they completed the test individually and responded to the predefined questions together afterward. All remaining sessions involved one participant at a time.
 
 #figure(
-  image("../images/sprint2-test-setup.png", height: 20%, width: 70%),
+  image("../images/sprint 2/sprint2-test-setup.png", height: 20%, width: 70%),
   caption: [Test Setup for Sprint 2],
 ) <fig:sprint2setup>
 

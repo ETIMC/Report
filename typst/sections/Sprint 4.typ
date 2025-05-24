@@ -1,6 +1,9 @@
+#import "@preview/codly:1.3.0": *
+#import "@preview/subpar:0.2.2"
+
 == CAD Design
 
-Based on the test, the NFC side was changed to have a narrower opening. However, when printed, there was printed support in the opening. This was very hard to remove, and when used with the NFC card, the opening was found to be too small. So modifications for a slightly bigger hole were made and printed.
+Based on the test, the NFC side was changed to have a narrower opening. However, when printed, there was printed support in the o pening. This was very hard to remove, and when used with the NFC card, the opening was found to be too small. So modifications for a slightly bigger hole were made and printed.
 
 There were also designed potentiometers toppers, based on the earlier tests.  They were made with (#text(red)[kilde video pots]) in mind, but changed to fit the potentiometers and chassis. Many different options were modeled and printed.
 
@@ -9,7 +12,82 @@ pots
 == Potentiometer MIDI
 
 == Button and Debouncing algorithm
+Though it worked fine having each button checked serially by iterating through an array (@sec:sprint2Buttons), a better solution was implemented. This was done by creating a special function, `click_watcher` (@listing:sprint4Click: 1), with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.
 
+#codly(
+  annotations: (
+    (
+      start: 1,
+      end:  10,
+      content: block(
+        width: 10em,
+        align(left, box(width: 110pt)[Checks for \ button press.])
+      )
+    ),
+    (
+      start: 15,
+      end:  16,
+      content: block(
+        width: 10em,
+        align(left, box(width: 120pt)[Debounce array and \ interval in seconds.])
+      )
+    ),
+    (
+      start: 18,
+      end:  25,
+      content: block(
+        width: 11em,
+        align(left, box(width: 110pt)[Initialize buttons.])
+      )
+    ),
+  ),
+  annotation-format: none
+)
+#figure(
+  ```cpy
+  async def click_watcher(self, button, index):
+        while True:
+            current_value = button.value
+            if current_value == False and self.button_states[index] == True:
+                current_time = time.monotonic()
+                if current_time - self.debounce_timers[index] >= self.debounce_interval:
+                    self.connection_handler.send_note(index)
+                    self.debounce_timers[index] = current_time
+            self.button_states[index] = current_value
+            await asyncio.sleep(0.001)
+
+    def init_buttons(self):
+        self.buttons = []
+        self.button_states = []
+        self.debounce_timers = [0] * len(BTN_PINS)
+        self.debounce_interval = 0.002
+        idx = 0
+        for pin in BTN_PINS:
+            btn = digitalio.DigitalInOut(pin)
+            btn.direction = digitalio.Direction.INPUT
+            btn.pull = digitalio.Pull.UP
+            self.buttons.append(btn)
+            self.button_states.append(True)
+            asyncio.create_task(self.click_watcher(btn, idx))
+            idx += 1
+  ```,
+  caption: [New `click_watcher(btn, idx)`, button initialization and debouncing.],
+) <listing:sprint4Click>
+
+A software debouncing routine was introduced by maintaining a dictionary that maps each button to its most recent activation time (@listing:sprint4Click:14). On each button press, the code reads the current time, computes the interval since the last recorded press of that button, and compares this against a predefined debounce threshold (@listing:sprint4Click:6). Only if the elapsed time exceeds that threshold is the event treated as a genuine button press, preventing a single physical actuation from registering as multiple clicks due to contact chatter #cite(<wright_what_2022>).
+
+The debounce interval was determined empirically using an oscilloscope to capture the button’s voltage waveform (@fig:sprint4Oscilloscope). During repeated actuations, the longest bounce period observed was approximately 1.5 ms. A 0.5 ms safety margin was added to set the debounce threshold at 2 ms (@listing:sprint4Click:16). This value comfortably outlasts any measured bounce while remaining brief enough to preserve responsive play.
+
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Analyzing bounce of switches.],
+  label: <fig:sprint4Oscilloscope>,
+  align: top,
+  figure(image("../images/sprint 4/Oscilloscope1.jpg", width: 100%),
+    caption: [First attempt at designing controller box.]), <fig:oscilloscope1>,
+  figure(image("../images/sprint 4/Oscilloscope2.jpg", width: 100%),
+    caption: [Controller chassis after changes.]), <fig:oscilloscope2>
+)
 
 == Automatic card detection
 schematic
@@ -32,7 +110,7 @@ Initially, to improve upon engagement (Requirement 11, @table:usabilityRequireme
 
 
 #figure(
-  image("../images/top-design.svg", height: 30%),
+  rect(image("../images/sprint 4/top-design.svg", height: 30%), radius: 2mm),
   caption: [Lid Design in SVG format.],
 ) <fig:topDesign>
 
@@ -43,7 +121,7 @@ The third round of user testing was conducted at Rosengårdskolen and involved f
 During this test, a functional prototype was presented (@fig:sprint4setup). However, as previously discussed in #text(red)[reference section yippie], issues with the PCB configuration prevented the potentiometers from functioning correctly during this session. The test employed A/B testing, Think Aloud methodology, and unstructured interviews.
 
 #figure(
-  image("../images/sprint4test.png", height: 25%, width: 100%),
+  image("../images/sprint 4/sprint4test.png", height: 25%, width: 100%),
   caption: [Test Setup for Sprint 4],
 ) <fig:sprint4setup>
 

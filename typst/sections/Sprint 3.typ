@@ -34,8 +34,8 @@ Introduction to sprint 3
 */
 
 == More instruments
-- på baggrund af sprint 2 test
-- Noget om flere kort (trompet+guitat), lyde dertil, pixelart
+Based on the breadboard prototype tests (@sec:sprint2test), two additional instruments, a trumpet and a guitar, were integrated into the system. In Ableton Live 11, this involved creating two new MIDI tracks, each loaded with a high-quality trumpet or guitar virtual instrument and assigned to its own dedicated MIDI channel. Correspondingly, the controller’s instrument-selection UI was updated: two new images (one for the trumpet, one for the guitar) were designed and added to the display, ensuring users receive clear visual feedback whenever they switch to one of these instruments. Lastly, two new NFC cards were assigned to each of the instruments.
+
 
 == Lowering latency
 === UDP
@@ -159,16 +159,19 @@ To develop a fully functional prototype beyond a breadboard implementation, a cu
 
 The GitHub repository KiCad-RP-Pico @ncarandini_kicad-rp-pico_nodate served as the foundation for the Pico footprint. However, since the prototype utilized Pico 2 boards, minor modifications were made to the original footprint, including the removal of several unnecessary pin-holes. This adapted footprint also served as the template for designing the display's footprint, given that the display module shared the same number of pins as the Pico. In addition, a separate GitHub repository providing various switch footprints @siderakb_key-switchespretty_nodate was referenced for the switch components. This footprint was also modified to suit the project's specific needs.
 
-=== Production
-Several issues emerged during the PCB production phase, as illustrated in @fig:PCBMistakes. One of the primary setbacks was caused by the printer setting "Fit to Page", which unintentionally scaled down the PCB layout. As a result, the printed design no longer matched the actual dimensions needed, rendering the PCB unusable. This led to a misdiagnosis of the problem as an error with the footprints themselves, prompting unnecessary modifications to the newly designed footprints. These adjustments were later reversed upon the realization that the original footprints had been correct and that the issue stemmed from the incorrect printer setting.
+The PCB was initially routed using the _FreeRouting_ tool #cite(<noauthor_freeroutingfreerouting_2025>), but the generated layout proved impractical for soldering. Because the board was to sit just beneath the chassis surface, for space purposes, a two-sided design was required: buttons and display on the top, all other components on the bottom. Unfortunately, FreeRouting did not honor these layer constraints, placing several critical traces, including some for button contacts, on the top copper foil where they would interfere with component pads.
 
-Once this problem was resolved, a second issue arose due to the change in the printer at the production facilities. The newly installed printer utilized ink, which was incompatible with the PCB fabrication process and led to additional delays, as the resulting PCB was not viable for use.
+To resolve this, the PCB was redesigned and all traces were drawn manually, ensuring that top-side copper was reserved exclusively for button and display connections and that all other routing remained on the bottom layer.
+
+=== Production
+Several issues emerged during the PCB production phase, as illustrated in @fig:PCBMistakes. One of the primary setbacks was caused by the automatically enabled printer setting "Fit to Page", which unintentionally scaled down the PCB layout. As a result, the printed design no longer matched the actual dimensions needed, rendering the PCB unusable. This led to a misdiagnosis of the problem as an error with the footprints themselves, prompting unnecessary modifications to the newly designed footprints. These adjustments were later reversed upon the realization that the original footprints had been correct and that the issue stemmed from the incorrect printer setting. However, the root of the problem was first discovered after spending a considerable amount of time drilling all the holes in the PCB.
+
+Once the problem was resolved, a new issue arose due to the change in the printer at the production facilities. The newly installed printer utilized ink incompatible with the PCB fabrication process which led to additional delays, as the resulting PCB was not viable for use.
 
 #figure(
-  image("../images/pcb-mistakes.jpeg", height: 25%, width: 100%),
+  image("../images/sprint 3/pcb-mistakes.jpeg", height: 25%, width: 100%),
   caption: [*Left*: "Fit to Page" scaling problems. *Middle*: Wrong footprint scaling. *Right*: Ink Problems.],
 ) <fig:PCBMistakes>
-
 
 == Chassis Design
 
@@ -211,7 +214,7 @@ At this stage, the first iteration of the product's outer shell had been complet
 Testing combined A/B testing and unstructured interviews to gather useful feedback.
 
 #figure(
-  image("../images/box-v1.jpeg", height: 25%, width: 40%),
+  image("../images/sprint 3/box-v1.jpeg", height: 25%, width: 40%),
   caption: [Test Setup for Sprint 3],
 ) <fig:sprint3setup>
 

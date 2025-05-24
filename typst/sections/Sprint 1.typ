@@ -44,11 +44,11 @@ Requirement 1 (MCU) was specified to balance processing power with cost-effectiv
 Wireless connectivity was adopted to satisfy the mobility and ease-of-setup goals of Requirement 2 in @table:usabilityRequirements. Among available options, WiFi was selected for its lower end-to-end latency compared to alternatives like Bluetooth #cite(<sharrow_speed_2025>), ensuring that the system could transmit MIDI data rapidly enough to meet the low-latency requirement 9.
 
 Directly linked to requirement 1, requirement 2 (Dedicated MIDI Host) was defined to prevent the limited processing power of the MCU's from introducing latency that would conflict with requirement 9 (Low Latency) in @table:technicalRequirements. To address this, a dedicated MIDI _host_ was specified to handle MIDI functionality separately from the _controller_ that the user would use to experiment with music.
-Requirement 3 (Ableton Live) was introduced to further offload sound generation from the MCU's to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation.
+Requirement 3 (Ableton Live) was introduced to further offload sound generation from the MCU's to a computer, enabling greater flexibility in sound selection and ensuring higher audio quality. Ableton Live was chosen due to its robust MIDI handling, real-time performance capabilities, and wide adoption in both amateur and professional music production. Although this choice imposes a dependency on a separate computer, limiting the flexibility mentioned in requirement 2 in @table:usabilityRequirements, it was decided that the advantages in terms of sound choice and audio quality outweighed this limitation. It is worth noting that while the _Suite_ version of Ableton Live has been used during development and testing, the "Lite" version should be sufficient, since it supports up to 16 tracks and full MIDI capabilities @ableton_buy_nodate.
 The host acts as the central connector in the system, interfacing between the controllers and Ableton Live, ensuring smooth communication and coordination across all components. (@fig:DeviceRelationsshipsSprint1)
 
 #figure(
-  image("../images/DeviceRelationshipsSprint1.png", width: 75%),
+  image("../images/sprint 1/DeviceRelationshipsSprint1.png", width: 75%),
   caption: [Diagram illustrating system relationships between devices.]
 ) <fig:DeviceRelationsshipsSprint1>
 
@@ -105,7 +105,7 @@ To address usability requirements 4 (Feedback), 11 (Engaging), and 12 (Cheap) as
 Initial testing was carried out using example code provided by Adafruit for the display. The code was successfully flashed onto a Pico 2 and produced a "Hello World" output directly on the display itself as seen in @fig:helloworlddisplay.
 
 #figure(
-  image("../images/hello-world-display.jpeg", height: 20%),
+  image("../images/sprint 1/hello-world-display.jpeg", height: 20%),
   caption: [Initial Display Test],
 ) <fig:helloworlddisplay>
 
@@ -168,7 +168,7 @@ The code was also modified to depend on which card was read (@listing:nfcCardCha
 
 
 #figure(
-  image("../images/nfcFirstSetup.jpg", height: 20%),
+  image("../images/sprint 1/nfcFirstSetup.jpg", height: 20%),
   caption: [Initial NFC Test],
 ) <fig:nfcFirstSetup>
 
@@ -193,7 +193,7 @@ Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading a
 
 == Paper prototype
 #figure(
- image("../images/paperprototype.png", height: 25%),
+ image("../images/sprint 1/paperprototype.png", height: 25%),
   caption: [Paper Prototype],
 ) <fig:paperprototype>
 
