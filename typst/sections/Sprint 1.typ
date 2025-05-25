@@ -175,7 +175,7 @@ The last technical elements experimented with during the first sprint was the "i
 
 Multiple button types where explored. This included both classic switch buttons but also force sensitive resistors @adafruit_square_2022 and piezoresistors @kosaka_e-drum_nodate, which would allow the user the play notes with different velocities. Ultimately, however, it was decided to use switch buttons, to keep the design and development process simple.
 
-Getting buttons to work with the Pico 1's where very easy using Circuitpython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these a GPIO pin on the Pico 1 could easily be referenced (@listing:buttonsPullUp:1), the pin could easily be defined as an input pin (@listing:buttonsPullUp:3), and the pin could finally easily be pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4). The libraries became the backbone of how the controllers would read user input. It was, however, also noted, that button debouncing #cite(<wright_what_2022>) would probably be required in the future depending on the final buttons used.
+Getting buttons to work with the Pico 1's were very easy using Circuitpython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these a GPIO pin on the Pico 1 could easily be referenced (@listing:buttonsPullUp:1), be defined as an input pin (@listing:buttonsPullUp:3), and easily be pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4). The libraries became the backbone of how the controllers would read user input. It was, however, also noted, that button debouncing #cite(<wright_what_2022>) would probably be required in the future depending on the final buttons used.
 
 #figure(
   ```cpy
@@ -187,7 +187,7 @@ Getting buttons to work with the Pico 1's where very easy using Circuitpython's 
   caption: [Code pulling input-pin GP13 to high.]
 ) <listing:buttonsPullUp>
 
-Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs @noauthor_analog_2025. It was decided this library was to be used for reading the potentiometers. However, it was noted that the Pico's only had three analog inputs. Therefore, a solution would later have to be found to connect all four potentiometers to the Pico's.
+Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs @noauthor_analog_2025. It was decided this library was to be used for reading the potentiometers. However, it was noted that the Pico's only had three analog inputs. Therefore, a solution would later have to be found to connect all four potentiometers to the Pico 1s.
 
 == Paper prototype
 #figure(
@@ -201,7 +201,7 @@ The prototype was constructed at a 1:1 scale using multicolored cardboard and ad
 
 
 === Testing
-The prototype was tested by a student enrolled in the Game Development and Learning Technology program at the University of Southern Denmark, allowing for initial feedback on usability. Due to the tester's personal connection to the team, feedback was looked upon with caution to mitigate potential bias. 
+The prototype was tested by a student enrolled in the Game Development and Learning Technology program at the University of Southern Denmark, allowing for initial feedback on usability. Due to the tester's personal relation to the team, feedback was looked upon with caution to mitigate potential bias. 
 
 The test was conducted at the University of Southern Denmark and involved an unstructured interview , combined with the Think Aloud methodology. An A/B test was also carried out to assess the preferred placement of the NFC reader. This multi-method approach supported a flexible testing environment and allowed exploration of questions not already pre-defined before the test. The session lasted approximately 30 minutes and yielded constructive criticism, while the overall user response remained positive. 
 
