@@ -6,4 +6,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: typst-community/setup-typst@v4
-      - run: typst compile main.typ paper.pdf
+      - run: typst compile typst/main.typ paper.pdf
