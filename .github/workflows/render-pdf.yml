@@ -9,3 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: typst-community/setup-typst@v4
       - run: typst compile typst/main.typ paper.pdf --font-path ~/.fontist/fonts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: paper.pdf
