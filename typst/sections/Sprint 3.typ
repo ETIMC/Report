@@ -34,7 +34,11 @@ Introduction to sprint 3
 */
 
 == More instruments
-Based on the breadboard prototype tests (@sec:sprint2test), two additional instruments, a trumpet and a guitar, were integrated into the system. In Ableton Live 11, this involved creating two new MIDI tracks, each loaded with a high-quality trumpet or guitar virtual instrument and assigned to its own dedicated MIDI channel. Correspondingly, the controller’s instrument-selection UI was updated: two new images (one for the trumpet, one for the guitar) were designed and added to the display, ensuring users receive clear visual feedback whenever they switch to one of these instruments. Lastly, two new NFC cards were assigned to each of the instruments.
+#figure(
+  image("../images/sprint 3/pixel-art2.png", height: 20%),
+  caption: [Additional Pixel Art],
+) <fig:pixelart2>
+Based on the breadboard prototype tests (@sec:sprint2test), two additional instruments, a trumpet and a guitar, were integrated into the system. In Ableton Live 11, this involved creating two new MIDI tracks, each loaded with a high-quality trumpet or guitar virtual instrument and assigned to its own dedicated MIDI channel. Correspondingly, the controller’s instrument-selection UI was updated: two new images (one for the trumpet, one for the guitar) were designed and added to the display (@fig:pixelart2), ensuring users receive clear visual feedback whenever they switch to one of these instruments. Lastly, two new NFC cards were assigned to each of the instruments.
 
 
 == Lowering latency
@@ -166,7 +170,7 @@ To resolve this, the PCB was redesigned and all traces were drawn manually, ensu
 === Production
 Several issues emerged during the PCB production phase, as illustrated in @fig:PCBMistakes. One of the primary setbacks was caused by the automatically enabled printer setting "Fit to Page", which unintentionally scaled down the PCB layout. As a result, the printed design no longer matched the actual dimensions needed, rendering the PCB unusable. This led to a misdiagnosis of the problem as an error with the footprints themselves, prompting unnecessary modifications to the newly designed footprints. These adjustments were later reversed upon the realization that the original footprints had been correct and that the issue stemmed from the incorrect printer setting. However, the root of the problem was first discovered after spending a considerable amount of time drilling all the holes in the PCB.
 
-Once the problem was resolved, a new issue arose due to the change in the printer at the production facilities. The newly installed printer utilized ink incompatible with the PCB fabrication process which led to additional delays, as the resulting PCB was not viable for use.
+Once the problem was resolved, a new issue arose due to the change in the printer at the production facilities at the University of Southern Denmark. The newly installed printer utilized ink incompatible with the PCB fabrication process which led to additional delays, as the resulting PCB was not viable for use.
 
 #figure(
   image("../images/sprint 3/pcb-mistakes.jpeg", height: 25%, width: 100%),
@@ -217,10 +221,10 @@ Testing combined A/B testing and unstructured interviews to gather useful feedba
 
 An A/B test was conducted to assess perferences for potentiometer knob sizes. Participants were presented with three different "topper" options: small, medium, and large. This test addressed earlier feedback, as described in @sec:sprint2test, where participants found the bare potentiometers difficult to manipulate. While individual preferences varied, all participants agreed that any topper was preferable to none.
 
-Overall, participants responded positively to the interaction experience during the Wizard of Oz test. One tester remarked #quote[Yes! I could just imagine myself sitting here and jamming!] #text(red)[cite appendices] and another stated: #quote[I think this is very funny!] #text(red)[cite appendices].
+Overall, participants responded positively to the interaction experience during the Wizard of Oz test. One tester remarked #quote[Yes! I could just imagine myself sitting here and jamming!] (@app:Sprint3Transcriptions) and another stated: #quote[I think this is very funny!] (@app:Sprint3Transcriptions).
 
-When asked whether the system might motivate them to explore a new musical instrument, the participants, having musical backgrounds playing drums and guitar, responded negatively. However, one participant noted: #quote[Hmm... Especially if you've never played music before, then I think it would be like that.] #text(red)[cite appendices] which suggest the product could hold great appeal for individuals without prior musical experience.
+When asked whether the system might motivate them to explore a new musical instrument, the participants, having musical backgrounds playing drums and guitar, responded negatively. However, one participant noted: #quote[Hmm... Especially if you've never played music before, then I think it would be like that.] (@app:Sprint3Transcriptions) which suggest the product could hold great appeal for individuals without prior musical experience.
 
-Participants were also asked if they would use the product in a real-life context, one responded: #quote[Yes, 100 percent!] #text(red)[cite appendices] and another offered a more nuanced perspective: #quote[Yes, but I would probably rather sit and feel the real thing, you know, but it's a good alternative if you just can't afford all those musical instruments.] #text(red)[cite appendices].
+Participants were also asked if they would use the product in a real-life context, one responded: #quote[Yes, 100 percent!] (@app:Sprint3Transcriptions) and another offered a more nuanced perspective: #quote[Yes, but I would probably rather sit and feel the real thing, you know, but it's a good alternative if you just can't afford all those musical instruments.] (@app:Sprint3Transcriptions).
 
-In terms of physical interaction, one participant offered constructive criticism regarding the insertion of the NFC card: #quote[[...] But maybe it's a bit loose. It's like, if you don't put it in properly, it can easily slide out. So maybe a slightly narrower opening?] #text(red)[cite appendices].
+In terms of physical interaction, one participant offered constructive criticism regarding the insertion of the NFC card: #quote[[...] But maybe it's a bit loose. It's like, if you don't put it in properly, it can easily slide out. So maybe a slightly narrower opening?] (@app:Sprint3Transcriptions).

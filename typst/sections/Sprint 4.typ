@@ -203,12 +203,12 @@ schematic
 
 
 
-== PCB
+== PCB 
 Later, the production facility reverted to the previous printer configuration instead of the faulty one described in @sec:PCBsprint3, allowing for a successfully fabricated PCB. During the soldering phase, several technical challenges were encountered. These included difficulties related to manual hole drilling, which affected the alignment and stability of mounted components. Additionally, this phase involved working with VIAs for the first time, which proved particularly challenging due to poor solder adhesion, leading to fragile connections. Further inspection of the assembled PCB revealed several design errors as well. These required "hacks" to establish the necessary connections and restore full functionality.
 
 Molex connectors were used to connect all off-board components—such as the USB port and power switch to the PCB. Theu were used because they provide secure and quick-release capability, simplifying assembly and maintenance. Although the NFC reader was originally planned to use a similar connector, it proved more practical to connect a pin-header to it's pins and solder flexible wires between the header and the PCB. This approach still allows the reader to be unplugged for removing the PCB without disturbing the rest of the wiring.
 
-=== Multiplexer, potentiometers and LDR
+=== Multiplexer, potentiometers and LDR <potsprint4>
 An unrelated issue arose concerning the functionality of the potentiometers when mounted in conjunction with other components, specifically an LED and a light-dependent resistor (LDR) which were intended to detect if a NFC card was inserted into the chassis. In this configuration, neither the potentiometers nor the LDR functioned as intended. The potentiometer readings had floating values, and the LDR failed to detect any significant changes in light levels. Given that these components were all connected through the multiplexer of the system, it was hypothesized that the root cause of the malfunction might have been inadequate grounding of the multiplexer's unused input channels– which was found to be essential for proper functionality as described in @sec:potsSprint2.
 
 === Ordering PCBs
@@ -229,7 +229,7 @@ Initially, to improve upon engagement (Requirement 11, @table:usabilityRequireme
 == Testing
 The third round of user testing was conducted at Rosengårdskolen and involved four individual participants from the 5th grade. Each session lasted approximately seven and a half minutes.
 
-During this test, a functional prototype was presented (@fig:sprint4setup). However, as previously discussed in #text(red)[reference section yippie], issues with the PCB configuration prevented the potentiometers from functioning correctly during this session. The test employed A/B testing, Think Aloud methodology, and unstructured interviews.
+During this test, a functional prototype was presented (@fig:sprint4setup). However, as previously discussed in @potsprint4, issues with the PCB configuration prevented the potentiometers from functioning correctly during this session. The test employed A/B testing, Think Aloud methodology, and unstructured interviews.
 
 #figure(
   image("../images/sprint 4/sprint4test.png", height: 25%, width: 100%),
@@ -238,13 +238,11 @@ During this test, a functional prototype was presented (@fig:sprint4setup). Howe
 
 Two participants reported having prior formal music training. One played the flute and another the guitar; the remaining two had no previous musical experience.
 
-When asked whether it was difficult to create a rhythm using the product, one participant responded: #quote[Yes, a little, because you do not really know where the buttons are and the sounds.] (Translated from Danish to English) #text(red)[appendices reference], upon further prompting, the participant elaborated that the switch-sensitivity was a problem #quote[You know, they are quite fast if you keep pressing it.] (Translated from Danish to English) #text(red)[appendices reference]. Another participant noted: #quote[Yes, yes, you do have to remember what sounds comes out of with buttons.] (Translated from Danish to English) #text(red)[appendices reference] To address this usability challenge, one participant suggested: #quote[Yes! It could be nice if it said what sounds come out of these buttons.] (Translated from Danish to English) #text(red)[appendices reference].
+When asked whether it was difficult to create a rhythm using the product, one participant responded: #quote[Yes, a little, because you do not really know where the buttons are and the sounds.] (Translated from Danish to English) (@app:Sprint4Transcriptions), upon further prompting, the participant elaborated that the switch-sensitivity was a problem #quote[You know, they are quite fast if you keep pressing it.] (Translated from Danish to English) (@app:Sprint4Transcriptions). Another participant noted: #quote[Yes, yes, you do have to remember what sounds comes out of with buttons.] (Translated from Danish to English) (@app:Sprint4Transcriptions). To address this usability challenge, one participant suggested: #quote[Yes! It could be nice if it said what sounds come out of these buttons.] (Translated from Danish to English) (@app:Sprint4Transcriptions).
 
-Participants responded positively to the functionality of the display. One stated: #quote[It is fun! And it is kind of fascinating that the picture is displayed when you put a card in.] (Translated from Danish to English) #text(red)[appendices reference]. However, constructive criticism was provided regarding the physical design. One participant remarked that the potentiometers obstructed the display: #quote[These could be lowered a little because they hide almost all of the display.] (Translated from Danish to English) #text(red)[appendices reference].
+Participants responded positively to the functionality of the display. One stated: #quote[It is fun! And it is kind of fascinating that the picture is displayed when you put a card in.] (Translated from Danish to English) (@app:Sprint4Transcriptions). However, constructive criticism was provided regarding the physical design. One participant remarked that the potentiometers obstructed the display: #quote[These could be lowered a little because they hide almost all of the display.] (Translated from Danish to English) (@app:Sprint4Transcriptions).
 
 
 An A/B test was conducted using different side panel designs featuring varying slit widths for NFC card insertion. It became clear that one version was too narrow, as multiple participants reported difficulty inserting the cards with ease. 
 
-When asked whether the product would be more enjoyable as a shared experience, all participants expressed a preference for using it collaboratively.
-
-Lastly, interest in the potential commercialization of the product was expressed with one participant asking: #quote[Is it like so, that you would put it out?] (Translated from Danish to English) #text(red)[appendices reference].
+When asked whether the product would be more enjoyable as a shared experience, all participants expressed a preference for using it collaboratively. Lastly, interest in the potential commercialization of the product was expressed with one participant asking: #quote[Is it like so, that you would put it out?] (Translated from Danish to English) (@app:Sprint4Transcriptions).

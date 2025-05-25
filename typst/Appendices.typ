@@ -17,6 +17,12 @@
   rect(image("appendices/sprint-2-test/Test 4.svg", width: 92%), radius: 2mm)
 )
 
+#heading([Sprint 3 transcriptions]) <app:Sprint3Transcriptions>
+
+#heading([Sprint 4 transcriptions]) <app:Sprint4Transcriptions>
+
+#heading([Sprint 5 transcriptions]) <app:Sprint5Transcriptions>
+
 #colbreak()
 = Schematic after second sprint <app:schematicSprint2>
 #figure(
