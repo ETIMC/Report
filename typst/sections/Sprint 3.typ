@@ -2,6 +2,7 @@
 
 Introduction to sprint 3
 - Naevn nye switches blev valgt
+- Noget om at testere gerne ville have LEDs
 
 /*
 - Conclude what the test from sprint 2 did for the further development plans.
@@ -181,11 +182,11 @@ Once the problem was resolved, a new issue arose due to the change in the printe
 
 === CAD design
 Based on the previously 3D printed chassis (#text(red)[reference til sprint2 fusion]), several features were added and refined through iterative design. 
-One of the first additions was the creation of the PCB standoffs—four cylindrical supports with central screw holes, aligned to match the mounting holes of the PCB. Before printing, the placement and alignment of the standoffs were verified in Fusion by inserting a model of the PCB to ensure proper fit.
+One of the first additions was the creation of PCB standoffs—four cylindrical supports with central screw holes, aligned to match the mounting holes of the PCB. Before printing, the placement and alignment of the standoffs were verified in Fusion by inserting a model of the PCB to ensure a proper fit.
 
 A dedicated NFC reader holder was also designed. This component included a fixed position for the NFC module and a dedicated slot for card insertion. A stop point was added inside the slot to prevent the cards from being inserted too far into the chassis, both to protect other internal components and in response to user testing from Sprint 2 (#text(red)[kilde]), where children expressed curiosity about placing objects into the opening. Additionally, holes were included in the NFC holder for an LDR sensor and an LED.
 
-Two new side panels were created as variations of the original design. The first was the NFC side panel, which featured a large rectangular opening with smoothed edges to ensure safe use. The second was the rear side panel, where cutouts were added for both a USB-B connector and a physical on/off switch.
+Two new side panels were created as variations of the original design. The first was the NFC side panel, which featured a large rectangular opening with smoothed edges to ensure safe use. The second was the rear side panel, where cutouts were added for both the USB-B connector and on/off switch.
 
 Lastly, the lid was designed to align with the base of the chassis and the component layout on the PCB. Corresponding cutouts were added for the buttons, display, and potentiometers, ensuring all interactive elements were accessible. To improve the surface finish, the lid was “ironed” using a feature in Bambu Studio. However, the result did not meet expectations and was therefore reconsidered in later iterations.
 
@@ -207,6 +208,7 @@ skruer:
 4. sort lav top, passede, men meget besværlig at skrue (sort)
 5. løsning: skrue uden hoved + ide om møtrik (hvid + hvis&sort møtrik)
 */
+  
 == Testing
 The test was conducted at the University of Southern Denmark and involved three participants from Teknologiskolen @teknologiskolen_om_2025. Each session lasted approximately eight minutes.
 

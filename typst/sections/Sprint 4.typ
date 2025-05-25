@@ -198,9 +198,7 @@ The idea behind the detection mechanism was placing a red LED at the bottom of t
 
 Before the setup of the LDR and the LED, a lot of calculations were made. Both to figure out which resistors should be used and to detect the reading values of the LDR inside the box, when it was just connected to a breadboard. This part was easy, but when connected to the PCB, it caused problems.
 
-schematic
-
-
+- schematic
 
 
 == PCB 
