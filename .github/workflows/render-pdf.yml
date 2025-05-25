@@ -1,0 +1,9 @@
+name: Render paper.pdf
+on: push
+jobs:
+  render-paper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: typst-community/setup-typst@v4
+      - run: typst compile main.typ paper.pdf
