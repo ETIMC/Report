@@ -183,12 +183,9 @@ A dedicated NFC reader holder was also designed. This component included a fixed
 
 Two new side panels were created as variations of the original design. The first was the NFC side panel, which featured a large rectangular opening with smoothed edges to ensure safe use. The second was the rear side panel, where cutouts were added for both a USB-B connector and a physical on/off switch.
 
-Lastly, the lid was designed to align with the base of the chassis and the component layout on the PCB. Corresponding holes for the buttons, display, and potentiometers were added, ensuring that all controls and feedback elements were accessible from the outside.
+Lastly, the lid was designed to align with the base of the chassis and the component layout on the PCB. Corresponding cutouts were added for the buttons, display, and potentiometers, ensuring all interactive elements were accessible. To improve the surface finish, the lid was “ironed” using a feature in Bambu Studio. However, the result did not meet expectations and was therefore reconsidered in later iterations.
 
-magnet huller
-roede dutter (midlertidige magneter)
-
-- ironing
+Since the lid was initially only placed on top of the chassis, a simple attachment mechanism was introduced using small 3D-printed cylinders. These were inserted into the corner holes of the chassis, and aligned with the lid's holes.
 
 === 3D printing
 Once the updated 3D models were completed, the components were printed without significant issues. The prints came out nicely and mostly fit together as intended. However, during assembly, it became clear that the PCB was positioned too low inside the chassis, making it hard to interact with the mounted components on the PCB, because the standoffs were too short. To fix this, a quick solution was implemented: small offset spacers were designed and printed. These were placed between the standoffs and the PCB to raise the board slightly. 

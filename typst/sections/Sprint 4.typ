@@ -3,11 +3,13 @@
 
 == CAD Design
 
-Based on the test, the NFC side was changed to have a narrower opening. However, when printed, there was printed support in the o pening. This was very hard to remove, and when used with the NFC card, the opening was found to be too small. So modifications for a slightly bigger hole were made and printed.
+Based on user testing, the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing, as previous testers had found the original size too large and had asked if unrelated objects could be inserted.
 
-There were also designed potentiometers toppers, based on the earlier tests.  They were made with (#text(red)[kilde video pots]) in mind, but changed to fit the potentiometers and chassis. Many different options were modeled and printed.
+Additionally, potentiometer toppers were designed and developed based on earlier feedback. The initial designs were inspired by (VIDEO), but adjusted to match the specific dimensions of the potentiometers and the holes in the lid. Several versions were modeled and printed. The first prototype was a simple cap designed to fit directly onto the potentiometer shaft (IMAGE), used to verify fit and tolerances.
 
-pots
+Thereafter, experimentation with how the bottom of the potentiometer topper should be begun. It was made to make toppers that went into the hole of the lid, so the PCB could not be seen (IMAGE). This was a good idea in theory, but it was very hard to turn. A new modified version of this was printed (IMAGE) and seemed to work. There were also printed two slightly different toppers with a flat facet (IMAGE 2 pots), which purpose were to lay on top of the lid, but still covering the holes for the PCB. Since all of the potentiometers toppers fitted and work, just had a different feeling, it was decided to test them on the target group, to get their thoughts about them.
+
+As all designs fit mechanically and differed mainly in tactile feedback and ergonomics, it was decided to include them in testing with the target group to gather user preferences.
 
 == Potentiometer MIDI
 
