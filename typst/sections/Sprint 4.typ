@@ -14,7 +14,103 @@ Thereafter, experimentation with how the bottom of the potentiometer topper shou
 As all designs fit mechanically and differed mainly in tactile feedback and ergonomics, it was decided to include them in testing with the target group to gather user preferences.
 
 == Potentiometer MIDI
+The functionality of the potentiometers was handled in much different way than the buttons. Since they were all plugged in to a multiplexer, each potentiometer could only be read, when the three "select" pins on the multiplexer were set to the right binary values.
 
+The select pins were defined as digital pins using _digitalio_, as they did not require specific analog signals (@listing:sprint4Pot:9). However, the multiplexer output pin was set as an analog input port on the Pico 1's using _analogio_ (@listing:sprint4Pot:7).
+
+The reading of the potentiometers themselves worked by continuously iterating through and array of the multiplexer settings for each potentiometer, setting the multiplexer to let that potentiometers signal through (@listing:sprint4Pot:18). This signal was then read and processed before continuing to the next setting.
+
+The processing of the signals consisted of sampling the potentiometer multiple times (@listing:sprint4Pot:23) and getting the average read 16-bit value from the samples (@listing:sprint4Pot:26). This was required as the potentiometers seemed to produced slightly fluctuating values. Afterwards, the averaged 16 bit number would be mapped to a range of 0-127 (@listing:sprint4Pot:27), as this is the range MIDI works in. Lastly, it would be checked if this value was different than the potentiometer's last value (@listing:sprint4Pot:28), and if it was, it would be forwarded to the Host in a special message consisting of the id of the potentiometer and its value (@listing:sprint4Pot:30). On the Host side, this message would be received and processed much like button presses. The main difference is that, instead of sending MIDI notes messages to Ableton Live 11, it would send _control change_ messages, which, in Ableton Live 11, can be configured to adjust a wide variety of settings; including instrument sound modifications.
+
+#codly(
+  annotations: (
+    (
+      start: 2,
+      end:  2,
+      content: block(
+        width: 15em,
+        align(left, box(width: 120pt)[Configure binary select values.])
+      )
+    ),
+    (
+      start: 7,
+      end:  10,
+      content: block(
+        width: 10em,
+        align(left, box(width: 110pt)[Initialize analog input and digital select pins.])
+      )
+    ),
+    (
+      start: 15,
+      end:  16,
+      content: block(
+        width: 10em,
+        align(left, box(width: 110pt)[Map 16-bit read value to MIDI range.])
+      )
+    ),
+    (
+      start: 18,
+      end:  21,
+      content: block(
+        width: 10em,
+        align(left, box(width: 110pt)[Iterate over predefined binary select values.])
+      )
+    ),
+    (
+      start: 23,
+      end:  26,
+      content: block(
+        width: 10em,
+        align(left, box(width: 110pt)[Sample each potentiometer multiple times.])
+      )
+    ),
+    (
+      start: 28,
+      end:  30,
+      content: block(
+        width: 10em,
+        align(left, box(width: 110pt)[Forward potentiometer value to Host if it is different to last check.])
+      )
+    ),
+  ),
+  annotation-format: none
+)
+#figure(
+  ```cpy
+  
+  POT_SELECT_VALUES = [(0, 0, 0), (0, 0, 1), (0, 1, 0), (0, 1, 1)]
+  
+  def init_potentiometers(self):
+    self.last_pot_values = [0, 0, 0, 0]
+    self.pot_select_objects = []
+    self.pot_input_object = analogio.AnalogIn(MPLEX_INPUT_PIN)
+    for pin in POT_SELECT_PINS:
+      select_pin = digitalio.DigitalInOut(pin)
+      select_pin.direction = digitalio.Direction.OUTPUT
+      self.pot_select_objects.append(select_pin)
+    asyncio.create_task(self.read_potentiometers())
+
+    async def read_potentiometers(self):
+      def map_value(raw):
+        return int(((65535 - raw) / 65535) * 127)
+      while True:
+        for idx, setup in enumerate(POT_SELECT_VALUES):
+          self.pot_select_objects[0].value = setup[0]
+          self.pot_select_objects[1].value = setup[1]
+          self.pot_select_objects[2].value = setup[2]
+          samples = []
+          for _ in range(NUM_SAMPLES):
+            samples.append(self.pot_input_object.value)
+            await asyncio.sleep(0.0005)
+          avg_value = sum(samples) / NUM_SAMPLES
+          mapped_value = map_value(avg_value)
+          if math.fabs(mapped_value - self.last_pot_values[idx]) > 1:
+            self.last_pot_values[idx] = mapped_value
+            self.connection_handler.send_potentiometer(idx, mapped_value)
+          await asyncio.sleep(0.001)
+  ```,
+  caption: [Methods on Controller for handling of potentiometers.]
+) <listing:sprint4Pot>
 
 == Button and Debouncing algorithm
 Though it worked fine having each button checked serially by iterating through an array (@sec:sprint2Buttons), a better solution was implemented. This was done by creating a special function, `click_watcher` (@listing:sprint4Click: 1), with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.

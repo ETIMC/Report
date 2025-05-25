@@ -89,4 +89,4 @@ The updated design of the top chassis also received positive remarks. Participan
 
 Several participants expressed a desire for more switches and additional functionalities, including the ability for sounds to play as long as a button was held down.
 
-Notably, one participant reported being inspired to learn the cello after the experience, an indication of high engagement. Although this sentiment was not shared by all, the plug-N-play nature of the NFC interaction was widely appreciated. One participant commented: #quote[It was very fun. Because you do not have to write all kinds of things, you just need to insert it and then it worked.] 
+Notably, one participant reported being inspired to learn the cello after the experience, an indication of high engagement. Although this sentiment was not shared by all, the plug-N-play nature of the NFC interaction was widely appreciated. One participant commented: #quote[It was very fun. Because you do not have to write all kinds of things, you just need to insert it, and then it works.] Finally, one pair of participants were excited about the idea of being able to buy the product as well.
