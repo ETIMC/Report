@@ -68,7 +68,7 @@ During the assembly of both PCBs, feedback gathered during the test from the pri
 ) <fig:finalpcbs>
 
 == Testing
-The last round of user testing was conducted at Rosengårdskolen and involved six individual participants from the 5th grade here, three had participated in the test during Sprint 4. Each session lasted approximately seven and a half minutes.
+The last round of user testing was conducted at Rosengårdskolen and involved six individual participants from the 5th grade. Three had participated in the test during Sprint 4. Each session lasted approximately twelve minutes.
 
 During this test, two functional controllers were presented alongside a print detailing extra instruments that could be played, but were not configured to an NFC card (@fig:sprint5setup). This allowed for two participants to be present in the room at the same time. Furthermore, it raised the opportunity of testing the proposed idea of a collaborative experience, enhancing the user experience. The test employed Think Aloud methodology and unstructured interviews.
 
@@ -77,12 +77,16 @@ During this test, two functional controllers were presented alongside a print de
   caption: [Test Setup for Sprint 5],
 ) <fig:sprint5setup>
 
-Participants that had also participated before, said that the product was more fun to use than last since there were more things to try out; including the expanded range of instruments and the potentiometers being functional.
+All participants responded positively to the experience of trying the product, consistently describing it as enjoyable. It was observed that selecting an instrument via the NFC card posed no difficulties for users during this test either.
 
-Participants responded positively to the added design to the top of the chassis, saying it was interesting and afforded interaction opposed to the prior all-black design.
+Althrough the collaborative element of the test was heavily influenced by the chemistry between participants, all reported that they preferred using the product together rather than individually. One participant noted #quote[Hmm.. Yeaaah.. It is like, it can be nice to sit with it yourself, but it sounded a little better when you do it together and find a good rhythm.] (translated from Danish to English) (appendices reference here)
 
-One tester showed interest in learning to play the Cello after trying the product, which was seen as a sign of high engagement.
+When asked about the display's loading time, one pair confirmed that they noticed it but did not find it disruptive. Overall, the display received positive feedback with one participant stating: #quote[It is very cool. It is also very nice that you know which instrument it is.]
 
-Additionally, it was both observed and voiced by participants that in order to fully enjoy the collaborative experience, chemistry between the participants was key. Here, two pairs of testers did not seem to be friends, and one pair did. This yielded completely different results in the answers from the participants. Some participants elaborated that they had each been doing their own thing with the product, but with more coordination between participants, it could be fun.
+Reactions to the potentiometer functionality were mixed. Some participants were unsure of their purpose, expressing that they did not perceive a difference in sound output. One remarked #quote[I could not really hear a difference in any of it.]. This was possibly attributed to a limitation in the test setup: only certain instruments (those with corresponding NFC cards) had potentiometer functionality enabled, and this was not communicated properly to participants. Additionally, one potentiometer was disabled after the first test due to it causing system issues.
 
-The pair who were deemed to be friends said the collaborative experience was very fun.
+The updated design of the top chassis also received positive remarks. Participants found it more engaging compared to the previous, all-black design, with one stating that it invited interaction. However, suggestions were made to incorporate more vibrant colors: #quote[Yes, a little. But maybe if it had a little more color instead of just black, white, and gray.].
+
+Several participants expressed a desire for more switches and additional functionalities, including the ability for sounds to play as long as a button was held down.
+
+Notably, one participant reported being inspired to learn the cello after the experience, an indication of high engagement. Although this sentiment was not shared by all, the plug-N-play nature of the NFC interaction was widely appreciated. One participant commented: #quote[It was very fun. Because you do not have to write all kinds of things, you just need to insert it and then it worked.] 

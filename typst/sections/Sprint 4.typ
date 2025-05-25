@@ -1,6 +1,8 @@
 #import "@preview/codly:1.3.0": *
 #import "@preview/subpar:0.2.2"
 
+overview
+
 == CAD Design
 
 Based on user testing, the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing, as previous testers had found the original size too large and had asked if unrelated objects could be inserted.
@@ -12,6 +14,7 @@ Thereafter, experimentation with how the bottom of the potentiometer topper shou
 As all designs fit mechanically and differed mainly in tactile feedback and ergonomics, it was decided to include them in testing with the target group to gather user preferences.
 
 == Potentiometer MIDI
+
 
 == Button and Debouncing algorithm
 Though it worked fine having each button checked serially by iterating through an array (@sec:sprint2Buttons), a better solution was implemented. This was done by creating a special function, `click_watcher` (@listing:sprint4Click: 1), with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.
@@ -92,30 +95,40 @@ The debounce interval was determined empirically using an oscilloscope to captur
 )
 
 == Automatic card detection
+
+To enable automatic NFC card detection, it was decided to add a sensor-based trigger to the NFC base. Since light-dependent resistors (LDRs) were available they were selected for this purpose due to their simplicity and previous integration experience.
+
+The idea behind the detection mechanism was placing a red LED at the bottom of the NFC base and placing the LDR through a small hole from the top side of the base. When no card was present, the LED light would pass unobstructed to the LDR. However, when a card was inserted, it would block the light, causing the LDR's resistance to change. This shift in light intensity could then be detected in software, triggering the system to initiate an NFC card scan automatically.
+
+Before the setup of the LDR and the LED, a lot of calculations were made. Both to figure out which resistors should be used and to detect the reading values of the LDR inside the box, when it was just connected to a breadboard. This part was easy, but when connected to the PCB, it caused problems.
+
 schematic
+
+
+
 
 == PCB
 Later, the production facility reverted to the previous printer configuration instead of the faulty one described in @sec:PCBsprint3, allowing for a successfully fabricated PCB. During the soldering phase, several technical challenges were encountered. These included difficulties related to manual hole drilling, which affected the alignment and stability of mounted components. Additionally, this phase involved working with VIAs for the first time, which proved particularly challenging due to poor solder adhesion, leading to fragile connections. Further inspection of the assembled PCB revealed several design errors as well. These required "hacks" to establish the necessary connections and restore full functionality.
 
-- molex
+Molex connectors were used to connect all off-board components—such as the USB port and power switch to the PCB. Theu were used because they provide secure and quick-release capability, simplifying assembly and maintenance. Although the NFC reader was originally planned to use a similar connector, it proved more practical to connect a pin-header to it's pins and solder flexible wires between the header and the PCB. This approach still allows the reader to be unplugged for removing the PCB without disturbing the rest of the wiring.
 
 === Multiplexer, potentiometers and LDR
 An unrelated issue arose concerning the functionality of the potentiometers when mounted in conjunction with other components, specifically an LED and a light-dependent resistor (LDR) which were intended to detect if a NFC card was inserted into the chassis. In this configuration, neither the potentiometers nor the LDR functioned as intended. The potentiometer readings had floating values, and the LDR failed to detect any significant changes in light levels. Given that these components were all connected through the multiplexer of the system, it was hypothesized that the root cause of the malfunction might have been inadequate grounding of the multiplexer's unused input channels– which was found to be essential for proper functionality as described in @sec:potsSprint2.
 
 === Ordering PCBs
+To support cooperative experimentation and play (Requirement 1, @table:usabilityRequirements), a second Controller, and thus a new PCB, was required. Having experienced the pitfalls of manual board fabrication, the team elected to professionally manufacture the design through JLCPCB, a service chosen for its reputability and competitive pricing #cite(<jlcpcbcom_pcb_2025>). During the order review, both JLCPCB’s automated checks and the team’s own inspections uncovered several design issues: missing solder masks, incorrectly routed traces, and a misplaced footprint, which were promptly corrected prior to production.
 
+Beyond simply offloading board etching, professional fabrication brought several practical advantages. First, the PCBs could be made double-sided with silkscreen on both faces, providing clear labels for component placement and orientation and greatly simplifying assembly. Second, JLCPCB handled all hole drilling and via formation, eliminating the most labor-intensive steps from the workflow. Finally, the boards arrived with a factory-applied thin flux layer, which improved solderability and joint quality.
 
 == Decorations for the Chassis
 Previous user testing #text(red)[reference specific test] indicated that the target group preferred a more playful and engaging design, expressing interest in additional visual elements such as LEDs and the use of vibrant colors. Participants also requested clearer labeling on the chassis to provide immediate feedback regarding the function of the various switches and potentiometers.
 
 Initially, to improve upon engagement (Requirement 11, @table:usabilityRequirements), the design plan involved decorating the chassis using vinyl stickers. However, testing this approach on a non-functional 3D-printed lid revealed that the results were unsatisfactory. Despite this, vector graphics were created for the purpose of generating vinyl stickers (@fig:topDesign), as the cutting equipment required vector-based file formats. These graphics were developed using the software Inkscape @inkscape_inkscape_2025 The vector artwork was later repurposed and integrated directly into the final 3D-printed lid design in order to enhance visual appeal.
 
-
 #figure(
   rect(image("../images/sprint 4/top-design.svg", height: 30%), radius: 2mm),
   caption: [Lid Design in SVG format.],
 ) <fig:topDesign>
-
 
 == Testing
 The third round of user testing was conducted at Rosengårdskolen and involved four individual participants from the 5th grade. Each session lasted approximately seven and a half minutes.
