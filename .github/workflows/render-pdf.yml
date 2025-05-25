@@ -4,6 +4,8 @@ jobs:
   render-paper:
     runs-on: ubuntu-latest
     steps:
+      - uses: fontist/setup-fontist@v2
+      - run: fontist install "STIX Two Text"
       - uses: actions/checkout@v4
       - uses: typst-community/setup-typst@v4
-      - run: typst compile typst/main.typ paper.pdf
+      - run: typst compile typst/main.typ paper.pdf --font-path ~/.fontist/fonts
