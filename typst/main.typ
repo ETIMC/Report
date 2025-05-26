@@ -50,8 +50,6 @@ Total character count: #total-characters
 
 #import "@preview/subpar:0.2.2"
 
-
-= Acronyms and Terms
 #include "Acronyms and Terms.typ"
 <no-wc>
 
@@ -70,7 +68,6 @@ Total character count: #total-characters
 
 #include "sections/Sprint 1.typ"
 
-= Sprint 2
 #include "sections/Sprint 2.typ"
 
 = Sprint 3 <sec:sprint3>
