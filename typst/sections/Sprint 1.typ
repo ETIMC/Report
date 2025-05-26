@@ -1,16 +1,24 @@
 // 1) Beskriv ideen. Kravspecifikation? Trådløs
 // Hardware valg -> Seperat host og computertilstlutning
 // 
-== Overview
+= Sprint 1
 During this sprint, technical and usability requirements were formulated, a paper prototype was produced and experimentation with hardware and microcontrollers were begun.
 
 Usability and technical requirements were formulated to streamline and focus product development. By defining these criteria, decisions made later in the process could be evaluated against the core objectives of the product, ensuring consistency and minimizing feature creep. Additionally, explicitly specifying the requirements ensured a uniform understanding of the project’s goals.
 
 == Usability Requirements
 All usability requirements are listed in @table:usabilityRequirements.
-The requirements were developed taking the target group's technical proficiency and prior musical knowledge into consideration. As a result, requirements 7 (Beats and Consistency) and 10 (Prior musical knowledge) were defined to ensure a positive user experience for both children with, and without prior experience playing instruments. Requirement 7 (Beats and Consistency) partly fulfills this by accommodating user timing inconsistencies without negatively affecting the produced music. Furthermore, the palette of playable notes should be predefined to make played music harmonically pleasing; even when used by individuals without any prior music theory knowledge.
+The requirements were developed taking the target group's technical proficiency and prior musical knowledge into consideration. As a result, requirements 7 (Beats and Consistency) and 10 (Prior musical knowledge) were defined to ensure a positive user experience for both children with, and without prior experience playing instruments. Requirement 7 (Beats and Consistency) partly fulfills this by quantizing user input, fixing timing inconsistencies without negatively affecting the produced music. Furthermore, the palette of playable notes should be predefined to make played music harmonically pleasing; even when used by individuals without any prior music theory knowledge.
 
-Requirement 1 (Cooperative play) was considered highly important, as relevant literature highlights the value of collaborative learning and interaction #cite(<newton-dunn_block_2003>) Requirements 2, 3, 4, 6, and 11 (Portable device, Size, Feedback, Plug'N'Play, and Engaging) were defined to create a streamlined experience using the product for the intended users, both making it easy to use and usable in multiple settings. Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex. Furthermore, it should not closely resemble real instruments, as these themselves can seem complex or intimidating for non-musicians #text(red)[cite here].
+Requirement 1 (Cooperative play) was considered highly important, as relevant literature highlights the value of collaborative learning and interaction #cite(<newton-dunn_block_2003>) Requirements 2, 3, 4, 6, and 11 (Portable device, Size, Feedback, Plug'N'Play, and Engaging) were defined to create a streamlined experience using the product for the intended users, both making it easy and engaging to use and usable in multiple settings.
+
+Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex. Furthermore, it should not closely resemble real instruments, as these themselves can seem complex or intimidating for non-musicians, as traditional instruments don't necessarily afford the same music playing for inexperienced musicians (DON NORMAN), whereas newer instruments with different designs are more inviting @dalgleish_cec_nodate.
+
+This requirement was added despite counteracting the initial idea (@sec:ideaGeneration), of making them resemble real instruments for near-transfer.
+
+//
+Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex, which is why the controller's design should avoid close resemblance to traditional instruments, as effective design should make possible actions immediately apparent and intuitive, without the need for prior knowledge or instruction (DON NORMAN), which traditional instruments might not do. Furthermore, unconventional interfaces can offer unique affordances that align more closely with the physical interactions of novice users, fostering a more inviting and exploratory musical experience @dalgleish_cec_nodate.
+//
 
 Finally, requirement 8 (Looping) regards allowing users to record and later accompany themselves with different sounds, allowing users to create something they can show others, which further fosters an engaging experience #text(red)[cite here].
 

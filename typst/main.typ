@@ -66,10 +66,8 @@ Total character count: #total-characters
 = State of the Art
 #include "sections/Literature review.typ"
 
-= Idea Generation
 #include "sections/Idea generation.typ"
 
-= Sprint 1
 #include "sections/Sprint 1.typ"
 
 = Sprint 2

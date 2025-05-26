@@ -160,6 +160,13 @@
     // Add margin to figures
     //set figure(placement: auto) // Change this to have image autoposition themselves (at either top or bottom)
     show figure: set block(spacing: 1.5em)
+    set figure(
+      placement: auto
+    )
+
+    show ref: it => {
+      text(black)[#underline[#it]]
+    }
     
 
   // Numbering and spacing of math

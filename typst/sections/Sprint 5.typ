@@ -16,9 +16,9 @@ When printing the side panels, both the new NFC side for the first chassis, and 
 The last step was to improve visual cohesion and aesthetics, a pre-designed button cap (LINK) compatible with the existing switches was found and printed. Additionally, the lid design introduced in Sprint 4(REF) was added to the lid and printed. These final changes gave the chassis a cleaner finish and a more playful, cohesive appearance.
 
 === Host
-To improve usability and support the Plug’n’Play requirement (Requirement 6, @table:usabilityRequirements), a dedicated enclosure was designed for the Host. The box was tailored to fit the breadboard setup, with one side featuring four cutouts for USB-A ports and another with an opening for the cable connected to the Pico. The lid was designed to sit flush inside the enclosure and included a cutout to allow visibility of the internal LEDs.
+To improve usability and support the Plug’n’Play requirement (Requirement 6, @table:usabilityRequirements), a dedicated enclosure was designed for the Host. The box was tailored to fit the breadboard setup, with one side featuring four cutouts for USB-A ports and another with an opening for the cable connected to the Pico 2. The lid was designed to sit flush inside the enclosure and included a cutout to allow visibility of the internal LEDs.
 
-To make the enclosure both informative and visually engaging, descriptive text was added around the LED cutout, highlighting the box’s purpose in a playful way. Although the print was not completed in time for user testing, it was printed shortly afterward (Figure).
+To make the enclosure both informative and visually engaging, descriptive text was added around the LED cutout, highlighting the box’s purpose in a playful way. Although the print was not completed in time for user testing, it was printed shortly afterward (IMAGE).
 
 == Additional instruments
 To further extend the Controller's musical palette, new instruments were added, so that a total of 11 instruments were available. These were first assigned their MIDI channels (@table:11Instruments), and afterwards added to Ableton Live, each instrument getting their own MIDI track (@fig:sprint5Ableton11Instruments).

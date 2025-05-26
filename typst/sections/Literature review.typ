@@ -8,3 +8,5 @@ The academic articles shed light on different designs for fostering a positive e
 Various commercial products were also big inspirations. Products such as #text(red)[cite] and #text(red)[cite] ...
 
 #text(red)[something about music hardware]
+
+inspiration fra andre/lignende produkter
