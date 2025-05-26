@@ -10,17 +10,11 @@ Usability and technical requirements were formulated to streamline and focus pro
 All usability requirements are listed in @table:usabilityRequirements.
 The requirements were developed taking the target group's technical proficiency and prior musical knowledge into consideration. As a result, requirements 7 (Beats and Consistency) and 10 (Prior musical knowledge) were defined to ensure a positive user experience for both children with, and without prior experience playing instruments. Requirement 7 (Beats and Consistency) partly fulfills this by quantizing user input, fixing timing inconsistencies without negatively affecting the produced music. Furthermore, the palette of playable notes should be predefined to make played music harmonically pleasing; even when used by individuals without any prior music theory knowledge.
 
-Requirement 1 (Cooperative play) was considered highly important, as relevant literature highlights the value of collaborative learning and interaction #cite(<newton-dunn_block_2003>) Requirements 2, 3, 4, 6, and 11 (Portable device, Size, Feedback, Plug'N'Play, and Engaging) were defined to create a streamlined experience using the product for the intended users, both making it easy and engaging to use and usable in multiple settings.
+Requirement 1 (Cooperative play) was considered highly important, as relevant literature highlights the value of collaborative learning and interaction #cite(<newton-dunn_block_2003>) Requirements 2, 3, 6, and 11 (Portable device, Size, Plug'N'Play, and Engaging) were defined to create a good experience using the product for the intended users, both making it easy and engaging to use and usable in multiple settings. Requirement 4 (Feedback) was created for making the product feel good and as intuitive to use as possible #cite(<norman_design_2013>, supplement: [ch. 4]).
 
-Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex. Furthermore, it should not closely resemble real instruments, as these themselves can seem complex or intimidating for non-musicians, as traditional instruments don't necessarily afford the same music playing for inexperienced musicians (DON NORMAN), whereas newer instruments with different designs are more inviting @dalgleish_cec_nodate.
+Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex, which traditional instruments can be @mesler_when_2017. That is why the Controller's design should avoid close resemblance to traditional instruments. Actions should immediately be apparent and intuitive, without the need for prior knowledge or instruction #cite(<norman_design_2013>, supplement: [ch. 4]), which traditional instruments might not afford. Furthermore, unconventional interfaces can offer unique affordances that align more closely with the physical interactions of novice users, fostering a more inviting and exploratory musical experience @dalgleish_cec_nodate. This requirement was added despite counteracting the initial idea (@sec:ideaGeneration), of making them resemble real instruments for near-transfer.
 
-This requirement was added despite counteracting the initial idea (@sec:ideaGeneration), of making them resemble real instruments for near-transfer.
-
-//
-Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it was essential that it did not appear daunting or overly complex, which is why the controller's design should avoid close resemblance to traditional instruments, as effective design should make possible actions immediately apparent and intuitive, without the need for prior knowledge or instruction (DON NORMAN), which traditional instruments might not do. Furthermore, unconventional interfaces can offer unique affordances that align more closely with the physical interactions of novice users, fostering a more inviting and exploratory musical experience @dalgleish_cec_nodate.
-//
-
-Finally, requirement 8 (Looping) regards allowing users to record and later accompany themselves with different sounds, allowing users to create something they can show others, which further fosters an engaging experience #text(red)[cite here].
+Finally, requirement 8 (Looping) regards allowing users to record their experimentations. This would allow users to create something they can show and share with others, which enhances confidence, further enhancing engagement @byrne_building_2019.
 
 #figure(
   table(
@@ -30,15 +24,14 @@ Finally, requirement 8 (Looping) regards allowing users to record and later acco
   [1], [Cooperative play], [Multiple users should be able to explore and experiment with music together.],
   [2], [Portable device], [The product should be easy to transport, so that usage is not limited to either home or school.],
   [3], [Size], [Product should have a suitable compact size for the target group.],
-  [4], [Feedback], [Feedback is given when using the product, ensuring intuitivity.],
-  [5], [Ambidextrous], [Product should be usable for both left- and right-handed people.],
+  [4], [Feedback], [Feedback is given when using the product, making it more intuitive.],
+  [5], [Cheap], [The product should be cheap to make it as accessible as possible.],
   [6], [Plug'N'Play], [Product should be easy to set up, use, and pack away.],
-  [7], [Beats and Consistency],[Music beat should be consistent and on time, notes should match ensuring everything "sounds good".],
+  [7], [Beats and Consistency],[Played music should be quantized to ensure it "sounds good" almost independently of the input.],
   [8], [Looping],[Small music pieces should be able to be recorded on- and looped directly from the product.],
   [9], [Not intimidating],[Users should not feel intimidated by using the product.],
   [10], [Prior musical knowledge],[Should be fun for both children who are well-versed in playing music, and those with no prior knowledge.],
-  [11], [Engaging],[Users should feel engaged.],
-  [12], [Cheap], [The product should be cheap to make it as accessible as possible.]
+  [11], [Engaging],[The product should consistently engage users to continuously use it, promoting interaction.]
   
   ),
   caption: [Usability requirements]

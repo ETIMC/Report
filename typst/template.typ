@@ -165,7 +165,11 @@
     )
 
     show ref: it => {
-      text(black)[#underline[#it]]
+      text(eastern)[#underline[#it]] // MAKE BLACK BEFORE TURNING IN
+    }
+
+    show cite: it => {
+      text(olive)[#underline[#it]]
     }
     
 
