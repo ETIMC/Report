@@ -7,6 +7,7 @@
 - LDR: Light-dependent resistor
 - MCU: Microcontroller Unit
 - NFC: Near field communication
+- PLA: Polylactic acid
 - REPL: Read–Eval–Print Loop
 - RFID: Radio Frequency Identification
 - SCL: Serial clock line

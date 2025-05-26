@@ -98,7 +98,7 @@ Initial testing was carried out using example code provided by Adafruit for the 
 
 As the display was originally intended to be mounted directly on top of the Pico, further testing was performed to determine the minimum set of pins required for full display functionality while ignoring the display's integrated buttons and LED. This was done as not all pins on the Picos would be available for the display. This process was complicated by the absence of a formal datasheet for the display since only a schematic was available @pimoroni_pico_2025, but was ultimately successful.
 
-=== NFC Reader
+=== NFC Reader <sprint1nfc>
 Both the _Parallax RFID Reader_ @parallaxcom_rfid_2024 and the _RFID RC522 Module_ @arduinotechdk_rfid_2019 were considered for implementing NFC functionality, both compatible with the Picos 3.3V power output. After brief testing and evaluation, the RC522 was chosen. The decision primarily rested on two factors: physical size and cost (Requirements 3 & 5, @table:usabilityRequirements). The Parallax reader measured nearly twice the size of the RC522, which made it less suitable for a compact Controller setup. In terms of cost, the Parallax reader was significantly more expensive, priced five times more than the RC522 module @arduinotechdk_rfid_2019 @parallaxcom_rfid_2024.
 
 The RC522 module had a slightly involved setup process, particularly due to the need for SPI communication. Challenges arose in finding appropriate documentation. Most available libraries for both the exact model and NFC readers in general were designed for MicroPython. However, the library `circuitpython-mfrc522` @davis-foster_domdfcodingcircuitpython-mfrc522_2021 offered full support for the necessary NFC functionality and proved to be a workable solution. The trade-off in ease of use was considered acceptable, given the substantial advantages in both size and cost.
@@ -170,7 +170,7 @@ Getting buttons to work with the Pico 1's were very easy using Circuitpython's _
 
 Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs @noauthor_analog_2025. It was decided this library was to be used for reading the potentiometers. However, it was noted that the Pico's only had three analog inputs. Therefore, a solution would later have to be found to connect all four potentiometers to the Pico 1s.
 
-== Paper prototype
+== Paper prototype <sec:paperprototype>
 #figure(
  image("../images/sprint 1/paperprototype.png", height: 25%),
   caption: [Paper Prototype],
