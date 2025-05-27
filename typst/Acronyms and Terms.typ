@@ -1,12 +1,15 @@
 = Abbreviations, acronyms,  and Terms
 == Acronyms
 - BPM: Beats per minute
+- CAD: Computer-Aided Design
 - DAW: Digital Audio Workstation
 - GPIO: General-purpose input/output
-- $I^2C$: Inter-Integrated Circuit
+- I²C: Inter-Integrated Circuit
+- LED: Led emitting diode
 - LDR: Light-dependent resistor
 - MCU: Microcontroller Unit
 - NFC: Near field communication
+- PCB: Printed Circuit Board
 - PLA: Polylactic acid
 - REPL: Read–Eval–Print Loop
 - RFID: Radio Frequency Identification

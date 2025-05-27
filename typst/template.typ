@@ -360,6 +360,11 @@
     supplement: [Appendix],
     numbering: "A"
   )
+
+  set figure(
+        placement: none
+      )
+
   
   include(appendices-file)
   }
@@ -367,6 +372,6 @@
   outline(
     target: heading.where(supplement: [Appendix]),
     title: [Appendices],
-    indent: auto
+    indent: auto,
   )
 }

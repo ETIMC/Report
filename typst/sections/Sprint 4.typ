@@ -1,26 +1,39 @@
 #import "@preview/codly:1.3.0": *
 #import "@preview/subpar:0.2.2"
 
-overview
+= Sprint 4 <sec:sprint4>
+Overview
 
-== CAD Design
+== CAD <sec:sprint4Cad>
+Based on user testing, showing that the NFC cards easily fell out of the NFC card insertion hole (@sec:sprint3test), and that the initial design unintentionally allowed for foreign objects to be inserted, which was a concern voiced by a test participant (@sec:sprint2test), the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing.
 
-Based on user testing, the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing, as previous testers had found the original size too large and had asked if unrelated objects could be inserted.
+Additionally, potentiometer knobs were designed and developed based on earlier feedback (@sec:sprint3test). The initial designs were inspired by @bluefinbima_creating_2021, but adjusted to match the specific dimensions of the potentiometers and holes in the lid. Several versions were modeled and printed. The first version was a simple knob designed to fit directly onto the potentiometer shaft (@fig:fus4pot1), and was used to verify fit and tolerances.
 
-Additionally, potentiometer toppers were designed and developed based on earlier feedback. The initial designs were inspired by (VIDEO), but adjusted to match the specific dimensions of the potentiometers and holes in the lid. Several versions were modeled and printed. The first prototype was a simple cap designed to fit directly onto the potentiometer shaft (IMAGE), used to verify fit and tolerances.
+Thereafter, experimentation figuring out how to make the knobs better and potentiometers more robust begun. Initially, the design involved the knob to be inserted under the lid of the chassis so that the PCB would not be visible; this idea was good in theory but did not work in practice as turning the knob became near impossible as it was pressed against the lid (@fig:fus4pot2). A new modified version of this specific knob with more clearance, was created, printed, and seemed to work (@fig:fus4pot3). Furthermore, two additional knobs were printed with bases that rested on top of the lid (@fig:fus4pot4), while still retaining the functionality of hiding the PCB. Since the printed knobs all worked, it was decided to later test, which knob was favored by the target group.
 
-Thereafter, experimentation with how the bottom of the potentiometer topper should be begun. It was made to make toppers that went into the hole of the lid, so the PCB could not be seen (IMAGE). This was a good idea in theory, but it was very hard to turn. A new modified version of this was printed (IMAGE) and seemed to work. There were also printed two slightly different toppers with a flat facet (IMAGE 2 pots), which purpose were to lay on top of the lid, but still covering the holes for the PCB. Since all of the potentiometers toppers fitted and work, just had a different feeling, it was decided to test them on the target group, to get their thoughts about them.
-
-As all designs fit mechanically and differed mainly in tactile feedback and ergonomics, it was decided to include them in testing with the target group to gather user preferences.
+#subpar.grid(
+  columns: (1fr, 1fr, 1fr, 2fr),
+  caption: [Potentiometer toppers.],
+  label: <fig:fus4>,
+  align: top,
+  figure(image("../images/sprint 4/pottop1.png", width: 37%),
+    caption: [Knob for only the shaft.]), <fig:fus4pot1>,
+  figure(image("../images/sprint 4/pottop2.png", width: 40%),
+    caption: [Knob for under lid.]), <fig:fus4pot2>,
+  figure(image("../images/sprint 4/pottop3.png", width: 40%),
+    caption: [Redesigned knob for under the lid.]), <fig:fus4pot3>,
+  figure(image("../images/sprint 4/pottop4.png", width: 65%),
+    caption: [Knobs resting on top of PCB.]), <fig:fus4pot4>
+)
 
 == Potentiometer MIDI
-The functionality of the potentiometers was handled in much different way than the buttons. Since they were all plugged in to a multiplexer, each potentiometer could only be read, when the three "select" pins on the multiplexer were set to the right binary values.
+The functionality of the potentiometers was handled in a much different way than the buttons (@sec:sprint2Buttons). Since they were all plugged into a multiplexer, each potentiometer could only be read, when the three _select_ pins on the multiplexer were set to the right binary values @texas_instruments_high-speed_2004.
 
 The select pins were defined as digital pins using _digitalio_, as they did not require specific analog signals (@listing:sprint4Pot:9). However, the multiplexer output pin was set as an analog input port on the Pico 1's using _analogio_ (@listing:sprint4Pot:7).
 
-The reading of the potentiometers themselves worked by continuously iterating through and array of the multiplexer settings for each potentiometer, setting the multiplexer to let that potentiometers signal through (@listing:sprint4Pot:18). This signal was then read and processed before continuing to the next setting.
+Reading the potentiometer values worked by continuously iterating through an array containing the binary multiplexer settings for each potentiometer, setting the multiplexer to let a specific potentiometer's signal through one at a time (@listing:sprint4Pot:18).
 
-The processing of the signals consisted of sampling the potentiometer multiple times (@listing:sprint4Pot:23) and getting the average read 16-bit value from the samples (@listing:sprint4Pot:26). This was required as the potentiometers seemed to produced slightly fluctuating values. Afterwards, the averaged 16 bit number would be mapped to a range of 0-127 (@listing:sprint4Pot:27), as this is the range MIDI works in. Lastly, it would be checked if this value was different than the potentiometer's last value (@listing:sprint4Pot:28), and if it was, it would be forwarded to the Host in a special message consisting of the id of the potentiometer and its value (@listing:sprint4Pot:30). On the Host side, this message would be received and processed much like button presses. The main difference is that, instead of sending MIDI notes messages to Ableton Live 11, it would send _control change_ messages, which, in Ableton Live 11, can be configured to adjust a wide variety of settings; including instrument sound modifications.
+The processing of the signals consisted of sampling the voltage from the potentiometers multiple times (@listing:sprint4Pot:23) and calculating the average 16-bit value read for each potentiometer from the samples (@listing:sprint4Pot:26). This was required as the potentiometers seemed to produce slightly fluctuating values. Afterwards, the averaged 16-bit number would be mapped to a range of 0-127 (@listing:sprint4Pot:27), as this is the range MIDI works in @wreglesworth_why_nodate. Lastly, it would be checked if this value was different than the potentiometer's last value (@listing:sprint4Pot:28), and if it was, it would be forwarded to the Host in a special message consisting of the ID of the potentiometer and its value (@listing:sprint4Pot:30). On the Host side, this message would be received and processed much like button presses (@sec:sprint2HostMidiInterface). The main difference is that, instead of sending MIDI notes messages to Live, it would send _control change_ messages, which, in Live, can be configured to adjust a wide variety of settings; including instrument sound modifications.
 
 #codly(
   annotations: (
@@ -113,7 +126,7 @@ The processing of the signals consisted of sampling the potentiometer multiple t
 ) <listing:sprint4Pot>
 
 == Button and Debouncing algorithm
-Though it worked fine having each button checked serially by iterating through an array (@sec:sprint2Buttons), a better solution was implemented. This was done by creating a special function, `click_watcher` (@listing:sprint4Click: 1), with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.
+Though it worked fine having each button checked serially by iterating through an array (@sec:sprint2Buttons), a better solution was implemented. This was done by creating a special function, `click_watcher` (@listing:sprint4Click:1), with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.
 
 #codly(
   annotations: (
@@ -185,62 +198,122 @@ The debounce interval was determined empirically using an oscilloscope to captur
   label: <fig:sprint4Oscilloscope>,
   align: top,
   figure(image("../images/sprint 4/Oscilloscope1.jpg", width: 100%),
-    caption: [First attempt at designing controller box.]), <fig:oscilloscope1>,
+    caption: [Testing and analyzing button's voltage waveform.]), <fig:oscilloscope1>,
   figure(image("../images/sprint 4/Oscilloscope2.jpg", width: 100%),
-    caption: [Controller chassis after changes.]), <fig:oscilloscope2>
+    caption: [Close-up of oscilloscope during debounce-analysis.]), <fig:oscilloscope2>
 )
 
 == Automatic card detection
+To enable automatic NFC card detection, instead of having to push a button, it was decided to add a sensor-based trigger to the NFC reading mechanism. Since light-dependent resistors (LDRs) were available they were selected for this purpose due to their relative simplicity and familiarity @arduinotechdk_lys_2025.
 
-To enable automatic NFC card detection, instead of having to push the button, it was decided to add a sensor-based trigger to the NFC base. Since light-dependent resistors (LDRs) were available they were selected for this purpose due to their  relative simplicity and previous integration experience.
+The idea behind the detection mechanism was placing a LED at the bottom of the holder for the NFC reader and placing the LDR through a small hole from the top side of the holder. When no card was present, the LED light would pass unobstructed to the LDR. However, when a card was inserted, it would block the light, causing the LDR's resistance to change. This shift in light intensity could then be detected in software, triggering the system to initiate an NFC card scan automatically.
 
-The idea behind the detection mechanism was placing a red LED at the bottom of the NFC base and placing the LDR through a small hole from the top side of the base. When no card was present, the LED light would pass unobstructed to the LDR. However, when a card was inserted, it would block the light, causing the LDR's resistance to change. This shift in light intensity could then be detected in software, triggering the system to initiate an NFC card scan automatically.
+To use the resistor as a sensor, a voltage divider using the LDR and another resistor were added to the schematic @app:schematicSprint4. To determine the size of the resistor added to ensure proper functionality of the LDR and LED, calculations were made in an isolated test environment.
 
-Before the setup of the LDR and the LED, a lot of calculations were made. Both to figure out which resistors should be used and to detect the reading values of the LDR inside the box, when it was just connected to a breadboard. This part was easy, but when connected to the PCB, it caused problems.
+=== LED Resistor Calculation
+The chosen LED had a forward voltage of approximately $1.8V$ at $20"mA"$ @nte_electronics_inc_nte3019_nodate. With the Pico's GPIO supplying $3.3V$, the resistor value was calculated by
+$ R = (V_("supply") - V_F) / I_F = (3.3V - 1.8V) / (0.02A) = 75 Omega $
 
-- schematic
+=== LDR <sec:ldr4>
+To calculate the correct resistor to use for the voltage divider with the LDR, the LDRs resistance, when placed in the Controller, was measured:
+- With an NFC card inserted: $1.900.000 Omega$
+- Without an NFC card inserted: $300.000 Omega$
 
+To create a voltage divider ensuring correct functionality, the resistor's resistance was calculated by calculating the ratio of the extremes @math:ratio1, calculating the square root to find how many times larger the fixed resistor should be than the smaller LDR value @math:sqrt, and multiplying/dividing with the measured LDR resistances @math:calc1 @math:calc2.
+
+$ (1.900.000 Omega) / (300.000 Omega) approx 6.33 $ <math:ratio1>
+$ sqrt(6.33) approx 2.52 $ <math:sqrt>
+$ 300.000 Omega dot 2.25 = 753.000 Omega $ <math:calc1>
+$ (1.900.000)/(2.52) = 756.369 Omega $ <math:calc2>
+
+For the project, no resistor the exact size was available and as such, a resistor of $0.75 M Omega$ was chosen. With the resistor and LDR combined to create a voltage divider, it's values were read by a Pico:
+- Observed voltage with NFC card inserted: $0.9V$
+- Observed voltage without NFC card inserted: $1.3V$
+
+For verification, the theoretical values were also calculated:
+
+With NFC card: 
+$ V_1 = 3.3V dot (1.900.000 Omega)/(1.900.000 Omega + 750.000 Omega) = 2.37V $
+$ V_"out" = V - V_1 = 3.3V - 2.37V = 0.93V $
+
+Without NFC card: 
+$ V_1 = 3.3V dot (300.000 Omega)/(300.000 Omega + 750.000 Omega) = 0.943V $
+$ V_"out" = V - V_1 = 3.3V - 0.94V = 2.36V $
+
+It was observed that the theoretical values were not exactly equal to the measured values. This was reasoned by the measured LDR resistances possibly not being completely accurate. 
 
 == PCB 
-Later, the production facility reverted to the previous printer configuration instead of the faulty one described in @sec:PCBsprint3, allowing for a successfully fabricated PCB. During the soldering phase, several technical challenges were encountered. These included difficulties related to manual hole drilling, which affected the alignment and stability of mounted components. Additionally, this phase involved working with VIAs for the first time, which proved particularly challenging due to poor solder adhesion, leading to fragile connections. Further inspection of the assembled PCB revealed several design errors as well. These required "hacks" to establish the necessary connections and restore full functionality.
+After having produced a faulty PCB caused by the printer at the production facility (@sec:PCBsprint3), the printer was exchanged for a functioning model, allowing for the fabrication of a functioning PCB.
 
-Molex connectors were used to connect all off-board components—such as the USB port and power switch to the PCB. They were used because they provide secure and quick-release capability, simplifying assembly and maintenance. Although the NFC reader was originally planned to use a similar connector, it proved more practical to connect a pin-header to it's pins and solder flexible wires between the header and the PCB. This approach still allows the reader to be unplugged for removing the PCB without disturbing the rest of the wiring.
+During the soldering phase, several technical challenges were encountered. These included difficulties related to manual hole drilling, which affected the alignment and stability of mounted components. Additionally, this phase involved manually soldering vias, which proved particularly challenging due to poor solder adhesion, leading to fragile connections. Further inspection of the assembled PCB revealed several design errors as well. Fixing these required "hacks", such as soldering across traces and soldering wires directly on the PCB (@fig:PcbHack). 
+
+#figure(
+  image("../images/sprint 4/pcb4solderedtop.jpg", width: 50%),
+  caption: ["Hacking" produced PCB by soldering external wire directly on it.]
+) <fig:PcbHack>
+
+Molex @molex_creating_2025 connectors were used to connect all off-board components, such as the USB port and power switch, to the PCB (@fig:molexConnectors). They were used because they provide secure and quick-release capability, simplifying assembly, disassembly and maintenance of the product. Although the NFC reader was originally planned to use a similar connector, it proved more practical to connect a pin-header @sullins_connector_solutions_100_nodate to it's pins and solder flexible wires between the header and the PCB (@fig:nfcHeader). This approach still allows the reader to be unplugged for removing the PCB without disturbing the rest of the wiring.
+
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Internal connectors of Controller.],
+  label: <fig:sprint4Molex>,
+  align: top,
+  figure(image("../images/sprint 4/molex4power.jpg", height: 15%),
+    caption: [Molex connection for power button.]), <fig:molexConnectors>,
+  figure(image("../images/sprint 4/molex4nfc.jpg", height: 15%),
+    caption: [NFC pinheader connection.]), <fig:nfcHeader>
+)
 
 === Multiplexer, potentiometers and LDR <potsprint4>
-An unrelated issue arose concerning the functionality of the potentiometers when mounted in conjunction with other components, specifically an LED and a light-dependent resistor (LDR) which were intended to detect if a NFC card was inserted into the chassis. In this configuration, neither the potentiometers nor the LDR functioned as intended. The potentiometer readings had floating values, and the LDR failed to detect any significant changes in light levels. Given that these components were all connected through the multiplexer of the system, it was hypothesized that the root cause of the malfunction might have been inadequate grounding of the multiplexer's unused input channels– which was found to be essential for proper functionality as described in @sec:potsSprint2.
+An unrelated issue arose concerning the functionality of the potentiometers when mounted in conjunction with other components, specifically the LED and LDR. In this configuration, neither the potentiometers nor the LDR functioned as intended. The potentiometer readings had floating values, and the LDR failed to detect any significant changes in light levels. Given that these components were all connected through the multiplexer of the system, it was hypothesized that the root cause of the malfunction might have been inadequate grounding of the multiplexer's unused input channels– which was found to be essential for proper functionality as described in @sec:potsSprint2.
 
 === Ordering PCBs
-To support cooperative experimentation and play (Requirement 1, @table:usabilityRequirements), a second Controller, and thus a new PCB, was required. Having experienced the pitfalls of manual board fabrication, the team elected to professionally manufacture the design through JLCPCB, a service chosen for its reputability and competitive pricing #cite(<jlcpcbcom_pcb_2025>). During the order review, both JLCPCB’s automated checks and the team’s own inspections uncovered several design issues: missing solder masks, incorrectly routed traces, and a misplaced footprint, which were promptly corrected prior to production.
+To support cooperative experimentation and play (Requirement 1, @table:usabilityRequirements), a second Controller, and thus a new PCB, was required. Having experienced the pitfalls of manual PCB fabrication (@sec:PCBsprint3), the team chose to have the PCB professionally manufactured through JLCPCB, a service chosen for its reputability and competitive pricing @jlcpcbcom_pcb_2025. Reviewing the PCB order, both engineers at JLCPCB and the team’s own inspections uncovered several design issues: missing solder masks, incorrectly routed traces, and a misplaced footprint, which were promptly corrected prior to production.
 
-Beyond simply offloading board etching, professional fabrication brought several practical advantages. First, the PCBs could be made double-sided with silkscreen on both faces, providing clear labels for component placement and orientation and greatly simplifying assembly. Second, JLCPCB handled all hole drilling and via formation, eliminating the most labor-intensive steps from the workflow. Finally, the boards arrived with a factory-applied thin flux layer, which improved solderability and joint quality.
+Beyond simply offloading board etching, professional fabrication brought several practical advantages. First, the PCBs could be made double-sided with a silkscreen layer on both faces, providing clear labels for component placement and orientation and greatly simplifying assembly. Second, JLCPCB handled all hole drilling and via formation, eliminating the most labor-intensive steps from the workflow. Finally, the boards arrived with a factory-applied thin flux layer, which improved solderability and joint quality.
 
-== Decorations for the Chassis
-Previous user testing #text(red)[reference specific test] indicated that the target group preferred a more playful and engaging design, expressing interest in additional visual elements such as LEDs and the use of vibrant colors. Participants also requested clearer labeling on the chassis to provide immediate feedback regarding the function of the various switches and potentiometers.
+== Decorations for the Chassis <sec:decorations>
+Previous user testing indicated that the target group preferred a more playful and engaging design, expressing interest in additional visual elements such as LEDs and the use of vibrant colors (@sec:sprint2test,). Participants had also requested clearer labeling on the chassis to provide immediate feedback regarding the function of the various switches and potentiometers.
 
-Initially, to improve upon engagement (Requirement 11, @table:usabilityRequirements), the design plan involved decorating the chassis using vinyl stickers. However, testing this approach on a non-functional 3D-printed lid revealed that the results were unsatisfactory. Despite this, vector graphics were created for the purpose of generating vinyl stickers (@fig:topDesign), as the cutting equipment required vector-based file formats. These graphics were developed using the software Inkscape @inkscape_inkscape_2025. The vector artwork was later repurposed and integrated directly into the final 3D-printed lid design in order to enhance visual appeal.
+To improve engagement (Requirement 11, @table:usabilityRequirements), a design plan was formulated, involving decorating the chassis using vinyl stickers. However, testing this approach on a 3D-printed lid yielded unsatisfactory results (@fig:vinyl). Concurrently, vector graphics were created for the purpose of generating vinyl stickers (@fig:topDesign), as the cutting equipment required vector-based file formats. These graphics were developed using the software Inkscape @inkscape_inkscape_2025. 
 
-#figure(
-  rect(image("../images/sprint 4/top-design.svg", height: 30%), radius: 2mm),
-  caption: [Lid Design in SVG format.],
-) <fig:topDesign>
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Lid Designs.],
+  label: <fig:designTop>,
+  align: top,
+  gutter: 30pt,
+  figure(image("../images/sprint 4/vinyl.jpg", height: 31%),
+    caption: [Lid with vinyl.]), <fig:vinyl>,
+  figure(rect(image("../images/sprint 4/top-design.svg", height: 30%), radius: 1mm),
+    caption: [Lid Design in SVG format.]), <fig:topDesign>
+)
 
-== Testing
-The third round of user testing was conducted at Rosengårdskolen and involved four individual participants from the 5th grade. Each session lasted approximately seven and a half minutes.
+== Testing <sec:test4>
+The fourth round of user testing consisted of observing how participants interacted with a functional assembled Controller (@fig:sprint4TestSetup). However, as previously discussed in @potsprint4, issues with the multiplexer prevented the potentiometers and the automatic NFC reader sensor from working correctly. To make the NFC reader work, one of the interactive buttons was reconfigured to manually activate it. The potentiometers were disabled. The test was conducted at Rosengårdskolen @rosengardskolen_velkommen_nodate and involved four individual participants from the 5th grade. Each session lasted approximately seven minutes. A/B testing, think-aloud methodology, and unstructured interviews were employed.
 
-During this test, a functional prototype was presented (@fig:sprint4setup). However, as previously discussed in @potsprint4, issues with the PCB configuration prevented the potentiometers from functioning correctly during this session. The test employed A/B testing, Think Aloud methodology, and unstructured interviews.
 
-#figure(
-  image("../images/sprint 4/sprint4test.png", height: 25%, width: 100%),
-  caption: [Test Setup for Sprint 4],
-) <fig:sprint4setup>
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Test setup for sprint 4.],
+  label: <fig:sprint4setup>,
+  align: top,
+  gutter: 30pt,
+  figure(image("../images/sprint 4/test4setup.jpg", height: 30%),
+    caption: [Full Test Setup.]), <fig:sprint4TestSetup>,
+  figure(image("../images/sprint 4/test4pots.jpg", height: 30%),
+    caption: [Knob A/B test.]), <fig:sprint4TestKnobs>
+)
 
 Two participants reported having prior formal music training. One played the transverse flute and another the guitar; the remaining two had no previous musical experience.
 
-When asked whether it was difficult to create a rhythm using the product, one participant responded: #quote[Yes, a little, because you do not really know where the buttons are and the sounds.] (Translated from Danish to English) (@app:Sprint4Transcriptions), upon further prompting, the participant elaborated that the switch-sensitivity was a problem #quote[You know, they are quite fast if you keep pressing it.] (Translated from Danish to English) (@app:Sprint4Transcriptions). Another participant noted: #quote[Yes, yes, you do have to remember what sounds comes out of with buttons.] (Translated from Danish to English) (@app:Sprint4Transcriptions). To address this usability challenge, one participant suggested: #quote[Yes! It could be nice if it said what sounds come out of these buttons.] (Translated from Danish to English) (@app:Sprint4Transcriptions).
+When asked whether it was difficult to create a rhythm using the product, one participant responded: #quote[Yes, a little, because you do not really know where the buttons are and the sounds.] (Translated from Danish to English) (@app:Sprint4Transcriptions), upon further prompting, the participant elaborated that the switch-sensitivity was a problem #quote[You know, they are quite fast if you keep pressing it.] (Translated from Danish to English) (@app:Sprint4Transcriptions). Another participant noted: #quote[Yes, yes, you do have to remember what sounds comes out of which buttons.] (Translated from Danish to English) (@app:Sprint4Transcriptions). To address this usability challenge, one participant suggested: #quote[Yes! It could be nice if it said what sounds come out of these buttons.] (Translated from Danish to English) (@app:Sprint4Transcriptions).
 
 Participants responded positively to the functionality of the display. One stated: #quote[It is fun! And it is kind of fascinating that the picture is displayed when you put a card in.] (Translated from Danish to English) (@app:Sprint4Transcriptions). However, constructive criticism was provided regarding the physical design. One participant remarked that the potentiometers obstructed the display: #quote[These could be lowered a little because they hide almost all of the display.] (Translated from Danish to English) (@app:Sprint4Transcriptions).
 
+Two A/B tests were conducted. One using different side panel designs featuring varying slit widths for NFC card insertion. It became clear that one version was too narrow, as multiple participants reported difficulty inserting the cards. Furthermore, it was observed that participants did not find it intuitive to insert the NFC cards into the chassis.
 
-An A/B test was conducted using different side panel designs featuring varying slit widths for NFC card insertion. It became clear that one version was too narrow, as multiple participants reported difficulty inserting the cards with ease. 
+The second A/B test had participants evaluate the different potentiometer knobs (@sec:sprint4Cad). The test showed that the participants liked the knobs resting on top of the lid the most (@fig:sprint4TestKnobs) because of its ergonomics and appearance (@app:Sprint4Transcriptions).
 
 When asked whether the product would be more enjoyable as a shared experience, all participants expressed a preference for using it collaboratively. Lastly, interest in the potential commercialization of the product was expressed with one participant asking: #quote[Is it like so, that you would put it out?] (Translated from Danish to English) (@app:Sprint4Transcriptions).

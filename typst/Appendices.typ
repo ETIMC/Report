@@ -31,6 +31,9 @@
 
 #colbreak()
 = Schematic after third sprint <app:schematicSprint3>
+- USB 2.0 Type B Connector
+- Separate SPI busses for display and NFC reader
+- LDR sensor and associated LED
 #figure(
   rect(image("appendices/Scematic sprint 3 (bf286ac).svg"), radius: 2mm)
 )

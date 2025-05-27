@@ -53,15 +53,12 @@ Total character count: #total-characters
 #include "Acronyms and Terms.typ"
 <no-wc>
 
-= Acknowledgements
 #include "sections/Acknowledgements.typ"
 <no-wc>
 
 #colbreak()
-= Introduction <chap:Introduction>
 #include "sections/Introduction.typ"
 
-= State of the Art
 #include "sections/Literature review.typ"
 
 #include "sections/Idea generation.typ"
@@ -70,23 +67,16 @@ Total character count: #total-characters
 
 #include "sections/Sprint 2.typ"
 
-= Sprint 3 <sec:sprint3>
 #include "sections/Sprint 3.typ"
 
-= Sprint 4 <sec:sprint4>
 #include "sections/Sprint 4.typ"
 
-= Sprint 5
 #include "sections/Sprint 5.typ"
 
-= Evaluation 
 #include "sections/Evaluation.typ"
 
-= Results
 #include "sections/Results.typ"
 
-= Discussion
 #include "sections/Discussion.typ"
 
-= Conclusion
 #include "sections/Conclusion.typ"
