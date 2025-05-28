@@ -59,7 +59,7 @@ Total character count: #total-characters
 #colbreak()
 #include "sections/Introduction.typ"
 
-#include "sections/Literature review.typ"
+#include "sections/State of the Art.typ"
 
 #include "sections/Idea generation.typ"
 

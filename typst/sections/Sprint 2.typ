@@ -113,7 +113,7 @@ def read_nfc(self):
 ) <listing:nfcReadWButton>
 
 === Display <sec:Sprint2Display>
-As explained in @sprint1display, Adafruit's example code served as the foundation for the display's implementation. However, the original code was modified to support image rendering, rather than solely displaying text. Through experimentation, the function presented in @listing:displayImage was created to encapsulate the image loading process. Within this function, the variable `splash` is first instantiated as a `display.io` group, which is then assigned as the display's `root_group` (@listing:displayImage:2 to @listing:displayImage:3). A `try-except` block is utilized (@listing:displayImage:5 to @listing:displayImage:10) to attempt loading a bitmap image file from the internal storage, which is subsequently appended to the `splash` group, which renders the image on the display.
+As explained in @sprint1display, Adafruit's example code served as the foundation for the display's implementation. However, the original code was modified to support image rendering, rather than solely displaying text. Through experimentation, the function presented in @listing:displayImage was created to encapsulate the image loading process. Within this function, the variable `splash` is first instantiated as the group containing what should be rendered on the display (@listing:displayImage:2). A `try-except` block is utilized (@listing:displayImage:5 to @listing:displayImage:10) to attempt loading a bitmap image file from the internal storage, which is subsequently appended to the `splash` group, rendering the image on the display. When rendering an image, it was observed that display blocked other code from running on the Pico until it was done rendering.
 
 #figure(
   ```cpy
