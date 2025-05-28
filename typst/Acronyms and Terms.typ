@@ -1,4 +1,4 @@
-= Abbreviations, acronyms,  and Terms
+= Acronyms, Abbreviations and Terms
 == Acronyms
 - BPM: Beats per minute
 - CAD: Computer-Aided Design

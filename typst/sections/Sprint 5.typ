@@ -1,6 +1,5 @@
-= Sprint 5
-
-// OVERVIEW 
+= Sprint 5: _Two Controllers, Soldering and even More Instruments_
+To evaluate upon the idea of collaborative play (Requirement 1, @table:usabilityRequirements), a second chassis was designed with, among other things, improved standoffs. Furthermore, the NFC card slot and reader holder were revised for better usability and print reliability. Aesthetic upgrades for the chassis included custom keycaps and a decorated lid. More instruments were added, though additional NFC cards were unavailable prompting a temporary fix. Two new PCBs were assembled using lower-profile potentiometers to avoid display obstruction as requested by testers (@sec:test4)– and allowing for a cohesive experience for all future testers.
 
 == CAD Design
 === Controller

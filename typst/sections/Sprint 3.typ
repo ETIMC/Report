@@ -1,41 +1,8 @@
 #import "@preview/codly:1.3.0": *
 #import "@preview/subpar:0.2.2"
 
-= Sprint 3 <sec:sprint3>
-Introduction to sprint 3
-- Naevn nye switches blev valgt
-- Noget om at testere gerne ville have LEDs
-- Anden sensor i stedet for NFC knap læseren
-
-/*
-- Conclude what the test from sprint 2 did for the further development plans.
-
- - Further experimentation with Multiplexer functionality
-  - To get a stable connection each A-pin on the multiplexer not in use must be set to ground, otherwise the values on the potentiometers will float A LOT and interfere with each other.
-- Further work on Fusion implementation
-  - Added Support implementation for the PCB to stay in place.
-  - Added NFC holder
-  - Added NFC-card holder/stopper.
-  - Added hole for on/off button.
-  - Added hole for USB-B port. 
-  - Added hole for NFC-card insertion.
-- PCB production
-  - Created, modified, and imported footprints for the display, switches, and Pico. 
-  - Finished footprint configuration in KiCad (with the help of autorouter thingy), first time working with VIAs.  
-  - Problem with printer, making it seem like items (pico and screen) didn´t fit and then fit, but did not fit on pcb
-  - Produced PCB.
-  - Drilled holes
-  - Soldered
-  - Tested
-- 3D printed Fusion implementation
-  - First draft of lid (NOT FINISHED DESIGN, NO TIME WAH)
-  - Updated base (lower walls.)
-  - Four walls.
-  - Modular for easy reach of things.
-  - Screws.
-- Planned testing.
-  - Conducted testing
-*/
+= Sprint 3: _Instruments, Cables and Printed Circuit Board_<sec:sprint3>
+Based on feedback gathered during testing in Sprint 2 additional instruments were added, and a decision was made upon which switches to use for the product. Decorative LED integration, as wished by testers, was also considered for the product, but was not prioritized. To resolve persistent latency issues, a shift was made from the wireless configuration to a wired solution utilizing I²C over USB. These changes led to updates to the circuit design and the creation of a custom printed circuit board (PCB) design, along with appropriate changes to the 3D-printed chassis.
 
 == More instruments
 #figure(
@@ -58,7 +25,7 @@ This improved the latency a fair bit. Sadly, however, the latency was still noti
 )
 #figure(
   ```cpy
-  - def _received_heartbeat(self, socket):
+  -  def _received_heartbeat(self, socket):
   -      self.socket_responses[socket] = 0
   +  def _received_heartbeat(self, addr):
   +      self.socket_responses[addr] = 0
@@ -67,7 +34,7 @@ This improved the latency a fair bit. Sadly, however, the latency was still noti
 ) <listing:exchangingSocketsDiff>
 
 === Wired
-To completely eliminate the perceived latency, the decision was made to replace the wireless connectivity with wired connectivity. This was not an easy decision to make as it directly contradicted the Wireless connection technical requirement (Requirement 4, @table:technicalRequirements). Furthermore, it was feared that a tethered connection would limit the users' desire to interact with the product. However, fixing the latency problem was deemed critical as the _feel_ of the product was more important.
+To completely eliminate the perceived latency, the decision was made to replace the wireless connectivity with wired connectivity. This was not an easy decision to make as it directly contradicted the wireless connection technical requirement (Requirement 4, @table:technicalRequirements). Furthermore, it was feared that a tethered connection would limit the users' desire to interact with the product. However, one tester did note, they would rather have it wired than powered by batteries (@sec:sprint2test), and fixing the latency problem was deemed critical as the _feel_ of the product was very important.
 
 The wired solution offered two key advantages that outweighed its drawbacks. First, it removed nearly all latency, delivering an immediate response that felt more natural and expected. Second, it enabled the Controllers to draw power directly from the Host rather than relying on onboard batteries. Removing batteries not only lightened the Controllers portability (Requirement 2, @table:usabilityRequirements), but also reduced product maintenance.
 
@@ -158,9 +125,9 @@ On the Host side, the USB 2.0 Type A connector’s ground and I²C pins were wir
 
 The new power solution was not without problems however. During internal testing it was discovered that when both the Host and Controllers were connected to a powered USB hub, other devices connected to the hub would not receive their required power. This was discovered by having the audio of a connected audio interface (NI Komplete Audio 6 @native_instruments_komplete_2025) starting to crackle, when the Host was connected. Furthermore, it was discovered that neither the Host nor any connected Controllers functioned properly when connected to a laptop, unless the laptop was actively being charged. However, as long as the laptop was being charged, everything worked as expected.
 
-== Printed Circuit Board <sec:PCBsprint3>
+== PCB <sec:PCBsprint3>
 === Design
-To develop a fully functional prototype beyond a breadboard implementation, a custom printed circuit board (PCB) was designed. During this process, practical considerations such as the placement of mounting holes for integration within the final chassis were taken into account, which meant that the scaling of the PCB itself was determined by the size of the chassis. Additionally, due to the use of specific components that lacked readily available footprints, several custom or modified footprints were created as part of the PCB design.
+To develop a fully functional prototype beyond a breadboard implementation, a PCB was designed. During this process, practical considerations such as the placement of mounting holes for integration within the final chassis were taken into account, which meant that the scaling of the PCB itself was determined by the size of the chassis. Additionally, due to the use of specific components that lacked readily available footprints, several custom or modified footprints were created as part of the PCB design.
 
 The GitHub repository KiCad-RP-Pico @ncarandini_kicad-rp-pico_nodate served as the foundation for the Pico footprint. However, since the prototype utilized Pico 1's with WiFi, minor modifications were made to the original footprint. This adapted footprint also served as the template for designing the display's footprint, given that the display module shared the same number of pins as the Pico (1 & 2). Based on the previous test (@sec:sprint2test), it was decided to use the NuPhy switches going forward. Therefore, in addition to the other footprints a separate GitHub repository providing various switch footprints @siderakb_key-switchespretty_nodate was referenced. This footprint was also modified to suit the project's specific needs.
 
@@ -181,7 +148,7 @@ Once the problem was resolved, a new issue arose due to the change in the printe
   figure(image("../images/sprint 3/PCB1.jpg", width: 100%),
     caption: ["Fit to Page" scaling problem.]), <fig:firstattemptpcb>,
   figure(image("../images/sprint 3/PCB2.jpg", width: 95%),
-    caption: [Wrong footprint scaling]), <fig:secondattemptpcb>,
+    caption: [Wrong footprint scaling.]), <fig:secondattemptpcb>,
   figure(image("../images/sprint 3/PCB3.jpg", width: 107%),
     caption: [Ink problems.]), <fig:thirdattemptpcb>
 )

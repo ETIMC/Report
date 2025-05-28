@@ -1,8 +1,8 @@
 #import "@preview/codly:1.3.0": *
 #import "@preview/subpar:0.2.2"
 
-= Sprint 4 <sec:sprint4>
-Overview
+= Sprint 4: _Knobs, Debouncing and NFC Card Detection_ <sec:sprint4>
+Feedback from testing (@sec:sprint3test) informed the choice of redesigning the NFC card slot to prevent the NFC cards from sliding out, custom potentiometer knobs were also designed. Furthermore automatic card detection was developed to alleviate the pain point testers had remembering to press the button to activate card detection. A switch debouncing algorithm was created for improved interaction with the system, and professionally manufactured PCBs were ordered to replace an earlier hand-made version, to resolve several issues.
 
 == CAD <sec:sprint4Cad>
 Based on user testing, showing that the NFC cards easily fell out of the NFC card insertion hole (@sec:sprint3test), and that the initial design unintentionally allowed for foreign objects to be inserted, which was a concern voiced by a test participant (@sec:sprint2test), the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing.
