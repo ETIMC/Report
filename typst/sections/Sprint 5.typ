@@ -5,7 +5,7 @@ To evaluate upon the idea of collaborative play (Requirement 1, @table:usability
 === Controller
 During testing, the participants preferred the knobs resting on top of the lid (@sec:test4). Furthermore, one participant noted that the currently used potentiometers obstructed the display. As a result, the potentiometers on the PCB were replaced with lower-profile versions, and the knobs were redesigned accordingly to match the new dimensions.
 
-To support cooperative play in the upcoming test session, aligning with Cooperative Play (Requirement 1, @table:usabilityRequirements), a second chassis was needed. Prior use of the original chassis revealed several design limitations, which were addressed before printing the new version. Notably, the standoffs were redesigned to be taller and to include integrated threaded cylinders for mounting the PCB, removing the need for separate 3D-printed screws and spacers.
+To support cooperative play (Requirement 1, @table:usabilityRequirements) in the upcoming test session, a second chassis was needed. Prior use of the original chassis revealed several design limitations, which were addressed before printing the new version. Notably, the standoffs were redesigned to be taller and to include integrated threaded cylinders for mounting the PCB, removing the need for separate 3D-printed screws and spacers.
 
 After printing the second chassis, it was discovered that earlier changes to the NFC side panel from a wide opening (@sec:sprint3cad) to a narrower one (@sec:sprint4Cad), unintentionally affected the internal geometry of the NFC reader holder. Specifically, it caused unsupported filament to sag during printing, interfering with card insertion. To resolve this, the NFC reader holder was revised to provide sufficient internal clearance, and the chassis was reprinted without further issues.
 
@@ -23,7 +23,7 @@ The last step was to improve visual cohesion and aesthetics, pre-designed button
 === Host
 To improve usability and support the Plug’n’Play requirement (Requirement 6, @table:usabilityRequirements), a dedicated enclosure was designed for the Host. The box was tailored to fit the breadboard setup, with one side featuring four cutouts for USB-A ports and another with an opening for the cable connected to the Pico 2. The lid was designed to sit flush inside the enclosure and included a cutout to allow visibility of the internal LEDs.
 
-To make the enclosure both informative and visually engaging, descriptive text was added around the LED cutout, highlighting the box’s purpose in a playful way. Although the print was not completed in time for user testing, it was printed shortly afterward @fig:3dhost.
+To make the enclosure both informative and visually engaging, descriptive text was added around the LED cutout, highlighting the box’s purpose in a playful way. Although the print was not completed in time for user testing, it was printed shortly afterward (@fig:3dhost).
 
 #figure(
   image("../images/sprint 5/3dhost.jpg", height: 30%),
@@ -58,12 +58,7 @@ To further extend the Controller's musical palette, new instruments were added, 
   caption: [Live setup for playing a total of 11 different instrument on different MIDI channels. \ The rightmost 12th MIDI channel was for internal testing and not present during external testing.]
 ) <fig:sprint5Ableton11Instruments>
 
-New NFC cards were sourced, so that each instrument could be assigned their own NFC card as the previous four instruments had. Unfortunately, upon testing them internally, the newly sourced NFC cards were incompatible with both the NFC reader and NFC tools mobile app. It was concluded that the new cards operated on a different frequency than the originally used ones. To accommodate this during the test, as only the original NFC cards were available, a piece of paper was constructed with the available instruments labeled upon it, which would be presented to testers (@fig:11InstrumentsCard). The testers would then have to say which of the new instruments, they would like to play, whereafter a team member, would configure Live, so that their controller was assigned to the correct MIDI channel. This was an imperfect solution but successfully resulted in the new instruments being tested.
-
-#figure(
-  image("../images/sprint 5/11InstrumentsPaperCard.jpg", width: 25%),
-  caption: [Paper showing available instruments not on NFC cards.]
-) <fig:11InstrumentsCard>
+New NFC cards were sourced, so that each instrument could be assigned their own NFC card as the previous four instruments had. Upon testing them internally, the newly sourced NFC cards were incompatible with both the NFC reader and NFC tools mobile app. It was concluded that the new cards operated on a different frequency than the originally used ones. To accommodate this during the test, as only the original NFC cards were available, a piece of paper was constructed with the available instruments labeled upon it, which would be presented to testers. The testers would then have to say which of the new instruments, they would like to play, whereafter a team member, would configure Live, so that their controller was assigned to the correct MIDI channel. This was an imperfect solution but successfully resulted in the new instruments being tested.
 
 == PCB Production
 Initially, the plan was to solder only a single additional PCB for use in a forthcoming test focused on collaborative interaction. Once the professionally manufactured PCBs arrived, one was quickly assembled with the necessary components. Due to the quick assembly time, testing of the functionality of the potentiometers was conducted which yielded positive results; the potentiometers worked as intended on this rendition of the PCB.

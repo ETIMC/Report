@@ -166,13 +166,12 @@
 
     show ref: it => {
       text(eastern)[#underline[#it]] // MAKE BLACK BEFORE TURNING IN
-    }
+      }
 
-    show cite: it => {
-      text(olive)[#underline[#it]]
-    }
+      show cite: it => {
+        text(olive)[#underline[#it]]
+      }
     
-
   // Numbering and spacing of math
   set math.equation(numbering: "(1)")
   show math.equation: set block(spacing: 1.5em)
