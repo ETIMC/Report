@@ -13,7 +13,7 @@ Thereafter, experimentation figuring out how to make the knobs better and potent
 
 #subpar.grid(
   columns: (1fr, 1fr, 1fr, 2fr),
-  caption: [Potentiometer toppers.],
+  caption: [Potentiometer knobs.],
   label: <fig:fus4>,
   align: top,
   figure(image("../images/sprint 4/pottop1.png", width: 37%),
@@ -23,7 +23,7 @@ Thereafter, experimentation figuring out how to make the knobs better and potent
   figure(image("../images/sprint 4/pottop3.png", width: 40%),
     caption: [Redesigned knob for under the lid.]), <fig:fus4pot3>,
   figure(image("../images/sprint 4/pottop4.png", width: 65%),
-    caption: [Knobs resting on top of PCB.]), <fig:fus4pot4>
+    caption: [Knobs resting on top of lid.]), <fig:fus4pot4>
 )
 
 == Potentiometer MIDI
@@ -204,7 +204,7 @@ The debounce interval was determined empirically using an oscilloscope to captur
 )
 
 == Automatic card detection
-To enable automatic NFC card detection, instead of having to push a button, it was decided to add a sensor-based trigger to the NFC reading mechanism. Since light-dependent resistors (LDRs) were available they were selected for this purpose due to their relative simplicity and familiarity @arduinotechdk_lys_2025.
+To enable automatic NFC card detection, instead of having to push a button, it was decided to add a sensor-based trigger to the NFC reading mechanism. Since light-dependent resistors (LDR) were available they were selected for this purpose due to their relative simplicity and familiarity @arduinotechdk_lys_2025.
 
 The idea behind the detection mechanism was placing a LED at the bottom of the holder for the NFC reader and placing the LDR through a small hole from the top side of the holder. When no card was present, the LED light would pass unobstructed to the LDR. However, when a card was inserted, it would block the light, causing the LDR's resistance to change. This shift in light intensity could then be detected in software, triggering the system to initiate an NFC card scan automatically.
 
@@ -291,7 +291,7 @@ To improve engagement (Requirement 11, @table:usabilityRequirements), a design p
 )
 
 == Testing <sec:test4>
-The fourth round of user testing consisted of observing how participants interacted with a functional assembled Controller (@fig:sprint4TestSetup). However, as previously discussed in @potsprint4, issues with the multiplexer prevented the potentiometers and the automatic NFC reader sensor from working correctly. To make the NFC reader work, one of the interactive buttons was reconfigured to manually activate it. The potentiometers were disabled. The test was conducted at Rosengårdskolen @rosengardskolen_velkommen_nodate and involved four individual participants from the 5th grade. Each session lasted approximately seven minutes. A/B testing, think-aloud methodology, and unstructured interviews were employed.
+The fourth round of user testing consisted of observing how participants interacted with a functional assembled Controller (@fig:sprint4TestSetup). this Controller was wired opposed to using WiFi, to omit the latency problem. However, as previously discussed in @potsprint4, issues with the multiplexer prevented the potentiometers and the automatic NFC reader sensor from working correctly. To make the NFC reader work, one of the interactive buttons was reconfigured to manually activate it. The potentiometers were disabled. The test was conducted at Rosengårdskolen @rosengardskolen_velkommen_nodate and involved four individual participants from the 5th grade. Each session lasted approximately seven minutes. A/B testing, think-aloud methodology, and unstructured interviews were employed.
 
 
 #subpar.grid(

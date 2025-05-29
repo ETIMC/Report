@@ -5,7 +5,7 @@
 - DAW: Digital Audio Workstation
 - GPIO: General-purpose input/output
 - I²C: Inter-Integrated Circuit
-- LED: Led emitting diode
+- LED: Light emitting diode
 - LDR: Light-dependent resistor
 - MCU: Microcontroller Unit
 - NFC: Near field communication
@@ -15,8 +15,10 @@
 - RFID: Radio Frequency Identification
 - SCL: Serial clock line
 - SDA: Serial data line
+- SDT: Self-Determination Theory
 - SPI: Serial Peripheral Interface
 - TCP: Transmission Control Protocol
+- TUI: Tangible User Interface
 - UID: Unique identifier
 - UDP: User Datagram Protocol
 
