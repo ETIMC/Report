@@ -58,14 +58,14 @@ To further extend the Controller's musical palette, new instruments were added, 
   caption: [Live setup for playing a total of 11 different instrument on different MIDI channels. \ The rightmost 12th MIDI channel was for internal testing and not present during external testing.]
 ) <fig:sprint5Ableton11Instruments>
 
-New NFC cards were sourced, so that each instrument could be assigned their own NFC card as the previous four instruments had. Upon testing them internally, the newly sourced NFC cards were incompatible with both the NFC reader and NFC tools mobile app. It was concluded that the new cards operated on a different frequency than the originally used ones. To accommodate this during the test, as only the original NFC cards were available, a piece of paper was constructed with the available instruments labeled upon it, which would be presented to testers. The testers would then have to say which of the new instruments, they would like to play, whereafter a team member, would configure Live, so that their controller was assigned to the correct MIDI channel. This was an imperfect solution but successfully resulted in the new instruments being tested.
+New NFC cards were sourced, so that each instrument could be assigned their own NFC card as the previous four instruments had. Upon testing them internally, the newly sourced NFC cards were incompatible with both the NFC reader and NFC tools mobile app. It was concluded that the new cards operated on a different frequency than the originally used ones. To accommodate this during the test, as only the original NFC cards were available, a piece of paper was constructed with the available instruments labeled upon it, which would be presented to testers. 
 
 == PCB Production
-Initially, the plan was to solder only a single additional PCB for use in a forthcoming test focused on collaborative interaction. Once the professionally manufactured PCBs arrived, one was quickly assembled with the necessary components. Due to the quick assembly time, testing of the functionality of the potentiometers was conducted which yielded positive results; the potentiometers worked as intended on this rendition of the PCB.
+Initially, the plan was to solder only a single additional PCB for use in a forthcoming test focused on collaborative interaction. Once the professionally manufactured PCBs arrived, one was quickly assembled with the necessary components. Testing of the functionality of the potentiometers was conducted which yielded positive results.
 
-However, given that a previous test had been conducted using the faulty PCB where the potentiometer functionality did not work, and upon realizing how efficiently the new PCBs could be assembled, the team unanimously decided to prepare a second board in time for the next test to replace the faulty PCB. This decision was made to ensure a consistent and equitable user experience for all participants, avoiding a scenario in which some would interact with a fully functional system while others were limited by hardware shortcomings.
+It was decided to solder a second PCB to replace the faulty one also. This decision was made to ensure a consistent and equitable user experience for all participants in future tests, avoiding a scenario in which some would interact with a fully functional system while others were limited by hardware shortcomings.
 
-During the assembly of both PCBs, feedback gathered during the test from the prior was incorporated. Specifically, smaller potentiometers were selected to address concerns of obstructing the view of the display (@fig:finalpcbs).
+During the assembly of the PCBs, feedback gathered during a prior test (@sec:test4) was incorporated. Specifically, smaller potentiometers were selected to address concerns of obstructing the view of the display (@fig:finalpcbs).
 
 #figure(
   image("../images/sprint 5/2pcbssoldered.jpg", height: 30%),
@@ -73,6 +73,8 @@ During the assembly of both PCBs, feedback gathered during the test from the pri
 ) <fig:finalpcbs>
 
 == Testing
+The testers would then have to say which of the new instruments, they would like to play, whereafter a team member, would configure Live, so that their controller was assigned to the correct MIDI channel. This was an imperfect solution but successfully resulted in the new instruments being tested.
+
 The last round of user testing was conducted at Rosengårdskolen and involved six individual participants from the 5th grade. Three had participated in the test during Sprint 4. Each session lasted approximately twelve minutes.
 
 During the test, two functional controllers were presented alongside paper detailing extra instruments that could be played, but were not configured to NFC cards (@fig:sprint5setup). This allowed for two participants to be present in the room at the same time. Furthermore, it raised the opportunity of testing the proposed idea of a collaborative experience, enhancing the user experience. The test employed Think Aloud methodology and unstructured interviews.
@@ -84,7 +86,7 @@ During the test, two functional controllers were presented alongside paper detai
 
 All participants responded positively to the experience of trying the product, consistently describing it as enjoyable. It was observed that selecting an instrument via the NFC card posed no difficulties for users during this test either.
 
-Althrough the collaborative element of the test was heavily influenced by the chemistry between participants, all reported that they preferred using the product together rather than individually. One participant noted #quote[Hmm.. Yeaaah.. It is like, it can be nice to sit with it yourself, but it sounded a little better when you do it together and find a good rhythm.] (translated from Danish to English) (@app:Sprint5Transcriptions)
+Although the collaborative element of the test was heavily influenced by the chemistry between participants, all reported that they preferred using the product together rather than individually. One participant noted #quote[Hmm.. Yeaaah.. It is like, it can be nice to sit with it yourself, but it sounded a little better when you do it together and find a good rhythm.] (translated from Danish to English) (@app:Sprint5Transcriptions)
 
 When asked about the display's loading time, one pair confirmed that they noticed it but did not find it disruptive. Overall, the display received positive feedback with one participant stating: #quote[It is very cool. It is also very nice that you know which instrument it is.] (translated from Danish to English) (@app:Sprint5Transcriptions).
 
