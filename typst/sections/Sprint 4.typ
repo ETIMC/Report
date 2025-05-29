@@ -5,7 +5,7 @@
 Feedback from testing (@sec:sprint3test) informed the choice of redesigning the NFC card slot to prevent the NFC cards from sliding out, custom potentiometer knobs were also designed. Furthermore automatic card detection was developed to alleviate the pain point testers had remembering to press the button to activate card detection. A switch debouncing algorithm was created for improved interaction with the system, and professionally manufactured PCBs were ordered to replace an earlier hand-made version, to resolve several issues.
 
 == CAD <sec:sprint4Cad>
-Based on user testing, showing that the NFC cards easily fell out of the NFC card insertion hole (@sec:sprint3test), and that the initial design unintentionally allowed for foreign objects to be inserted, which was a concern voiced by a test participant (@sec:sprint2test), the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing.
+User testing, showed that the NFC cards easily fell out of the NFC card insertion hole (@sec:sprint3test), and that the initial design unintentionally allowed for foreign objects to be inserted, which was a concern voiced both by a test participant (@sec:sprint2test) and by #cite(<chen_humming_2019>, form: "prose"). To fix this, the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing.
 
 Additionally, potentiometer knobs were designed and developed based on earlier feedback (@sec:sprint3test). The initial designs were inspired by @bluefinbima_creating_2021, but adjusted to match the specific dimensions of the potentiometers and holes in the lid. Several versions were modeled and printed. The first version was a simple knob designed to fit directly onto the potentiometer shaft (@fig:fus4pot1), and was used to verify fit and tolerances.
 
@@ -28,12 +28,6 @@ Thereafter, experimentation figuring out how to make the knobs better and potent
 
 == Potentiometer MIDI
 The functionality of the potentiometers was handled in a much different way than the buttons (@sec:sprint2Buttons). Since they were all plugged into a multiplexer, each potentiometer could only be read, when the three _select_ pins on the multiplexer were set to the right binary values @texas_instruments_high-speed_2004.
-
-The select pins were defined as digital pins using _digitalio_, as they did not require specific analog signals (@listing:sprint4Pot:9). However, the multiplexer output pin was set as an analog input port on the Pico 1's using _analogio_ (@listing:sprint4Pot:7).
-
-Reading the potentiometer values worked by continuously iterating through an array containing the binary multiplexer settings for each potentiometer, setting the multiplexer to let a specific potentiometer's signal through one at a time (@listing:sprint4Pot:18).
-
-The processing of the signals consisted of sampling the voltage from the potentiometers multiple times (@listing:sprint4Pot:23) and calculating the average 16-bit value read for each potentiometer from the samples (@listing:sprint4Pot:26). This was required as the potentiometers seemed to produce slightly fluctuating values. Afterwards, the averaged 16-bit number would be mapped to a range of 0-127 (@listing:sprint4Pot:27), as this is the range MIDI works in @wreglesworth_why_nodate. Lastly, it would be checked if this value was different than the potentiometer's last value (@listing:sprint4Pot:28), and if it was, it would be forwarded to the Host in a special message consisting of the ID of the potentiometer and its value (@listing:sprint4Pot:30). On the Host side, this message would be received and processed much like button presses (@sec:sprint2HostMidiInterface). The main difference is that, instead of sending MIDI notes messages to Live, it would send _control change_ messages, which, in Live, could be configured to adjust a wide variety of settings; including instrument sound modifications. In the end, it was decided the four potentiometers should control the instrument's volume, delay (echo) and reverb. The last potentiometer was for each instrument configured to turn on an audio effect somewhat drastically changing the sound.
 
 #codly(
   annotations: (
@@ -125,8 +119,15 @@ The processing of the signals consisted of sampling the voltage from the potenti
   caption: [Methods on Controller for handling of potentiometers.]
 ) <listing:sprint4Pot>
 
+The select pins were defined as digital pins using _digitalio_, as they did not require specific analog signals (@listing:sprint4Pot:9). However, the multiplexer output pin was set as an analog input port on the Pico 1's using _analogio_ (@listing:sprint4Pot:7).
+
+Reading the potentiometer values worked by continuously iterating through an array containing the binary multiplexer settings for each potentiometer, setting the multiplexer to let a specific potentiometer's signal through one at a time (@listing:sprint4Pot:18).
+
+The processing of the signals consisted of sampling the voltage from the potentiometers multiple times (@listing:sprint4Pot:23) and calculating the average 16-bit value read for each potentiometer from the samples (@listing:sprint4Pot:26). This was required as the potentiometers seemed to produce slightly fluctuating values. Afterwards, the averaged 16-bit number would be mapped to a range of 0-127 (@listing:sprint4Pot:27), as this is the range MIDI works in @wreglesworth_why_nodate. Lastly, it would be checked if this value was different than the potentiometer's last value (@listing:sprint4Pot:28), and if it was, it would be forwarded to the Host in a special message consisting of the ID of the potentiometer and its value (@listing:sprint4Pot:30). On the Host side, this message would be received and processed much like button presses (@sec:sprint2HostMidiInterface). The main difference is that, instead of sending MIDI note messages to Live, it would send _control change_ messages, which, in Live, could be configured to adjust a wide variety of settings; including instrument sound modifications. In the end, it was decided the four potentiometers should control the instrument's volume, delay, reverb and an amp effect.
+
+
 == Button and Debouncing algorithm
-Though it worked fine having each button checked serially by iterating through an array (@sec:sprint2Buttons), a better solution was implemented. This was done by creating a special function, `click_watcher` (@listing:sprint4Click:1), with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.
+A refined solution was implemented for handling button input and debouncing. A special task, `click_watcher` (@listing:sprint4Click:1) was created with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a `click_watcher`-task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.
 
 #codly(
   annotations: (
@@ -188,7 +189,7 @@ Though it worked fine having each button checked serially by iterating through a
   caption: [New `click_watcher(btn, idx)`, button initialization and debouncing.],
 ) <listing:sprint4Click>
 
-A software debouncing routine was introduced by maintaining a dictionary that maps each button to its most recent activation time (@listing:sprint4Click:14). On each button press, the code reads the current time, computes the interval since the last recorded press of that button, and compares this against a predefined debounce threshold (@listing:sprint4Click:6). Only if the elapsed time exceeds that threshold is the event treated as a genuine button press, preventing a single physical actuation from registering as multiple clicks due to contact chatter #cite(<wright_what_2022>).
+A software debouncing routine was introduced by maintaining a dictionary that maps each button to its most recent activation time (@listing:sprint4Click:14). On each button press, the code reads the current time, computes the interval since the last recorded press of that button, and compares this against a predefined debounce threshold (@listing:sprint4Click:6). Only if the elapsed time exceeds that threshold is the event treated as a genuine button press, preventing a single physical actuation from registering as multiple clicks due to contact chatter @wright_what_2022.
 
 The debounce interval was determined empirically using an oscilloscope to capture the button’s voltage waveform (@fig:sprint4Oscilloscope). During repeated actuations, the longest bounce period observed was approximately 1.5 ms. A 0.5 ms safety margin was added to set the debounce threshold at 2 ms (@listing:sprint4Click:16). This value comfortably outlasts any measured bounce while remaining brief enough to preserve responsive play.
 
@@ -208,39 +209,7 @@ To enable automatic NFC card detection, instead of having to push a button, it w
 
 The idea behind the detection mechanism was placing a LED at the bottom of the holder for the NFC reader and placing the LDR through a small hole from the top side of the holder. When no card was present, the LED light would pass unobstructed to the LDR. However, when a card was inserted, it would block the light, causing the LDR's resistance to change. This shift in light intensity could then be detected in software, triggering the system to initiate an NFC card scan automatically.
 
-To use the resistor as a sensor, a voltage divider using the LDR and another resistor were added to the schematic @app:schematicSprint4. To determine the size of the resistor added to ensure proper functionality of the LDR and LED, calculations were made in an isolated test environment.
-
-=== LED Resistor Calculation
-The chosen LED had a forward voltage of approximately $1.8V$ at $20"mA"$ @nte_electronics_inc_nte3019_nodate. With the Pico's GPIO supplying $3.3V$, the resistor value was calculated by
-$ R = (V_("supply") - V_F) / I_F = (3.3V - 1.8V) / (0.02A) = 75 Omega $
-
-=== LDR <sec:ldr4>
-To calculate the correct resistor to use for the voltage divider with the LDR, the LDRs resistance, when placed in the Controller, was measured:
-- With an NFC card inserted: $1.900.000 Omega$
-- Without an NFC card inserted: $300.000 Omega$
-
-To create a voltage divider ensuring correct functionality, the resistor's resistance was calculated by calculating the ratio of the extremes @math:ratio1, calculating the square root to find how many times larger the fixed resistor should be than the smaller LDR value @math:sqrt, and multiplying/dividing with the measured LDR resistances @math:calc1 @math:calc2.
-
-$ (1.900.000 Omega) / (300.000 Omega) approx 6.33 $ <math:ratio1>
-$ sqrt(6.33) approx 2.52 $ <math:sqrt>
-$ 300.000 Omega dot 2.25 = 753.000 Omega $ <math:calc1>
-$ (1.900.000)/(2.52) = 756.369 Omega $ <math:calc2>
-
-For the project, no resistor the exact size was available and as such, a resistor of $0.75 M Omega$ was chosen. With the resistor and LDR combined to create a voltage divider, it's values were read by a Pico:
-- Observed voltage with NFC card inserted: $0.9V$
-- Observed voltage without NFC card inserted: $1.3V$
-
-For verification, the theoretical values were also calculated:
-
-With NFC card: 
-$ V_1 = 3.3V dot (1.900.000 Omega)/(1.900.000 Omega + 750.000 Omega) = 2.37V $
-$ V_"out" = V - V_1 = 3.3V - 2.37V = 0.93V $
-
-Without NFC card: 
-$ V_1 = 3.3V dot (300.000 Omega)/(300.000 Omega + 750.000 Omega) = 0.943V $
-$ V_"out" = V - V_1 = 3.3V - 0.94V = 2.36V $
-
-It was observed that the theoretical values were not exactly equal to the measured values. This was reasoned by the measured LDR resistances possibly not being completely accurate. 
+To use the resistor as a sensor, a voltage divider using the LDR and another resistor were added to the schematic (@app:schematicSprint4). To determine the size of the resistor added to ensure proper functionality of the LDR and LED, calculations were made in an isolated test environment (@app:automaticCardDetection). While doing the calculations it was observed that the theoretical values were not exactly equal to the measured values. This was reasoned by the measured LDR resistances possibly not being completely accurate due to a volatile test environment. 
 
 == PCB 
 After having produced a faulty PCB caused by the printer at the production facility (@sec:PCBsprint3), the printer was exchanged for a functioning model, allowing for the fabrication of a functioning PCB.
