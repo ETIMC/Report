@@ -9,10 +9,13 @@ Further research in this domain is essential, as traditional music education oft
 
 To learn more about the project:
 
-*Video Walkthrough:* #text(blue)[#underline[#link("https://drive.google.com/file/d/1H6dUJ6WPt3np7xRLT2iUnK9Qn9W2uAV5/view?usp=drive_link")]]
+_Video Walkthrough:_
 
-*GitHub Repositories:* #text(blue)[#underline[#link("https://github.com/ETIMC")]]
+#text(blue)[#underline[#link("https://drive.google.com/file/d/1H6dUJ6WPt3np7xRLT2iUnK9Qn9W2uAV5/view?usp=drive_link")]] <no-wc>
 
+_GitHub Repositories:_
+
+#text(blue)[#underline[#link("https://github.com/ETIMC")]] <no-wc>
 
 /*
 @samuel_impact_2024

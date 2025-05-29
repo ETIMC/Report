@@ -1,5 +1,16 @@
 #import "@preview/wordometer:0.1.4": word-count, total-words, total-characters
 #show: word-count.with(exclude: (<no-wc>, figure))
+
+#import "@preview/codly:1.3.0": *
+#show: codly-init.with()
+#codly(
+  languages: (
+    cpy: (name: " CircuitPython", icon: emoji.snake, color: rgb("#652f8e")),
+  )
+)
+
+#import "@preview/subpar:0.2.2"
+
 #import "template.typ": AcademicTemplate
 #show: AcademicTemplate.with(
   title: "Exploring Tangible Interfaces
@@ -42,16 +53,6 @@ Vi har fået lavet to af de her "spille-bøtter" og så en "hoved-bøtte". Spill
 Vi har testet det her af med ungerne, og de synes, det er skide sjovt! Især når de er flere om det. Der var lige lidt bøvl med skærmen, der var lidt langsom, og dreje-knapperne var lidt svære at finde ud af for nogen, men alt i alt, så er det noget, der kan få folk til at kaste sig over musikken, uden at det bliver for besværligt. Så det er sgu et godt stykke arbejde, vi har fået lavet her, det er det!
 ]
 )
-
-#import "@preview/codly:1.3.0": *
-#show: codly-init.with()
-#codly(
-  languages: (
-    cpy: (name: " CircuitPython", icon: emoji.snake, color: rgb("#652f8e")),
-  )
-)
-
-#import "@preview/subpar:0.2.2"
 
 #include "Acronyms and Terms.typ"
 <no-wc>

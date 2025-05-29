@@ -161,7 +161,7 @@
     //set figure(placement: auto) // Change this to have image autoposition themselves (at either top or bottom)
     show figure: set block(spacing: 1.5em)
     set figure(
-      placement: auto
+      placement: none
     )
 
     show ref: it => {
@@ -287,7 +287,7 @@
   let abstractSection() = {
     if abstract != none [
       #set text(weight: 700)
-      #h(1em) _Abstract_---#abstract
+      #h(1em) _Abstract_---#abstract <no-wc>
   
       #if index-terms != () [
         #h(1em)_Index terms_---#index-terms.join(", ")

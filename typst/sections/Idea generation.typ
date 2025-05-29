@@ -1,8 +1,7 @@
 #import "@preview/subpar:0.2.2" 
 
 = Idea Generation <sec:ideaGeneration>
-
-At the start of the project period, it was decided to create a project revolving around music, experimentation, exploration, and tangibility. To further narrow down the different possible subjects, an idea generation session utilizing the brainstorming method #cite(<fullerton_game_2019>, supplement: [p. 16]) was conducted (@fig:FigmaIdeaGeneration). The basis of the brainstorm was the sentence "Tangible device for music exploration", which was based on the previously mentioned keywords. Various ideas were explored, and the most interesting keywords were combined into the following ideas: 
+A brainstorm session #cite(<fullerton_game_2019>, supplement: [p. 16]) took place. It was decided to create a product revolving around music, experimentation, exploration and tangibility. Various ideas were explored, and the most interesting ideas were as follows:
 
 + Modular blocks with magnets that can be attached together to make a music-piece.
   - Could be a cooperative experience where more than one person decides the placement of a block in the system.
@@ -16,11 +15,7 @@ At the start of the project period, it was decided to create a project revolving
 + LED screens with interactive 'faces' that jump out of joy when the music is placed. (could be used in all of the different ideas)
 + Classic piano roll where different modules can be attached. 
 
-#figure(image("../images/idea generation/FigmaIdeaGeneration1.png", width: 50%),
-    caption: [Post-it notes brainstorm.],
-  ) <fig:FigmaIdeaGeneration>
-
-The second idea, cooperative modules for music experimentation utilizing an NFC reader, with a target group of 9 to 12-year-olds, was selected as the basis for the project. This aligned with the 3rd - 6th primary school grades, in which music is taught in the Danish school system @styrelsen_for_undervisning_og_kvalitet_faghaefte_2025. In practice, the idea would be to have multiple _Controllers_ that the target group could play with and experiment with music. A sketch was produced visualizing the idea (@fig:firstDrawing).
+The second idea, cooperative modules for music experimentation utilizing an NFC reader, with a target group of 9-12-year-olds, was selected as the basis for the project. This aligned with the 3rd-6th primary school grades, in which music is taught in the Danish school system @styrelsen_for_undervisning_og_kvalitet_faghaefte_2025. In practice, the idea would be to have multiple _Controllers_ that the target group could play with and experiment with music. A sketch was produced visualizing the idea (@fig:firstDrawing).
 
 #figure(
   image("../images/idea generation/FirstDrawing.png", height: 20%),

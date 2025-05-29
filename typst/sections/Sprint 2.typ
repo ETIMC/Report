@@ -3,7 +3,6 @@
 = Sprint 2: _Breadboard implementation, Wifi and Host functionalities_
 Building on the insights gathered during Sprint 1 , the focus shifted to integrating the individual functional components into a cohesive system. This involved interconnecting the components to form a working breadboard prototype suitable for further testing and iteration. The user feedback from Sprint 1 also confirmed that the overall physical design of the product was well-received, and could be worked upon further as well.
 
-
 == WiFi problems <sec:sprint2WifiProblems>
 During further WiFi connectivity tests between the Host and a Controller, the Host’s WiFi driver would crash unpredictably, often within a minute of establishing a connection. This instability generated significant confusion, leading to doubts about the viability of WiFi as the communication protocol of choice. As a fallback, Bluetooth was briefly trialed, but its inherent latency was incompatible with the low-latency requirement (Requirement 9, @table:technicalRequirements).
 
