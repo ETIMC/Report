@@ -69,7 +69,7 @@ During the assembly of both PCBs, feedback gathered during the test from the pri
 
 #figure(
   image("../images/sprint 5/2pcbssoldered.jpg", height: 30%),
-  caption: [Final rendition of soldered PCBs],
+  caption: [Final rendition of soldered PCBs.],
 ) <fig:finalpcbs>
 
 == Testing
@@ -78,8 +78,8 @@ The last round of user testing was conducted at Rosengårdskolen and involved si
 During the test, two functional controllers were presented alongside paper detailing extra instruments that could be played, but were not configured to NFC cards (@fig:sprint5setup). This allowed for two participants to be present in the room at the same time. Furthermore, it raised the opportunity of testing the proposed idea of a collaborative experience, enhancing the user experience. The test employed Think Aloud methodology and unstructured interviews.
 
 #figure(
-  image("../images/sprint 5/sprint5test.png", height: 30%),
-  caption: [Test Setup for Sprint 5],
+  image("../images/sprint 5/testSetupSprint5.jpg", height: 30%),
+  caption: [Test Setup for Sprint 5.],
 ) <fig:sprint5setup>
 
 All participants responded positively to the experience of trying the product, consistently describing it as enjoyable. It was observed that selecting an instrument via the NFC card posed no difficulties for users during this test either.
