@@ -1,5 +1,5 @@
 #import "@preview/wordometer:0.1.4": word-count, total-words, total-characters
-#show: word-count.with(exclude: (<no-wc>, figure))
+#show: word-count.with(exclude: (<no-wc>, figure, heading.where(supplement: [Appendix])))
 
 #import "@preview/codly:1.3.0": *
 #show: codly-init.with()
@@ -46,11 +46,6 @@
   timespan: "2nd of June 2025",
   mainSupervisor: (fullName: "Jacob Nielsen"),
   abstract:[Word Count: #total-words. Character Count: #total-characters \
-Ej, du! Hør lige her! Det her projekt, det er sgu da for fedt! Vi har lavet sådan en dims, man kan røre ved, så man kan lave musik. Ikke sådan noget kedeligt noget, men noget der er lige til at gå til, så man kan sidde og hygge sig med det og finde ud af, hvad der sker. Vi har lavet det i flere omgange, og vi har haft ungerne til at prøve det, så vi er sikre på, det virker, som det skal.
-
-Vi har fået lavet to af de her "spille-bøtter" og så en "hoved-bøtte". Spille-bøtterne har otte knapper, fire dreje-knapper, en dims der kan læse sådan nogle kort med instrumenter på, og så en lille skærm, der viser, hvad du spiller. Det hele kører på sådan en lille computer, der hedder en Raspberry Pi Pico W. Når du trykker på knapperne, sender den bare nogle signaler videre til hoved-bøtten, som så sender det videre til Ableton Live, der laver lyden. Og det hele er pakket ind i en 3D-printet kasse, der kan skilles ad, hvis der skal rodes med indmaden.
-
-Vi har testet det her af med ungerne, og de synes, det er skide sjovt! Især når de er flere om det. Der var lige lidt bøvl med skærmen, der var lidt langsom, og dreje-knapperne var lidt svære at finde ud af for nogen, men alt i alt, så er det noget, der kan få folk til at kaste sig over musikken, uden at det bliver for besværligt. Så det er sgu et godt stykke arbejde, vi har fået lavet her, det er det!
 ]
 )
 
@@ -64,6 +59,8 @@ Vi har testet det her af med ungerne, og de synes, det er skide sjovt! Især nå
 #include "sections/Introduction.typ"
 
 #include "sections/State of the Art.typ"
+
+#include "sections/Method & Materials.typ"
 
 #include "sections/Idea generation.typ"
 

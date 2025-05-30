@@ -1,26 +1,42 @@
-#heading([Sprint 2 transcriptions])
-<app:Sprint2Transcriptions>
-
+= Bill of Materials <app:bom>
 #figure(
-  rect(image("appendices/sprint-2-test/Test 1.svg", width: 92%), radius: 2mm)
+  table(
+    
+  ),
 )
 
-#figure(
-  rect(image("appendices/sprint-2-test/Test 2.svg", width: 92%), radius: 2mm)
-)
+#colbreak()
+= Sprint 2 transcriptions <app:Sprint2Transcriptions>
+== Test 1
+//#figure(
+//  rect(image("appendices/sprint-2-test/Test 1.svg", width: 92%), radius: 2mm)
+//)
 
-#figure(
-  rect(image("appendices/sprint-2-test/Test 3.svg", width: 92%), radius: 2mm)
-)
+#colbreak()
+== Test 2
+//#figure(
+//  rect(image("appendices/sprint-2-test/Test 2.svg", width: 92%), radius: 2mm)
+//)
 
-#figure(
-  rect(image("appendices/sprint-2-test/Test 4.svg", width: 92%), radius: 2mm)
-)
+#colbreak()
+== Test 3
+//#figure(
+//  rect(image("appendices/sprint-2-test/Test 3.svg", width: 92%), radius: 2mm)
+//)
 
+#colbreak()
+== Test 4
+//#figure(
+//  rect(image("appendices/sprint-2-test/Test 4.svg", width: 92%), radius: 2mm)
+//)
+
+#colbreak()
 #heading([Sprint 3 transcriptions]) <app:Sprint3Transcriptions>
 
+#colbreak()
 #heading([Sprint 4 transcriptions]) <app:Sprint4Transcriptions>
 
+#colbreak()
 #heading([Sprint 5 transcriptions]) <app:Sprint5Transcriptions>
 
 #colbreak()
@@ -45,7 +61,6 @@
 )
 
 #colbreak()
-
 = Automatic card detection calculation <app:automaticCardDetection>
 #[
   *LED Resistor Calculation:*

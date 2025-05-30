@@ -1,3 +1,4 @@
+#import "@preview/subpar:0.2.2"
 = Sprint 5: _Two Controllers, Soldering and even More Instruments_
 To evaluate upon the idea of collaborative play (Requirement 1, @table:usabilityRequirements), a second chassis was designed with, among other things, improved standoffs. Furthermore, the NFC card slot and reader holder were revised for better usability and print reliability. Aesthetic upgrades for the chassis included custom keycaps and a decorated lid. More instruments were added, though additional NFC cards were unavailable prompting a temporary fix. Two new PCBs were assembled using lower-profile potentiometers to avoid display obstruction as requested by testers (@sec:test4)– and allowing for a cohesive experience for all future testers.
 
@@ -67,10 +68,16 @@ It was decided to solder a second PCB to replace the faulty one also. This decis
 
 During the assembly of the PCBs, feedback gathered during a prior test (@sec:test4) was incorporated. Specifically, smaller potentiometers were selected to address concerns of obstructing the view of the display (@fig:finalpcbs).
 
-#figure(
-  image("../images/sprint 5/2pcbssoldered.jpg", height: 30%),
+#subpar.grid(
+  columns: (auto, auto),
   caption: [Final rendition of soldered PCBs.],
-) <fig:finalpcbs>
+  label: <fig:>,
+  align: top,
+  figure(image("../images/sprint 5/pcbAssembledTop.jpg", height: 25%),
+    caption: [PCB's top side.]), <fig:>,
+  figure(image("../images/sprint 5/pcbAssembledBottom.jpg", height: 25%),
+    caption: [PCB's bottom side.]), <fig:finalpcbs>
+)
 
 == Testing
 The testers would then have to say which of the new instruments, they would like to play, whereafter a team member, would configure Live, so that their controller was assigned to the correct MIDI channel. This was an imperfect solution but successfully resulted in the new instruments being tested.
@@ -86,14 +93,14 @@ During the test, two functional controllers were presented alongside paper detai
 
 All participants responded positively to the experience of trying the product, consistently describing it as enjoyable. It was observed that selecting an instrument via the NFC card posed no difficulties for users during this test either.
 
-Although the collaborative element of the test was heavily influenced by the chemistry between participants, all reported that they preferred using the product together rather than individually. One participant noted #quote[Hmm.. Yeaaah.. It is like, it can be nice to sit with it yourself, but it sounded a little better when you do it together and find a good rhythm.] (translated from Danish to English) (@app:Sprint5Transcriptions)
+Although the collaborative element of the test was heavily influenced by the chemistry between participants, all reported that they preferred using the product together rather than individually. One participant noted #quote[Hmm.. Yeaaah.. It is like, it can be nice to sit with it yourself, but it sounded a little better when you do it together and find a good rhythm.] (@app:Sprint5Transcriptions)
 
-When asked about the display's loading time, one pair confirmed that they noticed it but did not find it disruptive. Overall, the display received positive feedback with one participant stating: #quote[It is very cool. It is also very nice that you know which instrument it is.] (translated from Danish to English) (@app:Sprint5Transcriptions).
+When asked about the display's loading time, one pair confirmed that they noticed it but did not find it disruptive. Overall, the display received positive feedback with one participant stating: #quote[It is very cool. It is also very nice that you know which instrument it is.] (@app:Sprint5Transcriptions).
 
-Reactions to the potentiometer functionality were mixed. Some participants were unsure of their purpose, expressing that they did not perceive a difference in sound output. One remarked #quote[I could not really hear a difference in any of it.] (translated from Danish to English) (@app:Sprint5Transcriptions). This was possibly attributed to a limitation in the test setup: only certain instruments (those with corresponding NFC cards) had potentiometer functionality enabled, which was not communicated properly to participants. Furthermore, the potentiometer with the most perceivable function, adjusting volume, was disabled after the first test due to it causing system issues.
+Reactions to the potentiometer functionality were mixed. Some participants were unsure of their purpose, expressing that they did not perceive a difference in sound output. One remarked #quote[I could not really hear a difference in any of it.] (@app:Sprint5Transcriptions). This was possibly attributed to a limitation in the test setup: only certain instruments (those with corresponding NFC cards) had potentiometer functionality enabled, which was not communicated properly to participants. Furthermore, the potentiometer with the most perceivable function, adjusting volume, was disabled after the first test due to it causing system issues.
 
-The updated design of the top chassis also received positive remarks. Participants found it more engaging compared to the previous, all-black design, with one stating that it invited interaction. However, suggestions were made to incorporate more vibrant colors: #quote[Yes, a little. But maybe if it had a little more color instead of just black, white, and gray.] (translated from Danish to English) (@app:Sprint5Transcriptions).
+The updated design of the top chassis also received positive remarks. Participants found it more engaging compared to the previous, all-black design, with one stating that it invited interaction. However, suggestions were made to incorporate more vibrant colors: #quote[Yes, a little. But maybe if it had a little more color instead of just black, white, and gray.] (@app:Sprint5Transcriptions).
 
 Several participants expressed a desire for more switches and additional functionalities, including the ability for sounds to play as long as a button was held down.
 
-Notably, one participant reported being inspired to learn the cello after the experience, an indication of high engagement. Although this sentiment was not shared by all, the plug-N-play nature of the NFC interaction was widely appreciated. One participant commented: #quote[It was very fun. Because you do not have to write all kinds of things, you just need to insert it, and then it works.] (translated from Danish to English) (@app:Sprint5Transcriptions). Finally, one pair of participants were excited about the idea of being able to buy the product as well.
+Notably, one participant reported being inspired to learn the cello after the experience, an indication of high engagement. Although this sentiment was not shared by all, the plug-N-play nature of the NFC interaction was widely appreciated. One participant commented: #quote[It was very fun. Because you do not have to write all kinds of things, you just need to insert it, and then it works.] (@app:Sprint5Transcriptions). Finally, one pair of participants were excited about the idea of being able to buy the product as well.
