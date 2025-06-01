@@ -326,20 +326,24 @@ To solve this, a slight inward curve was added to the side panels. This preserve
 )
 
 == Pixelart for the Display
-All visual assets used for the display were created specifically for the project, as the Picos had limited storage capacity @raspberry_pi_raspberry_2024-1 and the chosen display module required the picture format to be in the bitmap (.BMP) format @alexa_davis_what_2025 for proper image rendering.  Using pixel art was considered suitable for the target audience, due to its playful and accessible engaging visual expression (Requirement 11, @table:usabilityRequirements). For the initial breadboard implementation, an image for each of the instruments was created (@fig:pixelart). 
+All visual assets used for the display were created specifically for the project, as the Picos had limited storage capacity @raspberry_pi_raspberry_2024-1 and the chosen display module required the picture format to be in the bitmap (.BMP) format @alexa_davis_what_2025 for proper image rendering.  Using pixelart was considered suitable for the target audience, due to its playful and accessible engaging visual expression (Requirement 11, @table:usabilityRequirements). For the initial breadboard implementation, an image for each of the instruments was created (@fig:pixelart). 
 
-#figure(
-  image("../images/sprint 2/pixel-art.png", height: 24%),
-  caption: [Instrument pixel art.],
-) <fig:pixelart>
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Instrument pixelart.],
+  label: <fig:pixelart>,
+  align: top,
+  figure(image("../images/sprint 2/drums.jpg", height: 15%),
+    caption: [Pixelart image of drum kit.]), <fig:pixel1>,
+  figure(image("../images/sprint 2/piano.jpg", height: 15%),
+    caption: [Pixelart image of piano.]), <fig:pixel2>,
+)
 
-
+#colbreak()
 == Testing <sec:sprint2test>
 Prototype evaluation was conducted at the University of Southern Denmark with five participants from the target user group. The participants were all enrolled at Teknologiskolen @teknologiskolen_om_2025, an extracurricular program focused on technology education for children. The breadboard prototype, which utilized WiFi for connectivity, was tested (@fig:sprint2setup). During this evaluation, the display was intentionally disconnected from the main circuit due to observed interference (@sec:Sprint2Display). Additionally, the NFC reader required a manual button press for activation. Participants' prior exposure to breadboard setups allowed for the testing of the very early prototype without significant participant confusion. The testing procedure comprised of two main phases: A think-aloud phase, where participants freely interacted with the prototype, followed by an unstructured interview. A/B tests were also utilized. Each test session averaged 10 minutes.
 
 In one instance, two participants were present concurrently. They individually completed the think-aloud phase but provided a joint response during the subsequent interview.
-
-
 
 None of the participants had received formal musical training, but two reported regularly playing on keyboards at home. All participants expressed curiosity and interest in learning more about music creation. 
 

@@ -7,16 +7,23 @@ Based on feedback gathered during testing in Sprint 2 additional instruments wer
 == More Instruments
 Based on the breadboard prototype test (@sec:sprint2test), two additional instruments, a trumpet and a guitar, were integrated into the system. In Live, this involved creating two new MIDI tracks, each loaded with a high-quality trumpet or guitar virtual instrument and assigned to its own dedicated MIDI channel. Correspondingly, two new images, one for each instrument, were designed and added to the display (@fig:pixelart2), ensuring users would receive clear visual feedback whenever they switched to one of these instruments. Lastly, two new NFC cards were assigned to each of the instruments.
 
-#figure(
-  image("../images/sprint 3/pixel-art2.png", height: 20%),
-  caption: [Additional pixel art.],
-) <fig:pixelart2>
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Additional instrument pixelart.],
+  label: <fig:pixelart2>,
+  align: top,
+  figure(image("../images/sprint 3/trumpet.jpg", height: 15%),
+    caption: [Pixelart image of trumpet.]), <fig:pixel3>,
+  figure(image("../images/sprint 3/guitar.jpg", height: 15%),
+    caption: [Pixelart image of guitar.]), <fig:pixel4>,
+)
+
 #colbreak()
 == Lowering Latency
 === UDP
 As discussed in @sec:sprint2WifiProblems, latency, hypothesized to be primarily caused by TCP, was experienced when playing on the Controller. To improve this, the WiFi system was changed to use UDP instead. Most rewriting consisted of removing TCP sockets (@listing:exchangingSocketsDiff:1) and exchanging them with the addresses of the Controllers (@listing:exchangingSocketsDiff:3). As UDP is not connection-oriented #cite(<kurose_computer_2020>, supplement: [ch. 3.3]), this was necessary for the Host to be able to identify and remember the Controllers that connected to it.
 
-This improved the latency a fair bit. However, the latency was still noticeable, which lead to a more drastic change being made.
+This improved the latency a fair bit. However, the latency was still noticeable, which led to a more drastic change being made.
 
 #codly(
   highlighted-lines: ((1, red.lighten(60%)), (2, red.lighten(60%)), (3, green.lighten(60%)), (4, green.lighten(60%))),
