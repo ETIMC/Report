@@ -26,7 +26,7 @@ The NFC side panel also underwent another revision. Observations during the test
 
 New side panels were printed, which included a full set for the new chassis as well as a new NFC card insertion side for the old chassis. Unlike earlier prints, these were printed laying down flat inside the 3D printer. This eliminated the need for support material inside the NFC card insertion hole, resolving earlier problems. However, this approach also resulted in support material being added to the "slit/slide" mechanisms of the sides making assembly of the entire chassis slightly more difficult. 
 
-Neodymium magnets were tried for fastening the lid, utilizing the previously designed magnet holes (@sec:sprint2Fusion); however, they proved impractical as they could not be securely mounted and consistently loosened when another magnet was introduced. Consequently, the previously devised "temporary" solution, involving small fastening cylinders (@sec:sprint3cad), remained in use.
+Neodymium magnets were tested for fastening the lid, utilizing the previously designed magnet holes (@sec:sprint2Fusion); however, they proved impractical as they could not be securely mounted and consistently loosened when another magnet was introduced. Consequently, the previously devised "temporary" solution, involving small fastening cylinders (@sec:sprint3cad), remained in use.
 
 The last step was to improve visual cohesion and aesthetics. Pre-designed button keycaps compatible with the used switches @luca_mechanical_2025 was found and printed. Additionally, the lid design (@sec:decorations) was added to the lid, and the lid was printed in two colors @fig:3dchassis. These final changes gave the chassis a cleaner finish and a more playful, cohesive and engaging appearance (Requirement 11, @table:usabilityRequirements).
 
@@ -71,7 +71,7 @@ New NFC cards were sourced, so that each instrument could be assigned their own 
 
 #colbreak()
 == PCB
-Initially, the plan was to solder only a single additional PCB for use in a forthcoming test focused on collaborative interaction. Once the professionally manufactured PCBs arrived, one was quickly assembled with the necessary components. Testing of the functionality of the potentiometers was conducted which yielded positive results. Therefore, it was decided to solder a second PCB to replace the faulty one also. This decision was made to ensure a consistent and equitable user experience for all participants in future tests, avoiding a scenario in which some would interact with a fully functional system while others were limited by hardware shortcomings.
+Initially, the plan was to solder only a single additional PCB for use in a forthcoming test focused on collaborative interaction. Once the professionally manufactured PCBs arrived, one was quickly assembled with the necessary components. Testing of the functionality of the potentiometers was conducted which yielded positive results. Therefore, it was decided to solder a second PCB to replace the faulty one as well. This decision was made to ensure a consistent and equitable user experience for all participants in future tests, avoiding a scenario in which some would interact with a fully functional system while others were limited by hardware shortcomings.
 
 During the assembly of the PCBs, feedback gathered during a prior test (@sec:test4) was incorporated. Specifically, smaller potentiometers were selected to address concerns of obstructing the view of the display (@fig:finalpcbs).
 

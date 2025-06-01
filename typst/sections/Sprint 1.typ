@@ -52,7 +52,7 @@ Furthermore, requirement 8 (Plug'N'Play) was included to facilitate usability re
 
 Both requirement 5 (NFC Reader) and requirement 6 (Display) were defined in correlation to requirement 4 and 11 (Feedback and Engaging, @table:usabilityRequirements). Requiring an NFC reader for changing instruments was inspired by retro gaming consoles as well as the NFC wooden blocks from #cite(<sabuncuoglu_tangible_2020>, form: "prose"), hopefully leading to the product feeling more tangible and interactive. Adding a display would make it easy to show which instrument's sounds were in use and provide important feedback #cite(<norman_design_2013>, supplement: [ch. 4]) to the user, which was deemed especially important by #cite(<chen_humming_2019>, form: "prose").
 
-Arguably the most important requirement was  requirement, 10 (Interactive sensors), as it formed the core interface, allowing users to actively experiment with music through the Controller. By incorporating an array of sensors, such as buttons and potentiometers, drawing inspiration from commercial music hardware @thomann_roland_2025 @native_instruments_native_2025 @teenage_engineering_teenage_2025, it would be ensured that the user's interactions with Controllers were captured and translated into music. This requirement was not only the foundation of the overall user experience, but also solidified the system's ability to deliver real-time musical interaction.
+Arguably the most important requirement was  requirement 10 (Interactive sensors), as it formed the core interface, allowing users to actively experiment with music through the Controller. By incorporating an array of sensors, such as buttons and potentiometers, drawing inspiration from commercial music hardware @thomann_roland_2025 @native_instruments_native_2025 @teenage_engineering_teenage_2025, it would be ensured that the user's interactions with Controllers were captured and translated into music. This requirement was not only the foundation of the overall user experience, but also solidified the system's ability to deliver real-time musical interaction.
 
 #figure(
   table(
@@ -158,11 +158,11 @@ When a card was scanned, its UID was compared with the previously scanned card (
 
 
 === Musical Interaction <sec:sprint1MusicalInteraction>
-The last technical element experimented with during the first sprint was the "interactive sensors" (Requirement 10, @table:technicalRequirements). The chosen sensors were eight buttons and four potentiometers, where each button should play a note, and the potentiometers should be used to experiment with the sounds. Having specifically eight buttons was because it formed a good balance between usability and how music is often split into fours.
+The last technical element experimented with during the first sprint was the "interactive sensors" (Requirement 10, @table:technicalRequirements). The chosen sensors were eight buttons and four potentiometers, where each button should play a note, and the potentiometers should be used to experiment with the sounds. Having specifically eight buttons was decided because it formed a good balance between usability and how music is often split into fours.
 
 Multiple button types where explored. This included both tactile switch buttons @adafruit_tactile_nodate but also force sensitive resistors @adafruit_square_2022 and piezoresistors @kosaka_e-drum_nodate, which would allow the user the play notes with different velocities. Ultimately, however, it was decided to use the tactile switch buttons, to keep the design and development process simple.
 
-Getting buttons to work with the Pico 1's were very easy using CircuitPython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these, a GPIO pin on the Pico could be referenced (@listing:buttonsPullUp:1), defined as an input pin (@listing:buttonsPullUp:3), and pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4).
+Getting buttons to work with the Pico 1s was very easy using CircuitPython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these, a GPIO pin on the Pico could be referenced (@listing:buttonsPullUp:1), defined as an input pin (@listing:buttonsPullUp:3), and pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4).
 
 #figure(
   ```cpy
@@ -189,7 +189,7 @@ The prototype was constructed at a 1:1 scale using colored cardboard and adhesiv
   label: <fig:paperprototype>,
   align: top,
   figure(image("../images/sprint 1/paperTop.jpg", height: 18%),
-    caption: [Paper prototype with instrument on screen.]), <fig:>,
+    caption: [Paper prototype with instrument on display.]), <fig:>,
   figure(image("../images/sprint 1/paperSide.jpg", height: 18%),
     caption: [Paper prototype's right side, with NFC hole.]), <fig:>,
   placement: top

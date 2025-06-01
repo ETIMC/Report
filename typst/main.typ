@@ -61,7 +61,7 @@
 
   _Video Walkthrough:_
   \
-  #text(blue)[#underline[#link("https://drive.google.com/file/d/1H6dUJ6WPt3np7xRLT2iUnK9Qn9W2uAV5/view?usp=drive_link")]] <no-wc>
+  #text(blue)[#underline[#link("https://drive.google.com/file/d/1H6dUJ6WPt3np7xRLT2iUnK9Qn9W2uAV5/view?usp=sharing")]] <no-wc>
   
   _GitHub Repositories:_
   \

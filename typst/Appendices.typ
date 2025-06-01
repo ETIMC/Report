@@ -1,8 +1,9 @@
+#set par(spacing: 1em)
+
 = Bill of Materials <app:bom>
-#set align(center)
 OBS: Bill of materials does not include software licenses or external computer pricing.
 
-*Single Controller*
+== Single Controller
 #figure(
   table(
   columns: (0.25fr, 3fr, 0.7fr, 1.6fr, 0.8fr),
@@ -36,7 +37,7 @@ OBS: Bill of materials does not include software licenses or external computer p
 ) <table:ControllerHardwareMaterials>
 
 #colbreak()
-*Host, connecting to a single Controller*
+== Host, connecting to a single Controller
 #figure(
   table(
   columns: (0.25fr, 3fr, 0.7fr, 1.6fr, 0.8fr),
@@ -59,37 +60,75 @@ OBS: Bill of materials does not include software licenses or external computer p
 
 #colbreak()
 = Sprint 2 transcriptions <app:Sprint2Transcriptions>
-*Test 1*
-#figure(
-  rect(image("appendices/sprint-2-test/Test 1.svg", width: 91%), radius: 2mm)
-)
+== Test 1:
+#include "appendices/sprint-2-test/test1.typ"
+<no-wc>
 
 #colbreak()
-*Test 2*
-#figure(
-  rect(image("appendices/sprint-2-test/Test 2.svg", width: 92%), radius: 2mm)
-)
+== Test 2:
+#include "appendices/sprint-2-test/test2.typ"
+<no-wc>
 
 #colbreak()
-*Test 3*
-#figure(
-  rect(image("appendices/sprint-2-test/Test 3.svg", width: 92%), radius: 2mm)
-)
+== Test 3:
+#include "appendices/sprint-2-test/test3.typ"
+<no-wc>
 
 #colbreak()
-*Test 4*
-#figure(
-  rect(image("appendices/sprint-2-test/Test 4.svg", width: 92%), radius: 2mm)
-)
+== Test 4:
+#include "appendices/sprint-2-test/test4.typ"
+<no-wc>
 
 #colbreak()
-#heading([Sprint 3 transcriptions]) <app:Sprint3Transcriptions>
+= Sprint 3 transcriptions <app:Sprint3Transcriptions>
+== Test 1:
+#include "appendices/sprint-3-test/test1.typ"
+<no-wc>
+
+== Test 2:
+#include "appendices/sprint-3-test/test1.typ"
+<no-wc>
+
+== Test 3:
+#include "appendices/sprint-3-test/test1.typ"
+<no-wc>
 
 #colbreak()
-#heading([Sprint 4 transcriptions]) <app:Sprint4Transcriptions>
+= Sprint 4 transcriptions <app:Sprint4Transcriptions>
+== Test 1:
+#include "appendices/sprint-4-test/test1.typ"
+<no-wc>
 
 #colbreak()
-#heading([Sprint 5 transcriptions]) <app:Sprint5Transcriptions>
+== Test 2:
+#include "appendices/sprint-4-test/test2.typ"
+<no-wc>
+
+#colbreak()
+== Test 3:
+#include "appendices/sprint-4-test/test3.typ"
+<no-wc>
+
+#colbreak()
+== Test 4:
+#include "appendices/sprint-4-test/test4.typ"
+<no-wc>
+
+#colbreak()
+= Sprint 5 transcriptions <app:Sprint5Transcriptions>
+== Test 1:
+#include "appendices/sprint-5-test/test1.typ"
+<no-wc>
+
+#colbreak()
+== Test 2:
+#include "appendices/sprint-5-test/test2.typ"
+<no-wc>
+
+#colbreak()
+== Test 3:
+#include "appendices/sprint-5-test/test3.typ"
+<no-wc>
 
 #colbreak()
 = Schematic after second sprint <app:schematicSprint2>

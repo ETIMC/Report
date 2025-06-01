@@ -114,9 +114,16 @@
       else if it.supplement == [Appendix] {
         set align(center)
         v(10pt, weak: true)
-        numbering("A.", deepest)
-        h(7pt, weak: true)
-        it.body
+
+        if it.level == 1 {
+          numbering("A.", deepest)
+          h(7pt, weak: true)
+          it.body
+        } else {
+          numbering("A.", deepest)
+          h(7pt, weak: true)
+          text(style: "italic")[#underline(it.body)]
+        }
       }
       
        // Level 1: Chapter style
@@ -375,7 +382,7 @@
 
   set heading(
     supplement: [Appendix],
-    numbering: "A"
+    numbering: "A."
   )
 
   set figure(
