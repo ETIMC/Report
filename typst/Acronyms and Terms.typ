@@ -1,6 +1,5 @@
 = Acronyms, Abbreviations and Terms
-== Acronyms
-- BPM: Beats Per Minute
+#heading("Acronyms", depth: 2, outlined: false)
 - CAD: Computer-Aided Design
 - DAW: Digital Audio Workstation
 - GPIO: General-Purpose Input/Output
@@ -23,12 +22,11 @@
 - UID: Unique Identifier
 - UDP: User Datagram Protocol
 
-== Abbreviations
+#heading("Abbreviations", depth: 2, outlined: false)
 - Pico 1: Raspberry Pi Pico 1 W
 - Pico 2: Raspberry Pi Pico 2 W
 - Live: Live 11 @ableton_ableton_2025
 
-
-== Terms
+#heading("Terms", depth: 2, outlined: false)
 - Host: Device connected to a computer, interfacing with Live and Controllers.
-- Controller: Device users interact with to experiment and explore music creation.
+- Controller: Device users interact with to explore and experiment with music.

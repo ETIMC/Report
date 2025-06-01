@@ -121,7 +121,7 @@
        else if it.level == 1 {
          set text(12pt)
          show: smallcaps
-         set align(left)
+         set align(center)
          v(25pt, weak: true)
          if it.numbering != none {
           numbering("I.", deepest)

@@ -1,5 +1,5 @@
 = Discussion
-Despite developing a functional prototype that enabled testing with the target group, several aspects of the project could have been improved to gain a more accurate understanding of the product's potential to foster engagement and musical interest within this group (Requirement 11, @table:usabilityRequirements).
+Despite developing a functional prototype that enabled testing with the target group, several aspects of the project could have been improved to gain a more accurate understanding of the product's potential to foster engagement and musical interest within the target group (Requirement 11, @table:usabilityRequirements).
 
 During development, minor issues emerged, such as the selected display's long loading time when rendering new images. This delay temporarily disabled the rest of the Controller's functionality. Opting for a different display could have mitigated this problem and contributed to a smoother Plug'N'Play experience (Requirement 6, @table:usabilityRequirements & Requirement 8,  @table:technicalRequirements). Additionally, some hardware features remained underdeveloped; for example, the automatic NFC card detection. This functionality could have freed all buttons on the Controller to focus exclusively on sound interaction making the product more intuitive (Requirement 4,  @table:usabilityRequirements).
 
@@ -7,9 +7,9 @@ While a redesigned lid added a playful and less intimidating appearance (Require
 
 Although the prototype was tested and useful feedback was collected, the evaluation methods used were, in retrospect, not optimal. Time constraints limited how long each participants could engage with the product, which may have influenced the quality of interview responses. More insightful data might have been obtained if users had been allowed to explore the product independently or with a peer in a distraction-free environment. Another valuable approach could have been lending the prototype to users for an extended period to observe long-term engagement, and if using the product led to participants learning a real instrument. However, the project's limited duration made this infeasible.
 
-One one the key usability goals was to ensure the product remained cost-effective (Requirement 5, @table:usabilityRequirements), therefore alternatives to Live _Suite_ edition could have been used. Options such as GarageBand or Live _Intro_ edition, which offer sufficient functionality at a lower cost, could have been explored further. Moreover, integrating an internal computer and built-in speakers into the prototype, rather than relying on a MCU, the Host and a computer for full functionality, could have simplified the setup and improved portability (Requirement 2, @table:usabilityRequirements).
+One of the key usability goals was to ensure the product remained cost-effective (Requirement 5, @table:usabilityRequirements), therefore alternatives to Live _Suite_ edition could have been used. Options such as GarageBand or Live _Intro_ edition, which offer sufficient functionality at a lower cost, could have been explored further. Moreover, integrating an internal computer and built-in speakers into the prototype, rather than relying on an MCU, the Host and a computer for full functionality, could have simplified the setup and improved portability (Requirement 2, @table:usabilityRequirements).
 
-Lastly, a more robust method of securing the lid to the chassis was desired. Magnets were considered but proved impractical, as the were too strong and failed to stay in place with glue.
+Lastly, a more robust method of securing the lid to the chassis was desired. Magnets were considered but proved impractical, as they were too strong and failed to stay in place with glue.
 
 /*
 

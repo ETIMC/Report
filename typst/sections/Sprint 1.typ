@@ -1,6 +1,6 @@
 #import "@preview/subpar:0.2.2"
 = Sprint 1: _Requirements, Technical Experimentation and Paper Prototyping_
-The overall direction of the project was defined by establishing core usability and technical requirements. These were shaped around the target group of 9–12-year-olds, aiming to make the product engaging, intuitive, and accessible regardless of prior musical knowledge. Parallel to this, experimentation was begun with key hardware components, including microcontrollers, buttons, potentiometers, NFC readers, and a display, to evaluate their feasibility and integration. A paper prototype of a Controller was created to visualize the physical layout and test early interaction ideas, helping the team gather feedback and refine the concept before moving into functional prototyping.
+The overall direction of the project was defined by establishing core usability and technical requirements. These were shaped around the target group of 9–12-year-olds, aiming to make the product engaging, intuitive, and accessible regardless of prior musical knowledge. Parallel to this, experimentation was begun with key hardware components, including microcontrollers, buttons, potentiometers, an NFC reader, and a display, to evaluate the feasibility of using and integrating them. A paper prototype of a Controller was created to visualize the physical layout and test early interaction ideas, helping the team gather feedback and refine the concept before moving into functional prototyping.
 
 == Usability Requirements
 All usability requirements are listed in @table:usabilityRequirements.
@@ -27,7 +27,7 @@ Finally, requirement 8 (Looping) regards allowing users to record their experime
   [8], [Looping],[Small music pieces should be able to be recorded and looped directly on the product.],
   [9], [Not intimidating],[Users should not feel intimidated by using the product.],
   [10], [Prior musical knowledge],[The product should be fun for both children who are well-versed in playing music and those with no prior knowledge.],
-  [11], [Engaging],[The product should consistently engage users to continuously use it, promoting interaction.]
+  [11], [Engaging],[The product should consistently engage users to continuously use it, promoting interaction and autonomy.]
   ),
   caption: [Usability requirements],
 ) <table:usabilityRequirements>
@@ -60,14 +60,14 @@ Arguably the most important requirement was  requirement, 10 (Interactive sensor
   align: start,
   table.header([*Id*], [*Feature*], [*Description*]),
   [1], [MCU], [Each device should be run by an MCU.],
-  [2], [Dedicated MIDI host], [Host should act as MIDI controller and interface with a DAW.],
+  [2], [Dedicated MIDI Host], [Host should act as MIDI Controller and interface with a DAW.],
   [3], [Digital Audio Workstation], [Sound should be produced using a DAW on a computer.],
-  [4], [Wireless connection], [Controllers should interface wirelessly with Host.],
-  [5], [NFC reader], [A NFC Reader should be used for changing controllers' instruments.],
+  [4], [Wireless connection], [Controllers should interface wirelessly with the Host.],
+  [5], [NFC reader], [An NFC Reader should be used for changing the Controllers' instruments.],
   [6], [Display], [A display should relay information and engage users.],
-  [7], [Low power consumption], [Controllers should be powered by batteries, and the host should be bus-powered by its connected computer.],
+  [7], [Low power consumption], [Controllers should be powered by batteries, and the Host should be bus-powered by its connected computer.],
   [8], [Plug'N'Play], [Devices should simply work when turned on, without any tinkering or configurating, and the order of the devices being turned on shouldn't matter.],
-  [9], [Low latency], [There should be no perceivable latency from when a user interacts with a controller to when a sound is produced.],
+  [9], [Low latency], [There should be no perceivable latency from when a user interacts with a Controller to when a sound is produced.],
   [10], [Interactive sensors], [Controllers should have sensors for the user to interact with.]
   ),
   caption: [Technical requirements]
@@ -80,10 +80,10 @@ Two MCU families were evaluated for both the Controllers and the Host (Requireme
 
 In contrast, the Raspberry Pi Pico series combines very low unit cost with robust performance and library support for both WiFi and MIDI functionality. Although the Pico lacks some of the Arduino series’ out-of-the-box shield compatibility and IDE simplicity, its community offers both free documentation, tutorials, and many well-made third-party libraries. This balance of affordability, sufficient processing capacity, and ecosystem support aligned closely with the cost-accessibility requirement (Requirement 5, @table:usabilityRequirements). It was also noted that the Pico series' GPIO pins could output a maximum of 3.3V. This was deemed not being a problem, but was important when choosing other components for the Controllers and Host.
 
-Ultimately, the Raspberry Pi Pico series was selected. The more powerful Raspberry Pico 2 W (Pico 2) was assigned to the host, where heavier computation would be done, and the original Raspberry Pi Pico W (Pico 1) was chosen for the Controllers to minimize per-unit expense. This configuration preserved overall system performance and flexibility, while ensuring the final devices remained inexpensive.
+Ultimately, the Raspberry Pi Pico series was selected. The more powerful Raspberry Pico 2 W (Pico 2) was assigned to the Host, where heavier computation would be done, and the original Raspberry Pi Pico W (Pico 1) was chosen for the Controllers to minimize per-unit expense. This configuration preserved overall system performance and flexibility, while ensuring the final devices remained inexpensive.
 
 ==== CircuitPython
-While exploring the Raspberry Pi Pico ecosystem the CircuitPython programming language @adafruit_circuitpython_nodate was discovered. CircuitPython was based on Python and promised simplicity, quick prototyping and "strong hardware support" @schroeder_what_2024. Furthermore, CircuitPython's creator, Adafruit, had already created many packages and libraries for everything from interfacing with displays to Bluetooth connectivity, including packages for working with WiFi @noauthor_adafruit_2025 and MIDI @walters_adafruit_2025. While testing, a Pico 2 was successfully programmed to act as a Host, hosting a WiFi hotspot using the WiFi library. Likewise, a Pico 1 was successfully configured to act as a Controller, connecting to the Pico 2's hotspot, where they successfully exchanged simple HTTP messages wirelessly. For experimentation purposes, using the MIDI library, the host was successfully configured to act as a MIDI interface, sending notes on multiple channels to an instance of Live running on a USB-connected laptop. 
+While exploring the Raspberry Pi Pico ecosystem the CircuitPython programming language @adafruit_circuitpython_nodate was discovered. CircuitPython was based on Python and promised simplicity, quick prototyping and "strong hardware support" @schroeder_what_2024. Furthermore, CircuitPython's creator, Adafruit, had already created many packages and libraries for everything from interfacing with displays to Bluetooth connectivity, including packages for working with WiFi @noauthor_adafruit_2025 and MIDI @walters_adafruit_2025. While testing, a Pico 2 was successfully programmed to act as a Host, hosting a WiFi hotspot using the WiFi library. Likewise, a Pico 1 was successfully configured to act as a Controller, connecting to the Pico 2's hotspot, where they successfully exchanged simple HTTP messages wirelessly. For experimentation purposes, using the MIDI library, the Host was successfully configured to act as a MIDI interface, sending notes on multiple channels to an instance of Live running on a USB-connected laptop. 
 
 The primary drawback of CircuitPython was the limitation of only a single central processing unit core being available on the Pico @mlewus_multicore_2021, raising concerns about multitasking performance as the Host would need to manage multiple Controllers and a computer concurrently. Fortunately, the discovery of the _asyncio_ library addressed this limitation @halbert_cooperative_2022 by providing a cooperative multitasking framework, where functions explicitly yield control and later resume after a specified interval, making sure functions do not block each other.
 
@@ -108,7 +108,7 @@ The RC522 module had an involved setup process, particularly due to the need for
 
 Instruments were assigned to the two NFC cards included with the reader: one representing a piano and the other a drum kit. The mobile application _NFC Tools_ @wakdev_nfc_2025 was used to find the ISO standard of the cards, in case the project called for extra, and to further explore and understand NFC technology. It was discovered that the cards used the ISO 14443A standard @laurie_iso14443_2015.
 
-This led to a basic breadboard setup where the NFC reader was connected to a Pico and two differently colored LEDs, each assigned an instrument. The code was kept intentionally simple, but was adapted to map the Unique Identifiers (UIDs) of the NFC cards to instrument names (@listing:nfcCardLabels). 
+This led to a basic breadboard setup where the NFC reader was connected to a Pico and two differently colored LEDs (@fig:nfcFirstSetup), each assigned an instrument. The code was kept intentionally simple, but was adapted to map the Unique Identifiers (UIDs) of the NFC cards to instrument names (@listing:nfcCardLabels). 
 
 #figure(
   ```cpy
@@ -155,7 +155,7 @@ The last technical element experimented with during the first sprint was the "in
 
 Multiple button types where explored. This included both tactile switch buttons @adafruit_tactile_nodate but also force sensitive resistors @adafruit_square_2022 and piezoresistors @kosaka_e-drum_nodate, which would allow the user the play notes with different velocities. Ultimately, however, it was decided to use the tactile switch buttons, to keep the design and development process simple.
 
-Getting buttons to work with the Pico 1's were very easy using Circuitpython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these, a GPIO pin on the Pico could be referenced (@listing:buttonsPullUp:1), defined as an input pin (@listing:buttonsPullUp:3), and pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4).
+Getting buttons to work with the Pico 1's were very easy using CircuitPython's _board_ and _digitalio_ libraries #cite(<noauthor_board_2025>) #cite(<noauthor_basic_2025>). Using these, a GPIO pin on the Pico could be referenced (@listing:buttonsPullUp:1), defined as an input pin (@listing:buttonsPullUp:3), and pulled high to avoid floating values, when the connected button wasn't pressed (@listing:buttonsPullUp:4).
 
 #figure(
   ```cpy
@@ -167,7 +167,7 @@ Getting buttons to work with the Pico 1's were very easy using Circuitpython's _
   caption: [Code pulling input-pin GP13 to high.]
 ) <listing:buttonsPullUp>
 
-Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs @noauthor_analog_2025. It was decided this library was to be used for reading the potentiometers' values. However, it was noted that the Picos only had three analog inputs. Therefore, a solution would later have to be found to connect all four potentiometers to the Pico 1s.
+Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading analog inputs @noauthor_analog_2025. It was decided this library was to be used for reading the potentiometers' values. However, it was noted that the Picos only had three analog inputs @raspberry_pi_raspberry_2024-1. Therefore, a solution would later have to be found to connect all four potentiometers to the Pico 1s.
 
 == Paper prototype <sec:paperprototype>
 #subpar.grid(
@@ -181,11 +181,11 @@ Lastly, a sister-library to _digitalio_, _analogio_ was discovered for reading a
     caption: [Paper prototypes right side, with NFC hole.]), <fig:>
 )   
 
-To facilitate a shared understanding of the Controllers' physical layout within the team, a paper prototype was created (@fig:paperprototype). The design incorporated the buttons and potentiometers, selected to balance simplicity and functionality with the physical constraints of the box's size (Requirements 2, 3 & 9, @table:usabilityRequirements).
+To facilitate a shared understanding of the Controllers' physical layout within the team, a paper prototype was created (@fig:paperprototype). The design incorporated the buttons and potentiometers, chosen to balance simplicity and functionality within the physical constraints of the box’s size (Requirements 2, 3 & 9, @table:usabilityRequirements).
 
 The prototype was constructed at a 1:1 scale using colored cardboard and adhesive tape to accurately represent the intended dimensions of a final Controller. Interface components were color-coded: the display was represented by a blue cutout, buttons by red cutouts, and potentiometers by pink cutouts. A hole was also cut on top and in the right side of the prototype, acting as possible insertion holes for the NFC cards (@fig:paperprototype). In addition to supporting a shared understanding, the prototype functioned as a tool for assessing usability and interface intuitiveness in the early stages of development.
 
-=== Testing <sec:sprint1test>
+== Testing <sec:sprint1test>
 The prototype was tested by a student enrolled in the Game Development and Learning Technology program at the University of Southern Denmark. This choice was made, as the participant's prior knowledge of paper prototypes would allow for gathering valuable insight on usability #cite(<macklin_games_2016>, supplement: [ch. 11]). Due to the participant's personal relation to the team, feedback was looked upon with caution to mitigate potential bias #cite(<macklin_games_2016>, supplement: [ch. 11]). 
 
 The test was conducted at the University of Southern Denmark and involved an unstructured interview #cite(<sharp_interaction_2019>, supplement: [ch. 8]), combined with the Think Aloud methodology #cite(<sharp_interaction_2019>, supplement: [p. 296]). An A/B test #cite(<sharp_interaction_2019>, supplement: [ch. 2]) was also carried out to assess the preferred side of the box for inserting the NFC cards. This multi-method approach supported a flexible testing environment and allowed asking questions not pre-defined before the test. The session lasted approximately 30 minutes and yielded constructive criticism, while the overall user response remained positive.

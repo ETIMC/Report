@@ -9,71 +9,17 @@
   - Forklar hvorfor oversættelserne kan være lidt tossede
 */
 
-The project employed an iterative, user-centered design approach, in which features were continuously refined and added based on user feedback gathered during multiple stages of prototype development.
+The project employed an iterative @fullerton_game_2019, user-centered design approach @sharp_interaction_2019, in which features were continuously refined and added based on user feedback gathered during multiple stages of prototype development.
 
-Testing was primarily conducted with the target user group, children aged 9 to 12, and incorporated a combination of think-aloud protocols, A/B testing, and unstructured interviews.The informal test-formats allowed the facilitator to respond flexibly to questions and moments of confusion, thereby improving the quality of feedback collected.
+Testing was primarily conducted with the target group, defined as children aged 9-12. This age range was selected based on previous studies that indicate the benefits of music interaction at a young age #cite(<mcpherson_music_2018>, supplement: [ch. 1]). The testing methodology integrated the think-aloud method #cite(<sharp_interaction_2019>, supplement: [p. 296]), A/B testing #cite(<sharp_interaction_2019>, supplement: [ch. 2]), and unstructured interviews #cite(<sharp_interaction_2019>, supplement: [ch. 8]). These formats were chosen for their adaptability, which helped mitigate cognitive overload @sweller_cognitive_2011 among participants. All testing sessions were conducted in Danish. Consequently, all participant quotes presented in this report have been translated from Danish to English. While every effort has been made to preserve the original meaning, some quotes may appear fragmented or imprecise due to the informal nature of children's speech and the challenges of direct translation.
 
-All testing sessions were conducted in Danish, as they took place in Denmark. Consequently, all participant quotes presented in this report have been translated from Danish to English. While every effort has been made to preserve the original meaning, some quotes may appear fragmented or imprecise due to the informal nature of children's speech and the challenges of direct translation.
+Visual Studio Code @noauthor_visual_nodate was selected as the integrated development environment (IDE) for the project. Its use facilitated seamless development with CircuitPython @adafruit_circuitpython_nodate and provided direct access to the Picos' Read-Eval-Print Loop (REPL) for effective debugging. Furthermore, KiCad @noauthor_kicad_nodate was used to design the circuitry schematics and the custom Printed Circuit Board (PCB) layouts. KiCad was chosen based on its open-source nature, flexibility, and its capability to produce precise schematics and fabrication-ready PCB designs.
 
-During development, CircuitPython was selected as the primary programming language. This choice was made because the project relied on several Adafruit components, and CircuitPython, developed by Adafruit, is tightly integrated with their hardware ecosystem. This ensured seamless library support, simplified setup, and reduced the amount of low-level configuration required, which accelerated development and prototyping.
+The enclosures were designed using Fusion @noauthor_autodesk_nodate, a CAD tool ideal for precise 3D modeling. Once the designs were finalized, the parts were prepared in Bambu Studio @bambu_lab_software_2025 and printed on a Bambu Lab P1S 3D printer @bambu_lab_bambu_nodate, ensuring high-quality and efficient fabrication. Multiple prints were required to refine the various components.
 
-For hardware design, KiCad was used to design custom Printed Circuit Board (PCB) layouts. KiCad was chosen for its open-source nature, flexibility, and ability to produce precise schematics and layouts suitable for fabrication.
+Images for the display were produced using Aseprite #cite(<igara_studio_aseprite_2025>), a tool suited for pixel art creation. This application was selected due to its ability to export compatible files, precise scaling for the display's resolution, and prior familiarity with the software. Additionally, Inkscape @inkscape_inkscape_2025, a free and open-source vector graphic design tool, was used to create the chassis decorations. This choice was driven by the initial plan to produce vinyl stickers, which required .SVG files. Inkscape was chosen over other vector design tools for its accessibility and beginner friendly interface.
 
-Fusion
-
-To support potential replication or further development, a bill of materials is included as an appendix. This document outlines the components used in the project and demonstrates how cost-efficiency was achieved—one of the key design requirements.
-
-Bill of hardware materials for one Controller:
-#figure(
-  table(
-  columns: (auto, auto, auto, auto, auto, auto),
-  align: start,
-  table.header([*Id*], [*Component*], [*Description*], [*Quantity*], [*Source*], [*Price*]),
-  [], [_Electronics_],[],[],[],[],
-  [1], [Raspberry Pi Pico W], [], [1], [@raspberrypidk_raspberry_nodate-1],[59 DKK],
-  [2], [NFC reader], [], [1], [@arduinotechdk_rfid_2025],[40 DKK],
-  [3], [Display], [], [1], [@pimoroni_pico_2025],[168 DKK],
-  [4], [Potentiometer], [], [4], [@rs_components_bourns_nodate],[31 DKK],
-  [5], [Switches], [], [8], [@nuphy_nuphy_2025],[20 DKK],
-  [6], [Multiplexer], [], [1], [@arduinotechdk_74hc4051_2025],[8,75 DKK],
-  [7], [USB B connector], [], [1], [@ardustoredk_usb_nodate-1],[3 DKK],
-  [8], [On/off switch], [], [1], [@arduinotechdk_vippekontakt_2025],[8.75 DKK],
-  [9], [Pinheader 8 holes], [], [1], [@digikey_pptc081lfbn-rc_2025],[3,63 DKK],
-  [10], [Cable to Host], [], [1], [@av-cablesdk_usb_nodate],[45 DKK],
-  [11], [Wires], [], [], [],[],
-  [], [_Molex_],[],[],[],[],
-  [1], [Molex 4-polet Straight Through Hole Pin Header], [], [1], [@rs_components_22-27-2041_nodate],[4,37 DKK],
-  [2], [Molex 4-polet Female Connector Housing], [], [1], [@rs_components_22-01-3047_nodate],[1,75 DKK],
-  [3], [Molex 2-polet Straight Through Hole Pin Header], [], [1], [@rs_components_22-27-2021_nodate],[2,25 DKK],
-  [4], [Molex 2-polet Female Connector Housing], [], [1], [@rs_components_22-01-2021_nodate],[1,35 DKK],
-  [5], [Molex Crimpterminal], [], [6], [@rs_components_08-52-0072_nodate],[6,5 DKK],
-  [], [_Chassis_],[],[],[],[],
-  [], [Black filament 290g], [],[], [],[],
-  [], [White filament 18g], [],[], [],[],
-  [], [Silver filament 22,5g], [],[], [],[],
-  [], [_Sum_], [], [], [], [Too much DKK]
-  ),
-  caption: [Single Controller bill of materials.],
-) <table:ControllerHardwareMaterials>
+To support potential replication of the final prototype or for further development, a bill of materials is included as an appendix (@app:bom). 
 
 
-Bill of hardware materials for the Host:
-#figure(
-  table(
-  columns: (auto, auto, auto, auto, auto, auto),
-  align: start,
-  table.header([*Id*], [*Component*], [*Description*], [*Quantity*], [*Source*], [*Price*]),
-  [1], [Raspberry Pi Pico 2 W], [],[1], [@raspberrypidk_raspberry_nodate],[69 DKK],
-  [2], [Breadboard], [],[1], [@arduinotechdk_breadboard_2025],[30 DKK],
-  [3], [NeoPixel], [],[1], [@adafruit_breadboard-friendly_2025],[10,5 DKK],
-  [4], [Resistor 82k$Omega $], [],[2], [@rs_components_rs_nodate],[0,18 DKK],
-  [5], [USB A connector], [],[alt efter hvor mange skal connectes], [@ardustoredk_usb_nodate],[8 DKK],
-  [6], [Cable to pico], [],[1], [@raspberrypidk_officiel_nodate],[39 DKK],
-  [7], [Wires], [],[], [],[],
-  [], [_3D printet enclosure_], [],[], [],[],
-  [], [Black filament 175g], [],[], [],[],
-  [], [Green filament 3,5g], [],[], [],[],
-  ),
-  caption: [Host],
-) <table:HostHardwareMaterials>
 
