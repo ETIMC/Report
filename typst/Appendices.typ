@@ -85,10 +85,12 @@ OBS: Bill of materials does not include software licenses or external computer p
 #include "appendices/sprint-3-test/test1.typ"
 <no-wc>
 
+#colbreak()
 == Test 2:
 #include "appendices/sprint-3-test/test1.typ"
 <no-wc>
 
+#colbreak()
 == Test 3:
 #include "appendices/sprint-3-test/test1.typ"
 <no-wc>
