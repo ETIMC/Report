@@ -12,7 +12,6 @@
 - PCB: Printed Circuit Board
 - PLA: Polylactic acid
 - REPL: Read–Eval–Print Loop
-- RFID: Radio Frequency Identification
 - SCL: Serial Clock Line
 - SDA: Serial Data Line
 - SDT: Self-Determination Theory

@@ -33,6 +33,8 @@
   
   // Title page
   seperateTitlePage: false,
+  characterCount: 0,
+  titlePageImagePath: none,
 
   // Toc
   useToc: false,
@@ -58,7 +60,7 @@
   // Report content
   body
 ) = {
-
+  
   // Document metadata
   set document(title: title, author: authors.map(author => author.name))
   set par(first-line-indent: 1em)
@@ -82,7 +84,7 @@
       )
     },
     columns: 1,
-    numbering: "1 / 1",
+    numbering: none
   )
 
   // Numbering of headings
@@ -165,11 +167,11 @@
     )
 
     show ref: it => {
-      text(eastern)[#underline[#it]] // MAKE BLACK BEFORE TURNING IN
+      text(black)[#it] // MAKE BLACK BEFORE TURNING IN
       }
 
       show cite: it => {
-        text(olive)[#underline[#it]]
+        text(black)[#it]
       }
     
   // Numbering and spacing of math
@@ -209,6 +211,11 @@
   if(timespan != none) {
     linebreak()
     text(titleFontSize/3)[#timespan]
+  }
+
+  if(characterCount != 0) {
+    linebreak()
+    text(titleFontSize/3)[#(characterCount) Characters]
   }
 
   // Authors
@@ -278,15 +285,27 @@
   
   // Group name
   v(1cm, weak: true)
+
+  if(titlePageImagePath != none){
+    set align(horizon)
+    box(image(titlePageImagePath), radius: 10pt, clip: true)
+    //rect(image(titlePageImagePath, width: 91%), radius: 55mm)
+  }
   
   if seperateTitlePage {
     pagebreak()
   }
 
+  set align(left)
+    
+  // Skip first page for numbering
+  set page(numbering: " 1 / 1")
+  counter(page).update(1)
+  
   let abstractSection() = {
     if abstract != none [
-      #set text(weight: 700)
-      #h(1em) _Abstract_---#abstract <no-wc>
+      #h(1em) #text(weight: 700)[_Abstract_---]
+      #abstract <no-wc>
   
       #if index-terms != () [
         #h(1em)_Index terms_---#index-terms.join(", ")
@@ -300,7 +319,6 @@
       pagebreak()
   }
   
- set align(left)
   show: columns.with(columnsAmount, gutter: 12pt)
   set par(justify: true, first-line-indent: firstLineIndentWidth)
     set par(spacing: paragraph-spacing)// Space between paragraphs
@@ -312,9 +330,7 @@
   }
 
   if useToc {
-    if seperateTocPage {
-      
-    }
+      set text(9pt)
       set par(first-line-indent: 0pt)
 
       show outline.entry.where(
@@ -337,8 +353,10 @@
       } else {
         v(20pt)
       }
-    }
 
+      set text(fontSize)
+    }
+  
   body
 
   // Display bibliography.

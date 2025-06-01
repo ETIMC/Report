@@ -1,44 +1,14 @@
 = Discussion
-Despite developing a functional prototype that enabled testing with the target group, several aspects of the project could have been improved to gain a more accurate understanding of the product's potential to foster engagement and musical interest within the target group (Requirement 11, @table:usabilityRequirements).
+Despite developing a functional prototype, enabling testing with the target group, several areas for improvement became evident, suggesting avenues for future refinement to gain a more accurate understanding of its impact (Requirement 11, @table:usabilityRequirements).
 
-During development, minor issues emerged, such as the selected display's long loading time when rendering new images. This delay temporarily disabled the rest of the Controller's functionality. Opting for a different display could have mitigated this problem and contributed to a smoother Plug'N'Play experience (Requirement 6, @table:usabilityRequirements & Requirement 8,  @table:technicalRequirements). Additionally, some hardware features remained underdeveloped; for example, the automatic NFC card detection. This functionality could have freed all buttons on the Controller to focus exclusively on sound interaction making the product more intuitive (Requirement 4,  @table:usabilityRequirements).
+Key technical and usability enhancements were identified. The chosen display's loading time, which temporarily disabled controller functionality, highlighted the need for a more responsive display to ensure a smoother Plug'N'Play experience and better feedback (Requirement 4 & 6, @table:usabilityRequirements & Requirement 8, @table:technicalRequirements). Furthermore, underdeveloped hardware features like automatic NFC card detection, if fully realized, could free up the last Controller button for sound interaction, thereby enhancing intuitiveness (Requirement 4, @table:usabilityRequirements). Another key design decision related to musical interaction concerned beat consistency (Requirement 7, @table:usabilityRequirements): while quantization of beats was removed as it did not result in a good "feel" for the user, the pre-defined harmonizing notes were retained to ensure musical cohesion. Future research could explore whether beat quantization could be re-implemented in a manner that still provides a desirable musical "feel" while maintaining rhythmic structure.
 
-While a redesigned lid added a playful and less intimidating appearance (Requirement 9, @table:usabilityRequirements) that was well-recieved, the prototype overall lacked sufficient user feedback mechanisms. Enhancements such as expanding the display's functionality to show real-time feedback from buttons and potentiometers could have significantly improved usability. An alternative solution considered was priting labels directly onto the lid, but this proved challenging due to the need for the text to align with different instruments. Similarly, incorporating more visual cues directly on the NFC cards, rather than relying solely on printed text-labels, would have been beneficial.
+While the redesigned lid improved the product's playful, non-intimidating appearance (Requirement 9, @table:usabilityRequirements), the prototype lacked comprehensive user feedback mechanisms. Expanding the display's functionality to provide real-time feedback from buttons and potentiometers would significantly improve usability. Integrating more visual cues directly onto NFC cards, as an alternative to text-labels, would also be beneficial for clarity, ease of use and engagement (Requirement 11, @table:usabilityRequirements). A consistent and strong request from all testers was the addition of LEDs for feedback or decoration, highlighting their importance for a better user experience and to meet clear user preferences.
 
-Although the prototype was tested and useful feedback was collected, the evaluation methods used were, in retrospect, not optimal. Time constraints limited how long each participants could engage with the product, which may have influenced the quality of interview responses. More insightful data might have been obtained if users had been allowed to explore the product independently or with a peer in a distraction-free environment. Another valuable approach could have been lending the prototype to users for an extended period to observe long-term engagement, and if using the product led to participants learning a real instrument. However, the project's limited duration made this infeasible.
+Cost-effectiveness was a crucial usability goal (Requirement 5, @table:usabilityRequirements). The latest prototype, due to its components and reliance on existing external hardware, maintains a subjectively reasonable price point (@app:bom). However, exploring alternatives to the full Live _Suite_ edition, such as GarageBand on iPad/iPhone (if users already own these devices) or Live _Intro_ edition, could significantly reduce software costs while maintaining sufficient functionality. Conversely, integrating an internal computer and built-in speakers into the prototype, rather than relying on an MCU, the Host, and an external computer, could simplify setup and enhance portability (Requirement 2, @table:usabilityRequirements); this would, however, substantially increase the overall product cost.
 
-One of the key usability goals was to ensure the product remained cost-effective (Requirement 5, @table:usabilityRequirements), therefore alternatives to Live _Suite_ edition could have been used. Options such as GarageBand or Live _Intro_ edition, which offer sufficient functionality at a lower cost, could have been explored further. Moreover, integrating an internal computer and built-in speakers into the prototype, rather than relying on an MCU, the Host and a computer for full functionality, could have simplified the setup and improved portability (Requirement 2, @table:usabilityRequirements).
+Despite the initial requirement for wireless functionality (Requirement 4, @table:technicalRequirements), latency issues during development led to a pivot towards a wired connection for the final prototype. This decision prioritized a stable and responsive user experience over wireless flexibility. Future development should focus on mitigating the practical downsides of the wired connection, such as cable management or potential limitations in movement, while preserving the established stability and low latency (Requirement 9, @table:technicalRequirements). Lastly, improving the method of securing the lid to the chassis, perhaps by exploring alternative fastening mechanisms beyond a magnetic solution, would contribute to the product's overall robustness and user satisfaction.
 
-Lastly, a more robust method of securing the lid to the chassis was desired. Magnets were considered but proved impractical, as they were too strong and failed to stay in place with glue.
+The evaluation methodology, while yielding useful feedback, had limitations. Time constraints on participant availability may have influenced the depth of interview responses. Future evaluations could benefit from allowing users to explore the product independently or with a peer in a distraction-free environment. This would particularly allow for deeper investigation into cooperative play (Requirement 1, @table:usabilityRequirements), which, despite its apparent significance for fostering engagement and intrinsic motivation, was only briefly explored in one test (@sec:sprint5test) and thus warrants more extensive research. Observing long-term engagement by lending prototypes to users could also provide valuable insights into sustained interest and potential to encourage learning real instruments, though this was infeasible within the project's timeframe. Additionally, the Host, an integral part of the product's functionality, was only internally tested; future iterations should involve external testers.
 
-/*
-
-- Hvad fik vi lavet, virkede det i det stadie det er i?
-  - Displayet blokerede alt andet, lang loading tid
-  - LEDer kunne være tilføjet
-  - NFC knap, skulle gerne være automatisk
-  - Flere NFC kort 
-    - Design på kortene
-  - Bedre labeling af funktionaliteterne af produktet, knapper og potentiometerne
-    - Generelt bedre feedback på hele produktet til brugeren
-    - Bedre potentiometer effekter, noget hvor man virkelig kan høre forskellen
-- Kritiske overfor test metoder
-- Afhængighed af computer med ABLETON LIVE
-  - Kunne andre DAWs bruges?
-  - Ableton Live Intro er egentlig okay billigt (bliver ofte inkl. gratis med musikudstyr)
-    - Strømproblemer? Trækker systemet for meget strøm?
-      - Ekstern strømforsyning?
-  - Forbindes til garageband på iPads? Chromebooks?
-  - Intern computer i stedet for MCU? Højtalere?
-- Magnetløsning var lårt fordi de var for stærke, og kassen ikke er printet på egen 3D printer woomp woomp
-- Visuel løsning til at vise instrumenterne på nfc kortene direkte, evt. med vinyl løsningen
-
-
-
-
-
-- Andet program end ableton live (gratis????)
-- It is worth noting that while the _Suite_ version of Live has been used during development and testing, the _Intro_ version should be sufficient, since it supports up to 16 tracks and full MIDI capabilities @ableton_buy_nodate.
-- soldering sucked big balls i swear to god i wanted to kill myself
-
-*/
+These identified areas for refinement and future exploration, collectively point towards a promising trajectory for further developing tangible interfaces in music creation.

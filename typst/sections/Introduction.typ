@@ -7,16 +7,6 @@ By adopting an iterative design process, the project aims to examine whether suc
 
 Further research in this domain is essential, as many children may not initially engage with music due to its perceived complexity or the lack of readily available, intuitive tools. Traditional approaches often present a steep learning curve, requiring significant time and effort before a child can experience the joy of musical discovery #cite(<mcpherson_music_2018>, supplement: [ch. 7 & 8]). By developing an alternative TUI, this project seeks to gain insights into how technology can support inclusive, intrinsically motivating @ryan_self-determination_2000 experiences with music. The aim is to nurture a fundamental love for music and experimentation, which may, in turn, drive children towards further musical engagement, including formal education or even musical creation.
 
-To learn more about the project:
-
-_Video Walkthrough:_
-
-#text(blue)[#underline[#link("https://drive.google.com/file/d/1H6dUJ6WPt3np7xRLT2iUnK9Qn9W2uAV5/view?usp=drive_link")]] <no-wc>
-
-_GitHub Repositories:_
-
-#text(blue)[#underline[#link("https://github.com/ETIMC")]] <no-wc>
-
 /*
 @samuel_impact_2024
 

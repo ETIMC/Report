@@ -19,6 +19,5 @@ The second idea, cooperative modules for music experimentation utilizing an NFC 
 
 #figure(
   image("../images/idea generation/FirstDrawing.png", height: 20%),
-  caption: [Initial Drawing of the Idea],
+  caption: [Initial drawing of the idea.],
 ) <fig:firstDrawing>
-

@@ -1,4 +1,7 @@
 = Bill of Materials <app:bom>
+#set align(center)
+OBS: Bill of materials does not include software licenses or external computer pricing.
+
 *Single Controller*
 #figure(
   table(
@@ -29,28 +32,29 @@
   [19], [Silver filament, Silver (10102)], [23 g],[#cite(<bambu_lab_pla_nodate>, form: "prose")], [4 DKK],
   [], [_Sum_], [], [],  [510,45 DKK]
   ),
-  caption: [Bill of materials for a single controller.],
+  caption: [Bill of materials for a single Controller.],
 ) <table:ControllerHardwareMaterials>
 
 #colbreak()
-*Host, connecting to a single controller*
+*Host, connecting to a single Controller*
 #figure(
   table(
   columns: (0.25fr, 3fr, 0.7fr, 1.6fr, 0.8fr),
   align: start,
   table.header([*Id*], [*Component*], [*Quantity*], [*Source*], [*Price*]),
+  [], [_Electronics_], [], [], [],
   [1], [Raspberry Pi Pico 2 W], [1], [#cite(<raspberrypidk_raspberry_nodate>, form: "prose")],[69 DKK],
   [2], [Breadboard], [1], [#cite(<arduinotechdk_breadboard_2025>, form: "prose")],[30 DKK],
   [3], [NeoPixel], [1], [#cite(<adafruit_breadboard-friendly_2025>, form: "prose")],[10,5 DKK],
   [4], [Resistor 82k$Omega $], [2], [#cite(<rs_components_rs_nodate>, form: "prose")],[0,18 DKK],
   [5], [USB A connector], [1], [#cite(<ardustoredk_usb_nodate>, form: "prose")],[8 DKK],
-  [6], [Cable to pico], [1], [#cite(<raspberrypidk_officiel_nodate>, form: "prose")],[39 DKK],
-  [], [_3D printet enclosure_], [],[], [],
+  [6], [Cable to Pico], [1], [#cite(<raspberrypidk_officiel_nodate>, form: "prose")],[39 DKK],
+  [], [_3D printed enclosure_], [],[], [],
   [7], [Black filament, Black (10101)], [175 g],[#cite(<bambu_lab_pla_nodate>, form: "prose")], [30 DKK],
   [8], [Green filament, Alpine Green Sparkle (13501)], [4 g],[#cite(<bambu_lab_pla_nodate-1>, form: "prose")], [0,8 DKK],
   [], [_Sum_], [], [],  [187,48 DKK]
   ),
-  caption: [Bill of materials for host connecting to a simple controller],
+  caption: [Bill of materials for Host connecting to a single Controller],
 ) <table:HostHardwareMaterials>
 
 #colbreak()

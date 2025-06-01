@@ -3,6 +3,7 @@
 
 = Sprint 4: _Knobs, Debouncing and NFC Card Detection_ <sec:sprint4>
 Feedback from testing (@sec:sprint3test) informed the choice of redesigning the NFC card slot to prevent the NFC cards from sliding out. Additionally, custom potentiometer knobs were designed. Furthermore, automatic card detection was developed to alleviate the pain point testers had remembering to press the button activating card detection. A switch debouncing algorithm was created for improved interaction with the system, and professionally manufactured PCBs were ordered to replace the earlier hand-made version, to resolve several issues.
+#colbreak()
 
 == CAD <sec:sprint4Cad>
 User testing showed that the NFC cards easily fell out of the NFC card insertion hole (@sec:sprint3test), and that the initial design unintentionally allowed for foreign objects to be inserted, which was a concern voiced both by a test participant (@sec:sprint2test) and by #cite(<chen_humming_2019>, form: "prose"). To fix this, the NFC side of the chassis was redesigned with a narrower opening. During printing, however, support structures were generated inside the opening, which proved difficult to remove. Despite this, the smaller opening was retained for further testing.
@@ -23,7 +24,8 @@ Thereafter, experimentation figuring out how to make the knobs better and potent
   figure(image("../images/sprint 4/pottop3.png", width: 40%),
     caption: [Redesigned knob for under the lid.]), <fig:fus4pot3>,
   figure(image("../images/sprint 4/pottop4.png", width: 65%),
-    caption: [Knobs resting on top of lid.]), <fig:fus4pot4>
+    caption: [Knobs resting on top of lid.]), <fig:fus4pot4>,
+    placement: top
 )
 
 == Potentiometer MIDI
@@ -116,7 +118,8 @@ The functionality of the potentiometers was handled in a much different way than
             self.connection_handler.send_potentiometer(idx, mapped_value)
           await asyncio.sleep(0.001)
   ```,
-  caption: [Methods on Controller for handling of potentiometers.]
+  caption: [Functions on Controller for handling of potentiometers.],
+  placement: top
 ) <listing:sprint4Pot>
 
 The select pins were defined as digital pins using _digitalio_, as they did not require specific analog signals (@listing:sprint4Pot:9). However, the multiplexer output pin was set as an analog input port on the Pico 1 using _analogio_ (@listing:sprint4Pot:7).
@@ -126,8 +129,12 @@ Reading the potentiometer values worked by continuously iterating through an arr
 The processing of the signals consisted of sampling the voltage from the potentiometers multiple times (@listing:sprint4Pot:23) and calculating the average 16-bit value read for each potentiometer from the samples (@listing:sprint4Pot:26). This was required as the potentiometers seemed to produce slightly fluctuating values. Afterwards, the averaged 16-bit number would be mapped to a range of 0-127 (@listing:sprint4Pot:27), as this was the range MIDI works in @wreglesworth_why_nodate. Lastly, it would be checked if this value was different than the potentiometer's last value (@listing:sprint4Pot:28), and if it was, it would be forwarded to the Host in a special message consisting of the ID of the potentiometer and its value (@listing:sprint4Pot:30). On the Host side, this message would be received and processed much like button presses (@sec:sprint2HostMidiInterface). The main difference is that, instead of sending MIDI note messages to Live, it would send _control change_ messages, which, in Live, could be configured to adjust a wide variety of settings; including instrument sound modifications. In the end, it was decided the four potentiometers should control the instrument's volume, delay, reverb and an amp effect.
 
 
-== Button and Debouncing algorithm
+== Button and Debouncing Algorithm
 A refined solution was implemented for handling button input and debouncing. A special task, `click_watcher` (@listing:sprint4Click:1) was created with the sole purpose of checking whether a single button had been pressed. When initializing the buttons (@listing:sprint4Click:11), a `click_watcher`-task would be created for and assigned to each button. This meant that button handling became theoretically parallel instead of serial.
+
+A software debouncing routine was introduced by maintaining a dictionary that mapped each button to its most recent activation time (@listing:sprint4Click:14). On each button press, the code read the current time, computed the interval since the last recorded press of that button, and compared it against a predefined debounce threshold (@listing:sprint4Click:6). Only if the elapsed time exceeded that of the threshold was the event treated as a genuine button press, preventing a single physical actuation from registering as multiple clicks due to contact chatter @wright_what_2022.
+
+The debounce interval was determined empirically using an oscilloscope to capture the button’s voltage waveform (@fig:sprint4Oscilloscope). During repeated actuations, the longest bounce period observed was approximately 1.5 ms. A 0.5 ms safety margin was added to set the debounce threshold at 2 ms (@listing:sprint4Click:16). This value comfortably outlasted any measured bounce while remaining brief enough to preserve responsive play.
 
 #codly(
   annotations: (
@@ -186,28 +193,24 @@ A refined solution was implemented for handling button input and debouncing. A s
             asyncio.create_task(self.click_watcher(btn, idx))
             idx += 1
   ```,
-  caption: [New `click_watcher(btn, idx)`, button initialization and debouncing.],
+  caption: [Button initialization and debouncing.],
 ) <listing:sprint4Click>
-
-A software debouncing routine was introduced by maintaining a dictionary that mapped each button to its most recent activation time (@listing:sprint4Click:14). On each button press, the code read the current time, computed the interval since the last recorded press of that button, and compared it against a predefined debounce threshold (@listing:sprint4Click:6). Only if the elapsed time exceeded that of the threshold was the event treated as a genuine button press, preventing a single physical actuation from registering as multiple clicks due to contact chatter @wright_what_2022.
-
-The debounce interval was determined empirically using an oscilloscope to capture the button’s voltage waveform (@fig:sprint4Oscilloscope). During repeated actuations, the longest bounce period observed was approximately 1.5 ms. A 0.5 ms safety margin was added to set the debounce threshold at 2 ms (@listing:sprint4Click:16). This value comfortably outlasted any measured bounce while remaining brief enough to preserve responsive play.
 
 #subpar.grid(
   columns: (auto, auto),
   caption: [Analyzing bounce of switches.],
   label: <fig:sprint4Oscilloscope>,
   align: top,
-  figure(image("../images/sprint 4/Oscilloscope1.jpg", width: 100%),
+  figure(image("../images/sprint 4/Oscilloscope1.jpg", width: 90%),
     caption: [Testing and analyzing button's voltage waveform.]), <fig:oscilloscope1>,
-  figure(image("../images/sprint 4/Oscilloscope2.jpg", width: 100%),
-    caption: [Close-up of oscilloscope during debounce-analysis.]), <fig:oscilloscope2>
+  figure(image("../images/sprint 4/Oscilloscope2.jpg", width: 90%),
+    caption: [Close-up of oscilloscope during debounce-analysis.]), <fig:oscilloscope2>,
 )
+#colbreak()
+== Automatic Card Detection
+To enable automatic NFC card detection, instead of having to push a button, it was decided to add a sensor-based trigger to the NFC reading mechanism. This was due to testing revealing that the prior implementation caused frustration (@sec:sprint2test). Since Light-Dependent Resistors (LDR) were available @arduinotechdk_lys_2025 they were selected for this purpose due to their relative simplicity and familiarity.
 
-== Automatic card detection
-To enable automatic NFC card detection, instead of having to push a button, it was decided to add a sensor-based trigger to the NFC reading mechanism. Since light-dependent resistors (LDR) were available @arduinotechdk_lys_2025 they were selected for this purpose due to their relative simplicity and familiarity.
-
-The idea behind the detection mechanism was placing an LED at the bottom of the holder for the NFC reader and placing the LDR through a small hole from the top side of the holder. When no card was present, the LED light would pass unobstructed to the LDR. However, when a card was inserted, it would block the light, causing the LDR's resistance to change. This shift in light intensity could then be detected in software, triggering the system to initiate an NFC card scan automatically.
+The idea behind the detection mechanism was placing an LED at the bottom of the holder for the NFC reader and the LDR through a small hole from the top side of the holder. When no card was present, the LED light would pass unobstructed to the LDR. However, when a card was inserted, it would block the light, causing the LDR's resistance to change. This shift in light intensity could then be detected in software, triggering the system to initiate an NFC card scan automatically.
 
 To use the resistor as a sensor, a voltage divider using the LDR and another resistor were added to the schematic (@app:schematicSprint4). To determine the size of the resistor added to ensure proper functionality of the LDR and LED, calculations were made in an isolated test environment (@app:automaticCardDetection). While doing the calculations it was observed that the theoretical values were not exactly equal to the measured values. This was reasoned by the measured LDR resistances possibly not being completely accurate due to a volatile test environment. 
 
@@ -218,8 +221,9 @@ The printer was exchanged for a functioning model at the production facility (@s
 During the soldering phase, several technical challenges were encountered. These included difficulties related to manual hole drilling, which affected the alignment and stability of mounted components. Additionally, this phase involved manually soldering vias, which proved particularly challenging due to poor solder adhesion, leading to fragile connections. Further inspection of the assembled PCB revealed several design errors. Fixing these required "hacks", such as soldering across traces and soldering wires directly on the PCB (@fig:PcbHack). 
 
 #figure(
-  image("../images/sprint 4/pcb4solderedtop.jpg", width: 50%),
-  caption: ["Hacking" produced PCB by soldering external wire directly on it.]
+  image("../images/sprint 4/pcb4solderedtop.jpg", height: 33%),
+  caption: ["Hacking" produced PCB by soldering external wire directly on it.],
+  placement: bottom
 ) <fig:PcbHack>
 
 === Molex Connectors
@@ -230,36 +234,39 @@ Molex @molex_creating_2025 connectors were used to connect off-board components,
   caption: [Internal connectors of Controller.],
   label: <fig:sprint4Molex>,
   align: top,
-  figure(image("../images/sprint 4/molex4power.jpg", height: 15%),
+  figure(image("../images/sprint 4/molex4power.jpg", height: 20%),
     caption: [Molex connection for power button.]), <fig:molexConnectors>,
-  figure(image("../images/sprint 4/molex4nfc.jpg", height: 15%),
-    caption: [NFC pinheader connection.]), <fig:nfcHeader>
+  figure(image("../images/sprint 4/molex4nfc.jpg", height: 20%),
+    caption: [NFC pinheader connection.]), <fig:nfcHeader>,
+    placement: top
 )
 
 === Multiplexer, potentiometers and LDR <potsprint4>
 An issue arose concerning the functionality of the potentiometers when mounted in conjunction with other components, specifically the LDR. In this configuration, neither the potentiometers nor the LDR functioned as intended. The potentiometer readings had floating values, and the LDR failed to detect any significant changes in light levels. Given that these components were all connected through the multiplexer, it was hypothesized that the root cause of the malfunction might have been inadequate grounding of the multiplexer's unused input channels– which was found to be essential for proper functionality @sec:potsSprint2.
 
-=== Ordering PCBs
+=== Ordering PCBs <sec:orderingPCBS>
 To support cooperative experimentation and play (Requirement 1, @table:usabilityRequirements), a second Controller, and thus a new PCB, was required. Having experienced the pitfalls of manual PCB fabrication (@sec:PCBsprint3), the team chose to have the new PCB professionally manufactured through JLCPCB @jlcpcbcom_pcb_2025, a service chosen for its reputability and competitive pricing. Reviewing the PCB order, both engineers at JLCPCB and the team’s own inspections uncovered several design issues: missing solder masks, incorrectly routed traces, and a misplaced footprint, which were promptly corrected prior to production.
 
 Beyond simply offloading board etching, professional fabrication brought several practical advantages. First, the PCBs were made double-sided with a silkscreen layer on both faces, providing clear labels for component placement and orientation, greatly simplifying assembly. Second, JLCPCB handled all hole drilling and via formation, eliminating the most labor-intensive steps from the workflow. Finally, the boards had a thin factory-applied flux layer, which improved solderability and joint quality.
 
 == Decorations for the Chassis <sec:decorations>
-Previous user testing indicated that the target group preferred a more playful and engaging design, expressing interest in additional visual elements such as LEDs and the use of vibrant colors (@sec:sprint2test,). Participants had also requested clearer labeling on the chassis to provide immediate feedback regarding the function of the various switches and potentiometers.
-
-To improve engagement (Requirement 11, @table:usabilityRequirements), a design plan was formulated, involving decorating the chassis using vinyl stickers. However, testing this approach on a 3D-printed lid yielded unsatisfactory results (@fig:vinyl). Concurrently, vector graphics were created for the purpose of printing vinyl stickers (@fig:topDesign).
 
 #subpar.grid(
   columns: (auto, auto),
-  caption: [Lid Designs.],
+  caption: [Lid designs.],
   label: <fig:designTop>,
   align: top,
   gutter: 30pt,
-  figure(image("../images/sprint 4/vinyl.jpg", height: 31%),
-    caption: [Lid with vinyl.]), <fig:vinyl>,
-  figure(rect(image("../images/sprint 4/top-design.svg", height: 30%), radius: 1mm),
-    caption: [Lid Design in SVG format.]), <fig:topDesign>
+  figure(image("../images/sprint 4/vinyl.jpg", height: 21%),
+    caption: [Lid with vinyl stickers.]), <fig:vinyl>,
+  figure(rect(image("../images/sprint 4/top-design.svg", height: 20%), radius: 1mm),
+    caption: [Lid design in SVG format.]), <fig:topDesign>,
+    placement: bottom
 )
+
+Previous user testing indicated that the target group preferred a more playful and engaging design, expressing interest in additional visual elements such as LEDs and the use of vibrant colors (@sec:sprint2test,). Participants had also requested clearer labeling on the chassis to provide immediate feedback regarding the function of the various switches and potentiometers.
+
+To improve engagement (Requirement 11, @table:usabilityRequirements), a design plan was formulated, involving decorating the chassis using vinyl stickers. However, testing this approach on a 3D-printed lid yielded unsatisfactory results (@fig:vinyl). Concurrently, vector graphics were created for the purpose of printing vinyl stickers (@fig:topDesign).
 
 == Testing <sec:test4>
 The fourth round of user testing consisted of observing how participants interacted with a functional assembled Controller (@fig:sprint4TestSetup). However, as previously discussed in @potsprint4, issues with the multiplexer prevented the potentiometers and the automatic NFC reader sensor from working correctly. To make the NFC reader work, one of the interactive buttons was reconfigured to manually activate it. The potentiometers were disabled. The test was conducted at Rosengårdskolen @rosengardskolen_velkommen_nodate and involved four individual participants from the 5th grade. Each session lasted approximately seven minutes. A/B testing, think-aloud methodology, and unstructured interviews were employed.
@@ -270,10 +277,11 @@ The fourth round of user testing consisted of observing how participants interac
   label: <fig:sprint4setup>,
   align: top,
   gutter: 30pt,
-  figure(image("../images/sprint 4/test4setup.jpg", height: 30%),
-    caption: [Full Test Setup.]), <fig:sprint4TestSetup>,
-  figure(image("../images/sprint 4/test4pots.jpg", height: 30%),
-    caption: [Knob A/B test.]), <fig:sprint4TestKnobs>
+  figure(image("../images/sprint 4/test4setup.jpg", height: 23%),
+    caption: [Full test setup.]), <fig:sprint4TestSetup>,
+  figure(image("../images/sprint 4/test4pots.jpg", height: 23%),
+    caption: [Knob A/B test.]), <fig:sprint4TestKnobs>,
+    placement: bottom
 )
 
 Two participants reported having prior formal musical training. One played the transverse flute and another the guitar; the remaining two had no previous musical experience.
