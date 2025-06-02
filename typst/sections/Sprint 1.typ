@@ -1,6 +1,67 @@
 #import "@preview/subpar:0.2.2"
+#import "@preview/subpar:0.2.2"
 = Sprint 1: _Requirements, Technical Experimentation and Paper Prototyping_
-The overall direction of the project was defined by establishing core usability and technical requirements. These were shaped around the target group of 9–12-year-olds, aiming to make the product engaging, intuitive, and accessible regardless of prior musical knowledge. Parallel to this, experimentation was begun with key hardware components, including microcontrollers, buttons, potentiometers, an NFC reader, and a display, to evaluate the feasibility of using and integrating them. A paper prototype of a Controller was created to visualize the physical layout and test early interaction ideas, helping the team gather feedback and refine the concept before moving into functional prototyping.
+The overall direction of the project was defined by establishing core usability and technical requirements. These were shaped around the target group of 9–12-year-olds, aiming to make the product engaging, intuitive, and accessible regardless of prior musical knowledge. Parallel to this, experimentation was begun with key hardware components, including microcontrollers, buttons, potentiometers, an of using and integrating thema
+#figure(
+  table(
+  columns: (auto, 1fr, 2fr),
+  align: start,
+  table.header([*Id*], [*Feature*], [*Description*]),
+  [1], [Cooperative play], [Multiple users should be able to explore and experiment with music together.],
+  [2], [Portable device], [The product should be easy to transport, so that usage is not limited to either home or school.],
+  [3], [Size], [Product should have a suitable compact size for the target group.],
+  [4], [Feedback], [Feedback is given when using the product, making it more intuitive.],
+  [5], [Cheap], [The product should be cheap to make it as accessible as possible.],
+  [6], [Plug'N'Play], [Product should be easy to set up, use, and pack away.],
+  [7], [Beats and Consistency],[Played music should be quantized to ensure it "sounds good" almost independently of the input.],
+  [8], [Looping],[Small music pieces should be able to be recorded and looped directly on the product.],
+  [9], [Not intimidating],[Users should not feel intimidated by using the product.],
+  [10], [Prior musical knowledge],[The product should be fun for both children who are well-versed in playing music and those with no prior knowledge.],
+  [11], [Engaging],[The product should consistently engage users to continuously use it, promoting interaction and autonomy.]
+  ),
+  caption: [Usability requirements.],
+  placement: bottom
+) <table:usabilityRequirements>
+ The requirements were developed taking the target group's technical proficiency and prior musical knowledge into consideration. As a result, requirements 7 (Beats and Consistency) and 10 (Prior musical knowledge) were defined to ensure a positive user experience, heightening competence @ryan_self-determination_2000, for both children with, and without prior experience playing instruments. Requirement 7 should partly fulfill this by quantizing user input, fixing timing inconsistencies without negatively affecting the played music. Furthermore, the palette of playable notes should be predefined to make played music harmonically pleasing; even when used by individuals without any prior music theory knowledge.
+
+Requirement 1 (Cooperative play) was considered highly important, as relevant literature highlighted the value of collaborative learning and interaction @newton-dunn_block_2003 @ryan_self-determination_2000. Requirements 2, 3, 6, and 11 (Portable device, Size, Plug'N'Play, and Engaging) were defined to create a good experience using the product for the target group, both making it easy and engaging to use and usable in multiple settings. Requirement 4 (Feedback) was created to make the product feel good and be as intuitive to use as possible #cite(<norman_design_2013>, supplement: [ch. 4]).
+Requirement 9 (Not intimidating) was defined as the product is intended to facilitate musical exploration and experimentation. Therefore, it needed not to appear daunting or overly complex, which traditional instruments can be @mesler_when_2017. That is why the Controllers' design should avoid close resemblance to traditional instruments. Actions should be immediately apparent and intuitive, without the need for prior knowledge or instruction #cite(<norman_design_2013>, supplement: [ch. 4]), which traditional instruments might not afford. Furthermore, unconventional interfaces can offer unique affordances that align closely with the physical interactions of novice users, fostering a more inviting and exploratory musical experience @dalgleish_cec_nodate, possibly fostering autonomy @ryan_self-determination_2000. This requirement was added despite counteracting the initial idea, of making them resemble real instruments for near-transfer (@sec:ideaGeneration).yController
+
+The Host would act as the central connector in the system, interfacing between the Controllers and Live, ensuring smooth communication and coordination across all components (@fig:DeviceRelationsshipsSprint1).
+
+#figure(
+  image("../images/sprint 1/DeviceRelationshipsSprint1.png", width: 42%),
+  caption: [Diagram illustrating system relationships between devices.]
+) <fig:DeviceRelationsshipsSprint1>
+
+Requirement 4 (Wireless Connection) was defined, since there would be both a Host and multiple Controllers having to communicate. Among available wireless communication options, WiFi was selected for its lower end-to-end latency compared to alternatives like Bluetooth #cite(<sharrow_speed_2025>), ensuring that the system could transmit MIDI data rapidly enough as required by requirement 9 (Low latency).FE for changing instruments
+Arguably the most important requirement was  requirement 10 (Interactive sensors), as it formed the core interface, allowing users to actively experiment with music through the Controller,was dHCa DAW thenthe CoHno perceivableC.,
+  placement: topEECHeddGPIOIDERaspberry Pi Pico seriesraspberrypidk_raspberry_nodatethe sRaspberry H Raspberry Piededwas d,,
+
+Awas designated to be a Host, and  to was designated as a Controller, and to connectHost'whered using Transmission Control Protocol (TCP)H, rH serie
+#figure(
+  image("../images/sprint 1/hello-world-display.jpeg", height: 20%),
+  caption: [Initial display test.],
+  placement: bottom
+) <fig:helloworlddisplay>
+Light Emitting Diode () to__ NFC (@fig:nfcFirstSetup)#figure(
+  image("../images/sprint 1/nfcFirstSetup.jpg", height: 24%),
+  caption: [Initial NFC test.],
+  placement: bottom
+) <fig:nfcFirstSetup>W1the same card lyNext, the's ID was matched 315  8134
+
+
+#figure(
+  ```cpy
+  card_labels = {
+    "80710414E1": "tromme",
+    "2ECB5873CE": "klaver",
+  }
+  ```,
+  caption: [Code mapping cards UIDs to labels.],
+  placement: top
+) <listing:nfcCardLabels>
+an NFC reader, and a display, to evaluate the feasibility of using and integrating them. A paper prototype of a Controller was created to visualize the physical layout and test early interaction ideas, helping the team gather feedback and refine the concept before moving into functional prototyping.
 
 == Usability Requirements
 #figure(
@@ -139,18 +200,30 @@ When a card was scanned, its UID was compared with the previously scanned card (
     print("UID detected:", card_str)
     card_type = card_labels.get(card_str, None)
     if card_type:
-        print("Card identified as:", card_type)
-        if card_type == "tromme":
+        print("Card identified as:", card_type)        if card_type == "tromme":
             yellow.value = False
             red.value = True
         elif card_type == "klaver":
             yellow.value = True
             red.value = False
-  else:
-      print("Unknown card detected with UID:", card_str)
+  else:      print("Unknown card detected with UID:", card_str)
       yellow.value = False
-      red.value = False
-  last_uid = uid
+      red.value = False,
+  placement: topI decided iswas P,
+  placement: bottom' valuess  @raspberry_pi_raspberry_2024-1
+#colbreak()PControllers ()The design incorporated the buttons and potentiometers, chosen to balance simplicity and functionality within the physical constraints of the box’s sizeaController (@fig:paperprototype)
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Paper prototype.],
+  label: <fig:paperprototype>,
+  align: top,
+  figure(image("../images/sprint 1/paperTop.jpg", height: 18%),
+    caption: [Paper prototype with instrument on display.]), <fig:>,
+  figure(image("../images/sprint 1/paperSide.jpg", height: 18%),
+    caption: [Paper prototype's right side, with NFC hole.]), <fig:>,
+  placement: top
+)   
+think-aaskinglast_uid = uid
   ```,
   caption: [Code depending on which NFC card is read.],
   placement: top
@@ -204,4 +277,4 @@ The participant had limited musical experience, only having played piano during 
 
 The participant's preliminary expectations included functionality for recording and playback of predefined beats, similar to _GarageBand_ @apple_garageband_2024, and the ability to alter pitch, intended humorously to produce annoying sounds. Although the participant was not part of the target demographic, such feedback was interpreted as indicative of an exploratory and motivated interaction approach. During the A/B test, the participant expressed a preference for inserting the NFC cards on the right side of the device. 
 
-Further observations indicated the importance of tactile feedback and visual indicators such as LEDs. A layout revision was recommended to better support left-handed users, ensuring potentiometer interaction would not obscure the display. Additional suggestions included adding a power switch and the use of neutral colors for the device chassis.
+Further observations indicated the importance of tactile feedback and visual indicators such as LEDs. A layout revision was recommended to better support left-handed users, ensuring potentiometer interaction would not obscure the displaydisplay. Additional suggestions included addingadding a power switch and the use of neutral colors for the device hassischassis.

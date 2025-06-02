@@ -1,5 +1,5 @@
 #import "@preview/wordometer:0.1.4": word-count, total-words, total-characters
-#show: word-count.with(exclude: (<no-wc>, figure, heading.where(supplement: [Appendix])))
+#show: word-count.with(exclude: (<no-wc>, figure, heading.where(supplement: [Appendix]), heading.where(supplement: [Appendix])))
 
 #import "@preview/codly:1.3.0": *
 #show: codly-init.with()
@@ -47,6 +47,26 @@
   mainSupervisor: (fullName: "Jacob Nielsen"),
   characterCount: total-characters,
   titlePageImagePath: "images/frontPageImage.JPG",
+  
+  This bachelor's thesis addresses the challenge of empowering young users to engage with music and cultivate intrinsic motivation through curiosity-driven, playful, and exploratory interactions.
+
+  To tackle this, an iterative, user-centered design methodology was employed, focusing on a target group of children aged 9-12. This involved the design and development of a tangible hardware interface prototype. The system comprises two Controllers and a dedicated Host device. The Controllers integrate NFC card readers, buttons, and potentiometers, allowing users to play harmonically fitting notes and control various effects. These interactions are translated into MIDI messages via the Host device, which connects to a computer running Live by Ableton.
+  
+  User testing yielded positive results, indicating that the tangible interface was highly intuitive and enjoyable, particularly in collaborative settings. The interface successfully lowered the entry barriers to music creation, fostering a more accessible and engaging experience. In conclusion, this project demonstrates the significant potential of tangible design to promote inclusive and curiosity-driven musical exploration among young individuals.
+  #v(80pt)
+
+  #set align(center)
+  
+  *To learn more about the project please visit:*
+
+  _Video Walkthrough:_
+  \
+  #text(blue)[#underline[#link("https://drive.google.com/file/d/1H6dUJ6WPt3np7xRLT2iUnK9Qn9W2uAV5/view?usp=sharing")]] <no-wc>
+  
+  _GitHub Repositories:_
+  \
+  #text(blue)[#underline[#link("https://github.com/ETIMC")]] <no-wc>characterCount: total-characters,
+  titlePageImagePath: "images/frontPageImage.JPG",
   abstract:[
   This bachelor's thesis addresses the challenge of empowering young users to engage with music and cultivate intrinsic motivation through curiosity-driven, playful, and exploratory interactions.
 
@@ -66,7 +86,7 @@
   _GitHub Repositories:_
   \
   #text(blue)[#underline[#link("https://github.com/ETIMC")]] <no-wc>
-  ]
+    ]
 )
 
 #include "Acronyms and Terms.typ"
@@ -83,8 +103,12 @@
 #include "sections/Method & Materials.typ"
 
 #colbreak()
+#include "sections/Method & Materials.typ"
+
+#colbreak()
 #include "sections/Idea generation.typ"
 
+#colbreak()
 #colbreak()
 #include "sections/Sprint 1.typ"
 

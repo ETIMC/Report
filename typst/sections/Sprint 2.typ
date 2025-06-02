@@ -1,10 +1,19 @@
 #import "@preview/subpar:0.2.2"
 #import "@preview/codly:1.3.0": *
-= Sprint 2: _Breadboard implementation, WiFi and Host functionalities_
-Building on the insights gathered during Sprint 1, the focus shifted to integrating the individual functional components into a cohesive system. This involved interconnecting the components to form a working breadboard prototype suitable for further testing and iteration. Testing (@sec:sprint1test) confirmed the physical design had a good layout and size, but could be worked upon further.
+= Sprint 2: _Breadboard implementation, WiFFi and Host functionalities_
+Building on the insights gathered during Sprint 1, the focus shifted to integrating the individual functional components into a cohesive system. This involved interconnecting the components to form a working breadboard prototype suitable for further testing and iteration. Testing (@sec:sprint1test) confirmed the physical design had a good layout and size, but could be worked upon further.< <sec:sprint1Circuitry>a
+The schematic contains the hardware elements of the Controller:  (@sprint1nfc)The display (@sprint1display) was also connected to the Pico 1's SPI-0 bus, but used a different _CSn_ pin. This allowed saving GPIO pins compared to using the SPI-1 bus.A multiplexer @arduinotechdk_74hc4051_2025s#cite(<raspberry_pi_raspberry_2024-1>, form: "prose")Based on testing (@sec:sprint1test), tas . TBP,Only f
+ (@listing:sprint2Buttons:2)
 
-== Circuitry <sec:sprint1Circuitry>
-A schematic was created to provide an overview of the internal wiring of a Controller and to ensure correct and consistent integration of the system’s components (@app:schematicSprint2). This step was essential to validate that the correct GPIO pins on the Pico were used.
+#figure(
+  ```cpy
+if current_state == False and self.button_states[idx] == True:
+  self.wifi_handler.send_note(idx)
+  await asyncio.sleep(0.001)
+  ```,
+  caption: [Example of code handling button presses.],
+  placement: top
+) <listing:sprint2Buttons>,a pre-defined list oflabelA schematic was created to provide an overview of the internal wiring of a Controller and to ensure correct and consistent integration of the system’s components (@app:schematicSprint2). This step was essential to validate that the correct GPIO pins on the Pico were used.
 The schematic contains the hardware elements of the Controller: 
 - NFC reader (RC522)
   - The NFC reader (@sprint1nfc) was connected to the Pico 1's SPI-0 bus.
@@ -100,10 +109,11 @@ def read_nfc(self):
 
   self.rfid.init()  
   ```,
-  caption: [Functions for reading and handling NFC functionality.],
+  caption: [Functions for reading and handling NFC functionality functionality.],
+  placement: none,
   placement: none
 ) <listing:nfcReadWButton>
-#colbreak()
+#colbreak()#colbreak()
 === Display <sec:Sprint2Display>
 The example code (@sprint1display) was modified to support image rendering, rather than solely displaying text. Through experimentation, the function presented in @listing:displayImage was created to encapsulate the image loading process. Within this function, the variable `splash` was first instantiated as the group containing what should be rendered on the display (@listing:displayImage:2). A `try-except` block was utilized (@listing:displayImage:5 to @listing:displayImage:10) to attempt loading a bitmap image file from the internal storage, which was subsequently appended to the `splash` group, rendering the image on the display. When rendering an image, it was observed that the display blocked other code from running on the Pico until it was done rendering.
 
@@ -122,6 +132,24 @@ def display_image(image_file):
 
   ```,
   caption: [Function to load images onto the display.],
+  placement: top
+) <listing:displayImage> nwasFunction to load images integrated with NFC functionality.,
+  placement: top (@sec:sprint1Circuitry)Mafterwards pins
+#colbreak()BPThe Host was implemented on a breadboard, consisting only of a Pico 2. However, during development and internal testing it was discovered that debugging the wireless connection was difficult as both the Host and Controller would have to be physically connected to a computer to monitor the REPL. To make debugging easier and to promote device feedback (Requirement 4, @table:usabilityRequirements) two NeoPixels @adafruit_breadboard-friendly_2025 were added to the Host for displaying the system's current state (@fig:hostBreadboard). The first LED was used for connection states such as when the Host was turning on and when the Controller connected or disconnected to the WiFi hotspot (@listing:handleNewConnectionLed).
+
+The second LED was programmed to display MIDI information. In practice this meant that it would blink according to MIDI clock messages sent by Live to the Host.
+
+height: 25%sFunction for NeoPixel alerting if,
+#colbreak()
+== WiFi Problems <sec:sprint2WifiProblems>
+During WiFi connectivity testing between the Host and the Controller, the Host’s WiFi driver would crash unpredictably, often within a minute of establishing a connection. This instability generated significant confusion, leading to doubts about the viability of WiFi as the communication protocol of choice. As a fallback, Bluetooth was briefly trialed, but its inherent latency was incompatible with the low-latency requirement (Requirement 9, @table:technicalRequirements).
+
+Debugging eventually uncovered a pattern: only a full power cycle of the Pico 2 before initiating the WiFi connection yielded a stable result. In contrast, soft reboots from the REPL almost invariably triggered driver failures shortly thereafter, particularly when performed in rapid succession. By adopting a strict procedure of completely disconnecting and reconnecting power to the Host prior to each WiFi session, the driver crashes ceased entirely, restoring reliable performance.
+
+During internal testing it was also discovered that there was a small but noticeable delay from pressing buttons on the Controller to the message showing up in the Host's REPL. The delay was minimized somewhat by tweaking asyncio delay lengths, making the Host query for notes more often. In the end, however, it was concluded that the primary delay was network latency. There were two suggested reasons for this. The first one was that the WiFi chip on the Pico 1 and Pico 2 may not have been designed for low-latency communication. A possible solution for this would be exchanging the Pico 1s and Pico 2s for different MCUs. A contender would be the ESP32 line of devices, since they have both a dedicated wireless protocol for low latency communication and a library for sending MIDI messages @espressif_systems_esp-now_2025 @geissl_thomasgeisslesp-now-midi_2025. For affordability and availability reasons, this idea was not further explored. The second possible reason for the latency was the usage of TCP, which contains extra headers and acknowledgement messages, adding overhead to each sent message #cite(<kurose_computer_2020>, supplement: [ch. 3]). It was decided that TCP should be exchanged for User Datagram Protocol (UDP), which has less overhead #cite(<kurose_computer_2020>, supplement: [ch. 3]).
+
+Lastly, if the Controller disconnected, the Host would never notice. To fix this, "heartbeat-messages" were implemented. They worked by having the Host sending a heartbeat request message to the Controller every few seconds. If the Controller did not answer the heartbeat request  three times in a row, the Host would forget the Controller.
+height28%Isend,
   placement: top
 ) <listing:displayImage>
 
@@ -234,6 +262,11 @@ During early Host development, two diagrams (@fig:diagramMessageFlow) were draft
 
 The Host was designed around three maps: a Controller-to-instrument map (@listing:lookUpTables2Instr:1), an instrument-to-MIDI-channel map (@listing:lookUpTables2Instr:2), and an instrument-specific map of Controller-button to MIDI-note assignments (@listing:lookUpTables2Instr:6), which used the `note_parser` function from the MIDI library #cite(<walters_adafruit_2025>) to convert the name of the notes to the right MIDI number. When a message arrived indicating, for example, that Controller A’s Button 1 was pressed, the Host would determine Controller A’s assigned instrument (@listing:receivedNote:5), select that instrument’s MIDI channel (@listing:receivedNote:6), look up the MIDI note tied to Button 1 for that instrument (@listing:receivedNote:8), forward a `NoteOn` MIDI message on the correct channel to Live (@listing:receivedNote:9), and lastly after a fixed amount of time send a corresponding `NoteOff` MIDI message to Live. To change instruments, Controllers sent messages indicating the desired instrument; the Host then updated the Controller-to-instrument map accordingly (@fig:ChangeSoundDiagram). By pre-allocating one channel per instrument, sound changes required no additional latency. Messages simply switched channels, ensuring seamless, low-latency responses as required by the low latency technical requirement (Requirement 9, @table:technicalRequirements). It was noted that use of channels limited the amount of instruments to 16, as that is the limit of the MIDI protocol @levin_how_2024.
 
+The map for converting Controller button-presses to MIDI notes was defined to guarantee harmonic consistency (Requirement 7, @table:usabilityRequirements). Two octaves of the C-major triad were selected so users could access both high and low pitches without additional configuration. To support a future use case where a potentiometer might shift octaves, a pentatonic scale was considered; its five notes per octave offering broader melodic flexibility without risking dissonance #cite(<farrant_what_2020>).5,`NoteOn` MIDI , and lastly after a fixed amount of time send a corresponding `NoteOff` MIDI message to Lives5%),
+    caption: [Message flow when changing instrument.]), <fig:ChangeSoundDiagram>,
+    placement: bottom
+)
+
 The map for converting Controller button-presses to MIDI notes was defined to guarantee harmonic consistency (Requirement 7, @table:usabilityRequirements). Two octaves of the C-major triad were selected so users could access both high and low pitches without additional configuration. To support a future use case where a potentiometer might shift octaves, a pentatonic scale was considered; its five notes per octave offering broader melodic flexibility without risking dissonance #cite(<farrant_what_2020>).
 
 #subpar.grid(
@@ -279,6 +312,7 @@ The map for converting Controller button-presses to MIDI notes was defined to gu
   }
   ```,
   caption: [Maps on Host.],
+  placement: bottom,
   placement: bottom
 ) <listing:lookUpTables2Instr>
 
@@ -297,7 +331,47 @@ The map for converting Controller button-presses to MIDI notes was defined to gu
                 print(f"Unknown note index: {note_idx} for instrument {instrument}")
         except Exception as e:
   ```,
-  caption: [Function handling the processing of Controller input messages.],
+  caption: [Function handling the of,
+  placement: bottomThe sending of notes themselves was driven by a queue. When a Controller registered a button input, a message with the ID of the button was sent to the Host. This message would undergo the previously mentioned processing before being added to a queue (@listing:receivedNote:9). The way the queue was emptied was quite interesting. When the _Play_ button in Live was pressed it would begin sending 24 `TimingClock` messages to the Host per beat. This meant that if Live was set to play at 120 beats per minute the message would be received by the Host $24 dot 120 = 2880$ times a minute. By counting these messages and only emptying the queue, sending the MIDI messages to the Host, every 24 `TimingClock` messages, the Controllers input was quantized to the beat, overlooking potential timing-mishaps by the user (Requirement 7, @table:usabilityRequirements). It was however also discovered that this didn't "feel" as nice to use as when the MIDI signals were immediately send to Live and the feedback heard immediately. This was also the case when emptying the queue every half-beat (every 12 `TimingClock` messages). For this reason, this feature was turned off during testing on the target group.should solidingmultiple schassisdeheight: 18Attempt onechassis.height: 18%Cheight: 18%,
+    placement: top theUsing engaging an image for each of the instrumentswas()
+
+#subpar.grid(
+  columns: (auto, auto),
+  caption: [Instrument pixelart.],
+  label: <fig:pixelart>,
+  align: top,
+  figure(image("../images/sprint 2/drums.jpg", height: 15%),
+    caption: [Pixelart image of drum kit.]), <fig:pixel1>,
+  figure(image("../images/sprint 2/piano.jpg", height: 15%),
+    caption: [Pixelart image of piano.]), <fig:pixel2>,
+)
+
+#colbreak()
+Prototype evaluation was conducted at the University of Southern Denmark with five participants from the target user group. The participants were all enrolled at Teknologiskolen @teknologiskolen_om_2025, an extracurricular program focused on technology education for children. The breadboard prototype, which utilized WiFi for connectivity, was tested (@fig:sprint2setup). During this evaluation, the display was intentionally disconnected from the main circuit due to observed interference (@sec:Sprint2Display). Additionally, the NFC reader required a manual button press for activation. Participants' prior exposure to breadboard setups allowed for the testing of the very early prototype without significant participant confusion. The testing procedure comprised of two main phases: A think-aloud phase, where participants freely interacted with the prototype, followed by an unstructured interview. A/B tests were also utilized. Each test session averaged 10 minutes.
+
+In one instance, two participants were present concurrently. They individually completed the think-aloud phase but provided a joint response during the subsequent interview.
+
+None of the participants had received formal musical training, but two reported regularly playing on keyboards at home. All participants expressed curiosity and interest in learning more about music creation. 
+
+While participants generally reported the prototype as easy to navigate, a significant usability issue emerged regarding the NFC reader's requirement for manual activation. Participants frequently forgot to activate it. One participant explicitly voiced frustration when reminded of this functionality, stating: #quote[Is that necessary? [...] It ends up being a negative thing.] (@app:Sprint2Transcriptions).
+
+A/B tests were conducted to inform design decisions. One A/B test focused on button preference for the final prototype rendition. A majority of participants (4/5) preferred NuPhy low-profile mechanical keyboard switches in the MOSS style @nuphy_nuphy_2025-1 over the buttons on the breadboard implementation (@sec:sprint1MusicalInteraction). While participants were also consulted on potentiometer preferences, this feedback proved largely irrelevant. It was observed that regardless of size, participants found potentiometers unintuitive and awkward to handle due to their small form factor and limited rotational range.
+
+A second A/B test, utilizing the paper prototype, investigated preferred NFC card slot placement. A strong preference for right-hand side placement was observed, which may be attributed to a handedness bias given all participants were right-handed. One participant also suggested a "swiping" interaction, akin to contactless payment options or the Danish public transport payment system, Rejsekort. Related to this, durability concerns were raised regarding the NFC slot, if inappropriate objects were inserted: #quote[Can you put other stuff into it? [...] so that it says kaboom?] (@app:Sprint2Transcriptions). Furthermore, a participant inquired about the device's resilience to drops, specifically regarding component detachment: #quote[But what about switches? What if they fall off if you accidentally drop it from the Eiffel Tower?] (@app:Sprint2Transcriptions).
+
+#figure(
+  image("../images/sprint 2/sprint2-test-setup.png", height: 22%),
+  caption: [Test setup for sprint 2.],
+) <fig:sprint2setup>
+
+Participants consistently requested LEDs for visual feedback. One suggested a color-coding scheme to associate with note pitches: #quote[Then you could have different colors, like, for the sounds. So if they were deep sounds, they could be dark blue, and if there were lighter ones, they could be light colors, like spring colors. The dark tones could then be winter colors.] (@app:Sprint2Transcriptions).
+
+Regarding the prototype's power supply, a wired connection was preferred over batteries by participants due to the inconvenience of battery replacement: #quote[Yes, but maybe I think it's a bit easier with a cord, you know. Batteries—you actually have to go out and buy them.] (@app:Sprint2Transcriptions). Furthermore, observations during the test revealed that all participants struggled to create cohesive rhythmic beats. This difficulty was theorized to be a result of WiFi latency, which was noted as a critical area for improvement.
+
+The concept of collaborative play was met with enthusiasm, as all testers expressed positive reactions to the idea of a shared music-experimentation experience. However, one participant raised a valid concern: that simultaneous use of identical instrument sounds could lead to an uncomfortable auditory experience.
+
+Finally, one participant requested that additional instruments be added; #quote[Drums, guitar, piano, you know maybe something diverse? Sjubidu [...] Trumpet [...] Or do you know that instrument from Australia, that tube where you, uh, say weird sounds?] (@app:Sprint2Transcriptions).
+Function handling the processing of Controller input messages.],
   placement: bottom
 ) <listing:receivedNote>
 
@@ -364,5 +438,4 @@ Regarding the prototype's power supply, a wired connection was preferred over ba
 
 The concept of collaborative play was met with enthusiasm, as all testers expressed positive reactions to the idea of a shared music-experimentation experience. However, one participant raised a valid concern: that simultaneous use of identical instrument sounds could lead to an uncomfortable auditory experience.
 
-Finally, one participant requested that additional instruments be added; #quote[Drums, guitar, piano, you know maybe something diverse? Sjubidu [...] Trumpet [...] Or do you know that instrument from Australia, that tube where you, uh, say weird sounds?] (@app:Sprint2Transcriptions).
-
+Finally, one participant requested that additional instruments be added; #quote[Drums, guitar, piano, you know maybe something diverse? Sjubidu [...] Trumpet [...] Or do you know that instrument from Australia, that tube where you, uh, say weird sounds?] (@app:Sprint2Transcriptions)
