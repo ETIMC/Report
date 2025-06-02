@@ -1,31 +1,31 @@
 = Acronyms, Abbreviations and Terms
-#heading("",dph:2,outld: false)#heading("Acronyms", depth: 2, outlined: false)
+#heading("Acronyms", depth: 2, outlined: false)
 - CAD: Computer-Aided Design
 - DAW: Digital Audio Workstation
-- GPIO: General-PPurpose IInput/OOutput
+- GPIO: General-Purpose Input/Output
 - I²C: Inter-Integrated Circuit
 - IDE: Integrated Development Environment
-- IDE: Integrated Development Environment
-- LED: Light EEmitting DDiode
-- LDR: Light-DDependent RResistor
+- LED: Light Emitting Diode
+- LDR: Light-Dependent Resistor
 - MCU: Microcontroller Unit
-- NFC: Near--field CCommunication
+- NFC: Near-field Communication
 - PCB: Printed Circuit Board
 - PLA: Polylactic acid
 - REPL: Read–Eval–Print Loop
-- SCL: Serial CClock LLine
-- SDA: Serial DData LLine
+- SCL: Serial Clock Line
+- SDA: Serial Data Line
 - SDT: Self-Determination Theory
 - SPI: Serial Peripheral Interface
 - TCP: Transmission Control Protocol
 - TUI: Tangible User Interface
-- UID: Unique IIdentifier
+- UID: Unique Identifier
 - UDP: User Datagram Protocol
 
-#heading("", depth: 2, outlined: false)#heading("Abbreviations", depth: 2, outlined: false)
+#heading("Abbreviations", depth: 2, outlined: false)
 - Pico 1: Raspberry Pi Pico 1 W
 - Pico 2: Raspberry Pi Pico 2 W
 - Live: Live 11 @ableton_ableton_2025
-#heading("", depth: 2, outlined: false)#heading("Terms", depth: 2, outlined: false)
-- Host: Device connected to a computer, interfacing withLive and Controllers.
-- Controller: Device users interact with to explore and explore witheimnt with music.
+
+#heading("Terms", depth: 2, outlined: false)
+- Host: Device connected to a computer, interfacing with Live and Controllers.
+- Controller: Device users interact with to explore and experiment with music.

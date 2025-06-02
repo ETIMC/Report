@@ -1,11 +1,10 @@
 #import "@preview/subpar:0.2.2"
-#import "@preview/subpar:0.2.2"
 = Sprint 5: _Two Controllers, Soldering and even More Instruments_
-To evaluate upon the idea of collaborative play (Requirement 1, @table:usabilityRequirements), and to contain the newly ordered PCBs (@sec:orderingPCBS), and to contain the newly ordered PCBs (@sec:orderingPCBS), a second chassis was designed with, among other things, improved standoffs. Furthermore, the NFC card slot and reader holder were revised for better usability and print reliability. Aesthetic upgrades for the chassis included custom keycaps and a decorated lid. More instruments were added, though additional NFC cards were unavailable prompting a temporary fix. Two new PCBs were assembled using lower-profile potentiometers to avoid display obstruction as requested by  paticipanttest participants (@sec:test4)– and allowing for a cohesive experience for all future  paticipanttest participants.
+To evaluate upon the idea of collaborative play (Requirement 1, @table:usabilityRequirements), and to contain the newly ordered PCBs (@sec:orderingPCBS), a second chassis was designed with, among other things, improved standoffs. Furthermore, the NFC card slot and reader holder were revised for better usability and print reliability. Aesthetic upgrades for the chassis included custom keycaps and a decorated lid. More instruments were added, though additional NFC cards were unavailable prompting a temporary fix. Two new PCBs were assembled using lower-profile potentiometers to avoid display obstruction as requested by test participants (@sec:test4)– and allowing for a cohesive experience for all future test participants.
 
 == CAD
 === Controller
-During testing, the participants preferred the knobs resting on top of the lid (@sec:test4). Furthermore, one participant had had noted that the currently used potentiometers obstructed the display. As a result, the potentiometers on the PCB were replaced with lower-profile versions, and the knobs were redesigned accordingly to match the new dimensions.
+During testing, the participants preferred the knobs resting on top of the lid (@sec:test4). Furthermore, one participant had noted that the currently used potentiometers obstructed the display. As a result, the potentiometers on the PCB were replaced with lower-profile versions, and the knobs were redesigned accordingly to match the new dimensions.
 
 To support cooperative play (Requirement 1, @table:usabilityRequirements) in the upcoming test session, a second chassis was needed. Prior use of the original chassis revealed several design limitations, which were addressed before printing the new version. Notably, the standoffs were redesigned to be taller and to include integrated threaded cylinders for mounting the PCB, removing the need for separate 3D-printed screws and spacers.
 
@@ -13,65 +12,6 @@ After printing the second chassis, it was discovered that earlier changes to the
 
 The NFC side panel also underwent another revision. Observations during the test (@sec:test4) indicated that the narrow NFC card insertion hole was difficult to use, because of its height and remaining support problems. In response, the hole was slightly widened, and the edges were rounded to help guide the NFC card during insertion.
 #subpar.grid(
-  columns: (auto, auto),
-  caption: [3D printed enclosures.],
-  label: <fig:sprint4setup>,
-  align: top,
-  gutter: 30pt,
-  figure(image("../images/sprint 5/sprint5chassis.JPG", height: 23%),
-    caption: [Finished 3D printed Controller.]), <fig:3dchassis>,
-  figure(image("../images/sprint 5/3dhost.jpg", height: 23%),
-    caption: [3D printed enclosure for the Host.]), <fig:3dhost>,
-    placement: bottom
-)
-card insertion,
-
-Neodymium magnets were tested for fastening the lid, utilizing the previously designed magnet holes (@sec:sprint2Fusion); however, they proved impractical as they could not be securely mounted and consistently loosened when another magnet was introduced. Consequently, the previously devised "temporary" solution, involving small fastening cylinders (@sec:sprint3cad), remained in use.
-. P @luca_mechanical_2025, and the lid was in two colors
-
-N connecting to a computerIs
-#subpar.grid(
-  columns: (1fr, 2fr),
-  caption: [New instruments implemented.],
-  label: <fig:sprint4setup>,
-  align: top,
-  figure(table(
-  columns: (auto, auto),
-  align: start,
-  table.header([*Instrument*], [*MIDI Channel*]),
-  [Drums], [1],
-  [Piano],[2],
-  [Guitar],[3],
-  [Trumpet],[4],
-  [Synthesizer],[5],
-  [Electric Piano],[6],
-  [Bass],[7],
-  [Cello],[8],
-  [Violin],[9],
-  [Flute],[10],
-  [Electric Guitar],[11]
-  ),
-  caption: [All 11 available instruments and their respective MIDI channels.]
-  ), <table:11Instruments>,
-  figure(image("../images/sprint 5/Ableton-11Tracks.png", width: 101%),
-    caption: [Live setup for playing 11 different instruments. The rightmost 12th MIDI channel was for internal testing and was not present during external testing.]), <fig:sprint5Ableton11Instruments>,
-)
-
-#colbreak() Therefore, ias well#subpar.grid(
-  columns: (auto, auto),
-  caption: [Final rendition of soldered PCB.],
-  label: <fig:>,
-  align: top,
-  figure(image("../images/sprint 5/pcbAssembledTop.jpg", height: 25%),
-    caption: [Finished PCB top side.]), <fig:>,
-  figure(image("../images/sprint 5/pcbAssembledBottom.jpg", height: 25%),
-    caption: [Finished PCB bottom side.]), <fig:finalpcbs>,
-    placement: top
-) <sec:sprint5test>
-@rosengardskolen_velkommen_nodate Ca  The testers would then have to say which of the extra instruments, they would like to play, whereafter a team member, would configure Live, so that their Controller was assigned to the correct MIDI channel. This was an imperfect solution but successfully resulted in the new instruments being tested.
-
-Having two Controllerstest the prototypetogethert-ass
-  placement: tope.;lid and possible intrinsic motivation @ryan_self-determination_2000P''P#subpar.grid(
   columns: (auto, auto),
   caption: [3D printed enclosures.],
   label: <fig:sprint4setup>,

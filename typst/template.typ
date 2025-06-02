@@ -35,8 +35,6 @@
   seperateTitlePage: false,
   characterCount: 0,
   titlePageImagePath: none,
-  characterCount: 0,
-  titlePageImagePath: none,
 
   // Toc
   useToc: false,
@@ -62,7 +60,7 @@
   // Report content
   body
 ) = {
-    
+  
   // Document metadata
   set document(title: title, author: authors.map(author => author.name))
   set par(first-line-indent: 1em)
@@ -86,7 +84,7 @@
       )
     },
     columns: 1,
-    numbering: nonenone
+    numbering: none
   )
 
   // Numbering of headings
@@ -126,20 +124,13 @@
           h(7pt, weak: true)
           text(style: "italic")[#underline(it.body)]
         }
-        if it.level == 1 {
-      
-        } else {
-          numbering("A.", deepest)
-          h(7pt, weak: true)
-          text(style: "italic")[#underline(it.body)]
-        }
       }
       
        // Level 1: Chapter style
        else if it.level == 1 {
          set text(12pt)
          show: smallcaps
-         set align(cncenterer)
+         set align(center)
          v(25pt, weak: true)
          if it.numbering != none {
           numbering("I.", deepest)
@@ -183,11 +174,11 @@
     )
 
     show ref: it => {
-      text(blblackck)[#it] // MAKE BLACK BEFORE TURNING IN
+      text(black)[#it] // MAKE BLACK BEFORE TURNING IN
       }
 
       show cite: it => {
-        text(bblackack)[#it]
+        text(black)[#it]
       }
     
   // Numbering and spacing of math
@@ -227,11 +218,6 @@
   if(timespan != none) {
     linebreak()
     text(titleFontSize/3)[#timespan]
-  }
-
-  if(characterCount != 0) {
-    linebreak()
-    text(titleFontSize/3)[#(characterCount) Characters]
   }
 
   if(characterCount != 0) {
@@ -306,12 +292,6 @@
   
   // Group name
   v(1cm, weak: true)
-  if(titlePageImagePath != none){
-    set align(horizon)
-    box(image(titlePageImagePath), radius: 10pt, clip: true)
-    //rect(image(titlePageImagePath, width: 91%), radius: 55mm)
-  }
-
 
   if(titlePageImagePath != none){
     set align(horizon)
@@ -329,15 +309,9 @@
   set page(numbering: " 1 / 1")
   counter(page).update(1)
   
-  set align(left)
-    
-  // Skip first page for numbering
-  set page(numbering: " 1 / 1")
-  counter(page).update(1)
-  
   let abstractSection() = {
-    if abstract != none [h(1m)##h(1em) #text(weight: 700)[_Abstract_---[]
-      ]
+    if abstract != none [
+      #h(1em) #text(weight: 700)[_Abstract_---]
       #abstract <no-wc>
   
       #if index-terms != () [
@@ -351,7 +325,8 @@
       abstractSection()
       pagebreak()
   }
-    show: columns.with(columnsAmount, gutter: 12pt)
+  
+  show: columns.with(columnsAmount, gutter: 12pt)
   set par(justify: true, first-line-indent: firstLineIndentWidth)
     set par(spacing: paragraph-spacing)// Space between paragraphs
   if (seperateAbstractColumn and seperateAbstractPage != true){
@@ -361,8 +336,8 @@
     abstractSection()
   }
 
-  if useToc { 
-      set text(9pt)text(9pt)
+  if useToc {
+      set text(9pt)
       set par(first-line-indent: 0pt)
 
       show outline.entry.where(
@@ -387,10 +362,8 @@
       }
 
       set text(fontSize)
-
-      set text(fontSize)
     }
-    
+  
   body
 
   // Display bibliography.
@@ -409,7 +382,7 @@
 
   set heading(
     supplement: [Appendix],
-    numbering: "A.."
+    numbering: "A."
   )
 
   set figure(
